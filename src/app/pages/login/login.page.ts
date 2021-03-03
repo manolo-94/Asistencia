@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { IonSlides } from '@ionic/angular';
+import { IonSlides, NavController } from '@ionic/angular';
+import { UiServicesService } from 'src/app/services/ui-services.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-login',
@@ -46,19 +48,38 @@ export class LoginPage implements OnInit {
     },
 ];
 
-avatarSlide = {
-  slidesPerView: 3.5
-};
+  avatarSlide = {
+    slidesPerView: 3.5
+  };
 
-  constructor() { }
+  loginUser = {
+    username: 'eduardo.osorio',
+    password: '_Temporal1'
+  }
+
+  constructor(  private usuarioService: UsuarioService,
+                private navCtrl: NavController,
+                private uiService: UiServicesService) { }
 
   ngOnInit() {
     /* this.slides.lockSwipes(true); */
     this.slider.lockSwipes(true);
   }
 
-  login( fLogin: NgForm ){
-    console.log(fLogin.valid);
+  async login( fLogin: NgForm ){
+
+    if (fLogin.invalid){return;}
+
+    const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);
+
+    if (valido){
+      this.navCtrl.navigateRoot('/formrender', {animated: true})
+    } else {
+      this.uiService.alertaInformativa('Usuario y contraseña no son correctos')
+    }
+
+    /* console.log(fLogin.valid);
+    console.log(this.loginUser) */
   }
 
   registro( fRegistro: NgForm ){
