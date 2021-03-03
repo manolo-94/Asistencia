@@ -32,7 +32,12 @@
               }
             ],
             "styles": ["src/theme/variables.scss", "src/global.scss"],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "./node_modules/jquery-ui-sortable/jquery-ui.min.js",
+              "./node_modules/formBuilder/dist/form-builder.min.js",
+              "./node_modules/formBuilder/dist/form-render.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -166,6 +171,7 @@
     }
   },
   "cli": {
+    "analytics": "6e07b6b0-b4ff-447b-b171-5d9aefe19cfb",
     "defaultCollection": "@ionic/angular-toolkit"
   },
   "schematics": {
