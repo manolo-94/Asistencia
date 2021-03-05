@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { IonSlides, NavController } from '@ionic/angular';
 import { UiServicesService } from 'src/app/services/ui-services.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { Usario } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'app-login',
@@ -57,12 +58,19 @@ export class LoginPage implements OnInit {
     password: '_Temporal1'
   }
 
+  registerUser: Usario = {
+    username: 'test.test',
+    email: 'test.test@gmail.com',
+    password: '_Temporal1',
+  };
+
   constructor(  private usuarioService: UsuarioService,
                 private navCtrl: NavController,
                 private uiService: UiServicesService) { }
 
   ngOnInit() {
     /* this.slides.lockSwipes(true); */
+    //bloquear la pantalla para que no se deslice
     this.slider.lockSwipes(true);
   }
 
@@ -72,18 +80,32 @@ export class LoginPage implements OnInit {
 
     const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);
 
-    if (valido){
+    if (valido[0] === true){
+      /* console.log(this.loginUser) */
       this.navCtrl.navigateRoot('/formrender', {animated: true})
     } else {
-      this.uiService.alertaInformativa('Usuario y contraseña no son correctos')
+      /* console.log(this.loginUser) */
+      this.uiService.alertaInformativa(valido[1])
+      //this.uiService.alertaInformativa('Usuario y contraseña no son correctos')
     }
 
     /* console.log(fLogin.valid);
     console.log(this.loginUser) */
   }
 
-  registro( fRegistro: NgForm ){
-    console.log(fRegistro.valid);
+  async registro( fRegistro: NgForm ){
+
+    if (fRegistro.invalid){ return; }
+
+    const valido = await this.usuarioService.registro(this.registerUser);
+
+    if (valido[0] === true){
+      console.log(this.registerUser);
+    } else {
+      console.log(this.registerUser);
+      this.uiService.alertaInformativa(valido[1])
+    }
+
   }
 
   seleccionarAvatar( avatar){
