@@ -1,6 +1,13 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>encuestas</ion-title>
+
+    <ion-buttons slot="start" >
+      <ion-icon name="receipt-outline"></ion-icon>
+    </ion-buttons>
+
+    <ion-title class="ion-text-capitalize">
+      encuestas
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -9,4 +16,8 @@
   <!-- Encuestas -->
   <app-encuestas-list [encuestas]="encuestas" ></app-encuestas-list>
 
+
 </ion-content>
+
+
+
