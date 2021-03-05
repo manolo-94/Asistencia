@@ -1,16 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
 import { IonicModule } from '@ionic/angular';
+import { HeaderComponent } from './header/header.component';
+import { EncuestasComponent } from './encuestas/encuestas.component';
+import { EncuestaComponent } from './encuesta/encuesta.component';
 
 
 
 @NgModule({
   declarations: [
-    HeaderComponent
+    HeaderComponent,
+    EncuestasComponent,
+    EncuestaComponent,
   ],
   exports:[
-    HeaderComponent
+    HeaderComponent,
+    EncuestasComponent,
+    EncuestaComponent,
   ],
   imports: [
     CommonModule,

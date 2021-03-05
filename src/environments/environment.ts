@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  url:'https://sipba.mx/api/auth'
+  url:'https://sipba.mx/api'
   /* url:'http://c60928004569.ngrok.io/api/auth' */
 };
 

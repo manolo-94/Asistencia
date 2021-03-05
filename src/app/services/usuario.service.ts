@@ -17,17 +17,44 @@ export class UsuarioService {
   constructor( private http: HttpClient,
                private storage: Storage) { }
 
-  login(username:string, password:string){
+   login(username:string, password:string){
+    
+    /* await this.cargarToken();
+
+    if(!this.token){
+      const data = {username,password};
+
+      return new Promise (resolve => {
+
+        this.http.post(`${URL}/token/login/`, data)
+        .subscribe(resp =>{
+          console.log(resp)
+          this.guardarToken(resp['auth_token']);
+          resolve([true,'Bienvenido'])
+        }, (err) => {
+          console.log(err['error']['non_field_errors']);
+          let msg = err['error']['non_field_errors']
+          this.token = null;
+          this.storage.clear();
+          resolve([false,msg]);
+        })
+      })
+    } else {
+      return new Promise (resolve => {
+        resolve([true,'Bienvenido'])
+      })
+    } */
+
 
     const data = {username,password};
 
     return new Promise (resolve => {
 
-      this.http.post(`${URL}/token/login/`, data)
+      this.http.post(`${URL}/auth/token/login/`, data)
       .subscribe(resp =>{
         console.log(resp)
         this.guardarToken(resp['auth_token']);
-          resolve([true,'Bienvenido'])
+        resolve([true,'Bienvenido'])
       }, (err) => {
         console.log(err['error']['non_field_errors']);
         let msg = err['error']['non_field_errors']
@@ -35,19 +62,6 @@ export class UsuarioService {
         this.storage.clear();
         resolve([false,msg]);
       })
-      /* .subscribe(resp => {
-        console.log(resp)
-
-        if (resp['ok']){
-          this.guardarToken(resp['token']);
-          resolve(true)
-        } else {
-          this.token = null;
-          this.storage.clear();
-          resolve(false);
-        }
-      });
- */
     })
     
   }
@@ -55,10 +69,9 @@ export class UsuarioService {
   registro(usuario: Usario){
     
     return new Promise(resolve => {
-      this.http.post(`${URL}/users/`, usuario)
+      this.http.post(`${URL}/auth/users/`, usuario)
           .subscribe( resp => {
             console.log(resp);
-            this.guardarToken(resp['auth_token']);
             resolve([true,'Usuario creado'])
           }, (err) => {
             console.log(err['error']['username']);
@@ -71,8 +84,12 @@ export class UsuarioService {
 
   }
 
+  async cargarToken(){
+    this.token = await this.storage.get('token') || null;
+  }
+
   async guardarToken(token:string){
-    /* debugger; */
+    
     this.token = token;
     await this.storage.set('token',token);
   }

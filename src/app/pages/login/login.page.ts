@@ -54,7 +54,7 @@ export class LoginPage implements OnInit {
   };
 
   loginUser = {
-    username: 'eduardo.osorio',
+    username: 'luis.villanueva',
     password: '_Temporal1'
   }
 
@@ -80,9 +80,10 @@ export class LoginPage implements OnInit {
 
     const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);
 
+    /* debugger; */
     if (valido[0] === true){
       /* console.log(this.loginUser) */
-      this.navCtrl.navigateRoot('/formrender', {animated: true})
+      this.navCtrl.navigateRoot('/encuestas', {animated: true})
     } else {
       /* console.log(this.loginUser) */
       this.uiService.alertaInformativa(valido[1])
@@ -101,6 +102,7 @@ export class LoginPage implements OnInit {
 
     if (valido[0] === true){
       console.log(this.registerUser);
+      this.uiService.alertaInformativa('Usuario creado')
     } else {
       console.log(this.registerUser);
       this.uiService.alertaInformativa(valido[1])

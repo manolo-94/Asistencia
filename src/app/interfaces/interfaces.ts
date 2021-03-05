@@ -8,3 +8,12 @@
   password?: string;
 }
 
+export interface RespuestaEncuestas {
+  encuestas: Encuesta[];
+}
+
+export interface Encuesta {
+  nombre: string;
+  descripcion: string;
+  encuesta: string;
+}
