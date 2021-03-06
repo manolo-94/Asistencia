@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { IonSlides, NavController } from '@ionic/angular';
 import { UiServicesService } from 'src/app/services/ui-services.service';
@@ -11,6 +11,7 @@ import { Usario } from '../../interfaces/interfaces';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+
 
   @ViewChild('sliderPrincipal', {static: true}) slider: IonSlides;
 
@@ -54,8 +55,8 @@ export class LoginPage implements OnInit {
   };
 
   loginUser = {
-    username: 'luis.villanueva',
-    password: '_Temporal1'
+    username: '',
+    password: ''
   }
 
   registerUser: Usario = {
@@ -76,6 +77,7 @@ export class LoginPage implements OnInit {
 
   async login( fLogin: NgForm ){
 
+    debugger;
     if (fLogin.invalid){return;}
 
     const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);
