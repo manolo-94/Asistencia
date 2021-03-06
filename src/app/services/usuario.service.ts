@@ -3,6 +3,7 @@ import { HttpClient }  from '@angular/common/http'
 import { Storage } from '@ionic/storage';
 import { environment } from '../../environments/environment';
 import { Usario } from '../interfaces/interfaces';
+import { NavController } from '@ionic/angular';
 
 
 const URL = environment.url;
@@ -15,7 +16,8 @@ export class UsuarioService {
   token:string = null;
 
   constructor( private http: HttpClient,
-               private storage: Storage) { }
+               private storage: Storage,
+               private navCtrl : NavController) { }
 
    login(username:string, password:string){
     
@@ -92,6 +94,10 @@ export class UsuarioService {
     
     this.token = token;
     await this.storage.set('token',token);
+  }
+
+  logout(){
+    this.navCtrl.navigateRoot('/login', {animated:true})
   }
 
 }

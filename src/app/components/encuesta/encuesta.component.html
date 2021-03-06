@@ -1,3 +1,10 @@
-<p>
+<!-- <p>
   Encuesta: {{ encuesta }}
-</p>
+</p> -->
+
+<ion-list>
+  <ion-item (click)="verDetalleEncuesta(encuestaBody)" >
+    <ion-icon></ion-icon>
+    {{ encuestaNombre}}
+  </ion-item>
+</ion-list>

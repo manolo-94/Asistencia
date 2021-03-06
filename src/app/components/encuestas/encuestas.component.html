@@ -1,3 +1,4 @@
 
-<app-encuesta *ngFor="let encuesta of encuestas"
-              [encuesta]="encuesta.nombre"></app-encuesta>
+    <app-encuesta *ngFor="let encuesta of encuestas"
+              [encuestaNombre]="encuesta.nombre"
+              [encuestaBody]="encuesta.encuesta"></app-encuesta>

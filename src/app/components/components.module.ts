@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { HeaderComponent } from './header/header.component';
 import { EncuestasComponent } from './encuestas/encuestas.component';
 import { EncuestaComponent } from './encuesta/encuesta.component';
+import { DetailencuestaComponent } from './detailencuesta/detailencuesta.component';
 
 
 
@@ -12,11 +13,13 @@ import { EncuestaComponent } from './encuesta/encuesta.component';
     HeaderComponent,
     EncuestasComponent,
     EncuestaComponent,
+    DetailencuestaComponent
   ],
   exports:[
     HeaderComponent,
     EncuestasComponent,
     EncuestaComponent,
+    DetailencuestaComponent
   ],
   imports: [
     CommonModule,
