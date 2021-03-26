@@ -5,7 +5,7 @@ import { HeaderComponent } from './header/header.component';
 import { EncuestasComponent } from './encuestas/encuestas.component';
 import { EncuestaComponent } from './encuesta/encuesta.component';
 import { DetailencuestaComponent } from './detailencuesta/detailencuesta.component';
-
+import { BuscarComponent } from './buscar/buscar.component';
 
 
 @NgModule({
@@ -13,13 +13,15 @@ import { DetailencuestaComponent } from './detailencuesta/detailencuesta.compone
     HeaderComponent,
     EncuestasComponent,
     EncuestaComponent,
-    DetailencuestaComponent
+    DetailencuestaComponent,
+    BuscarComponent
   ],
   exports:[
     HeaderComponent,
     EncuestasComponent,
     EncuestaComponent,
-    DetailencuestaComponent
+    DetailencuestaComponent,
+    BuscarComponent
   ],
   imports: [
     CommonModule,

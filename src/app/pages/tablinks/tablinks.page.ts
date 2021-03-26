@@ -27,4 +27,8 @@ export class TablinksPage implements OnInit {
     this.usuarioService.logout();
   }
 
+  buscarPersona(){
+    console.log('Buscar persona');
+  }
+
 }

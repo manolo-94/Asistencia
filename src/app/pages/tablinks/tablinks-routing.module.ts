@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: () => import('../encuestas/encuestas.module').then( m => m.EncuestasPageModule)
       },
       {
+        path: 'promovidos',
+        loadChildren: () => import('../promovidos/promovidos.module').then( m => m.PromovidosPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'

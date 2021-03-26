@@ -77,7 +77,7 @@ export class LoginPage implements OnInit {
 
   async login( fLogin: NgForm ){
 
-    debugger;
+    /* debugger; */
     if (fLogin.invalid){return;}
 
     const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);

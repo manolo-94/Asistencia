@@ -36,6 +36,10 @@ const routes: Routes = [
     path: 'tablinks',
     loadChildren: () => import('./pages/tablinks/tablinks.module').then( m => m.TablinksPageModule)
   },
+  // {
+  //   path: 'promovidos',
+  //   loadChildren: () => import('./pages/promovidos/promovidos.module').then( m => m.PromovidosPageModule)
+  // },
 ];
 
 @NgModule({
