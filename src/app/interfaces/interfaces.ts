@@ -17,3 +17,13 @@ export interface Encuesta {
   descripcion: string;
   encuesta: string;
 }
+
+export interface Persona {
+  id:number;
+  nombre?: string;
+  apellido_paterno?: string;
+  apellido_materno?: string;
+  nombre_completo?: string;
+  fecha_nacimiento?: string;
+  edad?: number
+}

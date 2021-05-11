@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="regresar()">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        <ion-label>Regresar</ion-label>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="promover()">
+        <ion-label>Promover</ion-label>
+        <ion-icon slot="end" name="save-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <p>
+    {{persona.nombre_completo}}
+  </p>
+</ion-content>
+

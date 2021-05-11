@@ -7,9 +7,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PromovidosPage implements OnInit {
 
-  constructor() { }
+  constructor() {
+
+    // this.personasService.buscarPersona();
+
+   }
 
   ngOnInit() {
   }
+
+
 
 }
