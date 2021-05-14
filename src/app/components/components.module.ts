@@ -7,7 +7,6 @@ import { EncuestaComponent } from './encuesta/encuesta.component';
 import { DetailencuestaComponent } from './detailencuesta/detailencuesta.component';
 import { BuscarComponent } from './buscar/buscar.component';
 import { DetallepersonaComponent } from './detallepersona/detallepersona.component';
-import { PersonasComponent } from './personas/personas.component';
 
 
 @NgModule({
@@ -17,8 +16,7 @@ import { PersonasComponent } from './personas/personas.component';
     EncuestaComponent,
     DetailencuestaComponent,
     BuscarComponent,
-    DetallepersonaComponent,
-    PersonasComponent,
+    DetallepersonaComponent
   ],
   exports:[
     HeaderComponent,
@@ -26,8 +24,7 @@ import { PersonasComponent } from './personas/personas.component';
     EncuestaComponent,
     DetailencuestaComponent,
     BuscarComponent,
-    DetallepersonaComponent,
-    PersonasComponent,
+    DetallepersonaComponent
   ],
   imports: [
     CommonModule,

@@ -1,3 +1,4 @@
+import { Time } from "@angular/common";
 
  export interface Usario {
   // ? puede ser opcional
@@ -27,3 +28,28 @@ export interface Persona {
   fecha_nacimiento?: string;
   edad?: number
 }
+
+export interface PersonaLN {
+  nombre_completo: string;
+}
+
+// export interface PersonaLN {
+//   id: number,
+//   id_persona: number;
+//   nombre: string;
+//   apellido_paterno: string;
+//   apellido_materno: string;
+//   nombre_completo: string;
+//   direccion: string;
+//   fecha_nacimiento: string;
+//   edad: number;
+//   seccion: number;
+//   municipio: number;
+//   localidad: number;
+//   comisaria: string;
+//   voto: boolean;
+//   fecha_voto: Date;
+//   hora_voto: Time;
+//   fecha_creacion: Date;
+//   hora_creacion: Time;
+// }

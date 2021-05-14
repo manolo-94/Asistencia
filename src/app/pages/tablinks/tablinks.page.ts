@@ -15,6 +15,10 @@ export class TablinksPage implements OnInit {
   ngOnInit() {
   }
 
+  descargarBase(){
+    console.log('ir a descargar base')
+  }
+
   verEncuesta(){
     console.log('listar encuestas');
   }

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonasService } from '../../services/personas.service';
-import { Persona } from '../../interfaces/interfaces';
+import { Persona, PersonaLN } from '../../interfaces/interfaces';
 import { ModalController } from '@ionic/angular';
 import { DetallepersonaComponent } from '../detallepersona/detallepersona.component';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-buscar',
@@ -16,8 +17,11 @@ export class BuscarComponent implements OnInit {
   error : string = "";
   resultError = false;
 
+  nombreCompleto: string = "";
+  personaLN: PersonaLN[] = [];
+
   constructor( private personasService: PersonasService,
-               private modalCtrl: ModalController ) { }
+               private modalCtrl: ModalController,) {}
 
   ngOnInit() {}
 

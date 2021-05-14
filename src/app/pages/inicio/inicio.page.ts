@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Chart } from 'chart.js';
+import { DatabaseService } from '../../services/database.service';
+import { PersonaLN } from '../../interfaces/interfaces';
 
 interface Componente {
   icon: string;
@@ -22,7 +24,9 @@ export class InicioPage implements OnInit {
    } 
   ]
 
-  constructor() { }
+  constructor() {
+
+   }
 
   ngOnInit() {
   }
@@ -102,8 +106,6 @@ export class InicioPage implements OnInit {
       }
     });
   }
-
-
 
 
 

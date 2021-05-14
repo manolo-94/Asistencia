@@ -25,9 +25,11 @@
     </ion-fab-button>
   </ion-fab>
   
-  <ion-tab-bar slot="bottom" class="ion-no-border" >
-    <ion-tab-button tab="tab-encounters">
-      <ion-icon name="compass"></ion-icon>
+  <ion-tab-bar slot="bottom" class="ion-no-border">
+
+    <ion-tab-button tab="tab-encounters" (click)="descargarBase()">
+      <ion-icon name="cloud-download"></ion-icon>
+      <ion-badge ></ion-badge>
     </ion-tab-button>
 
     <ion-tab-button tab="encuestas" (click)="verEncuesta()" class="comments">

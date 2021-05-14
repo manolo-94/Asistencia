@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { TablinksPageModule } from './pages/tablinks/tablinks.module';
 
+import { SQLite } from '@ionic-native/sqlite/ngx'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +26,11 @@ import { TablinksPageModule } from './pages/tablinks/tablinks.module';
     HttpClientModule,
     TablinksPageModule
   ],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [
+    SQLite, 
+    { provide: RouteReuseStrategy, 
+      useClass: IonicRouteStrategy 
+    }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
