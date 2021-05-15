@@ -7,11 +7,11 @@
 <ion-content>
 
   <section>
-    <ion-button (click)="downloadPersonas()" expand="block">Descargar información</ion-button>
+    <ion-button (click)="downloadPersonas(null)" expand="block">Descargar información</ion-button>
   </section>
 
 
-  <section>
+  <section *ngIf="status_progresbar">
     <ion-row>
       <ion-col size="12">
         <div class="progress-wrapper col-md-6">
@@ -26,6 +26,14 @@
         </div>
       </ion-col>
     </ion-row>
+  </section>
+
+  <section *ngIf="status_completadoMsj">
+    <ion-col size="12" style="text-align: center;">
+      <div>
+        <ion-label color="secondary">Descarga completa</ion-label>
+      </div>
+    </ion-col>
   </section>
 
 </ion-content>

@@ -66,15 +66,18 @@ export class DatabaseService {
 
   }
 
-  async downloadPersonas(){
+  async downloadPersonas(newURL:string){
     
     this.token = await this.storage.get('token') || null;
     
     const headers = new HttpHeaders({
       'Authorization' : 'Token ' + this.token
     });
-
-    return this.http.get<PersonasObject>(`${URL}/personas/persona/seccion/`,{headers});
+    if(newURL != null){
+      return this.http.get<PersonasObject>(`${newURL}`,{headers});
+    }else{
+      return this.http.get<PersonasObject>(`${URL}/personas/persona/seccion/`,{headers});
+    }
               //  .subscribe(resp => {
               //   console.log(resp.next);
               //   console.log(resp.previous);
