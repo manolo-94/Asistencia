@@ -38,7 +38,7 @@ export class DetallepersonaComponent implements OnInit {
   }
 
   addVotante(){
-    this.database.createPerson(this.persona.nombre_completo)
+    this.database.addPerson(this.persona.nombre_completo)
     .then(resp => {
       console.log(resp);
       this.uiService.alertaInformativa('agregado');

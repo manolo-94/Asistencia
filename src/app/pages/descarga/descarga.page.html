@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title class="ion-text-capitalize">descarga</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <section>
+    <ion-button (click)="downloadPersonas()" expand="block">Descargar información</ion-button>
+  </section>
+
+
+  <section>
+    <ion-row>
+      <ion-col size="12">
+        <div class="progress-wrapper col-md-6">
+          <div class="progress-bar" [style.width]="porcentValue + '%'">
+              {{porcentValue}}%
+          </div>
+        </div>
+      </ion-col>
+      <ion-col size="12" style="text-align: center;">
+        <div text-center>
+          <label for="">{{paginaActual}}/{{paginasTotales}}</label>
+        </div>
+      </ion-col>
+    </ion-row>
+  </section>
+
+</ion-content>

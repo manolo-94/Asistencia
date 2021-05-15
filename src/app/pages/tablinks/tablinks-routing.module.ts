@@ -33,6 +33,10 @@ const routes: Routes = [
         loadChildren: () => import('../promovidos/promovidos.module').then( m => m.PromovidosPageModule)
       },
       {
+        path: 'descarga',
+        loadChildren: () => import('../descarga/descarga.module').then( m => m.DescargaPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'
