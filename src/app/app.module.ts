@@ -13,6 +13,8 @@ import { TablinksPageModule } from './pages/tablinks/tablinks.module';
 
 import { SQLite } from '@ionic-native/sqlite/ngx'
 
+import { Network } from '@ionic-native/network/ngx';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +30,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx'
   ],
   providers: [
     SQLite, 
+    Network,
     { provide: RouteReuseStrategy, 
       useClass: IonicRouteStrategy 
     }],

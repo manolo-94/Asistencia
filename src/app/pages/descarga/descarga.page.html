@@ -6,7 +6,24 @@
 
 <ion-content>
 
-  <section>
+  <ion-card *ngIf="!status_connection_internet">
+    <ion-card-content text-center style="background-color: darkred; color:#FFFFFF;">
+      <strong>Desconectado</strong>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- <ion-card *ngIf="status_connection_internet">
+    <ion-card-content text-center style="background-color: rgb(80, 146, 42); color:#FFFFFF;">
+      <strong>Conectado</strong>
+    </ion-card-content>
+  </ion-card> -->
+
+  <section *ngIf="status_connection_internet">
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(80, 146, 42); color:#FFFFFF;">
+        <strong>Conectado</strong>
+      </ion-card-content>
+    </ion-card>
     <ion-button (click)="downloadPersonas(null)" expand="block">Descargar información</ion-button>
   </section>
 

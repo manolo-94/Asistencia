@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { Network } from '@ionic-native/network/ngx';
 import { IonSlides, NavController } from '@ionic/angular';
 import { UiServicesService } from 'src/app/services/ui-services.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -67,7 +68,25 @@ export class LoginPage implements OnInit {
 
   constructor(  private usuarioService: UsuarioService,
                 private navCtrl: NavController,
-                private uiService: UiServicesService) { }
+                private uiService: UiServicesService,
+                public network: Network) { 
+
+                  // this.ionViewDidLoad();
+
+                }
+
+  ionViewDidLoad(){
+    this.network.onDisconnect().subscribe(() => {
+      console.log('Desconectado :-(');
+    });
+
+    this.network.onConnect().subscribe(() => {
+      console.log('Conectado!');
+      setTimeout(() => {
+        console.log('Tenemos una conexión '+this.network.type+', woohoo!')
+      }, 3000);
+    });
+  }
 
   ngOnInit() {
     /* this.slides.lockSwipes(true); */
