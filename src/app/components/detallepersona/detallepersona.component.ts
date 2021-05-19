@@ -37,18 +37,18 @@ export class DetallepersonaComponent implements OnInit {
     this.modalCtrl.dismiss();
   }
 
-  addVotante(){
-    this.database.addPerson(this.persona.nombre_completo)
-    .then(resp => {
-      console.log(resp);
-      this.uiService.alertaInformativa('agregado');
-      this.modalCtrl.dismiss();
-      this.getPersonas();
-    })
-    .catch(error => {
-      console.log(error);
-    })
-  }
+  // addVotante(){
+  //   this.database.addPerson(this.persona.nombre_completo)
+  //   .then(resp => {
+  //     console.log(resp);
+  //     this.uiService.alertaInformativa('agregado');
+  //     this.modalCtrl.dismiss();
+  //     this.getPersonas();
+  //   })
+  //   .catch(error => {
+  //     console.log(error);
+  //   })
+  // }
 
   getPersonas(){
     this.database.getPeople()

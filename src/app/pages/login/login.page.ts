@@ -61,7 +61,7 @@ export class LoginPage implements OnInit {
   }
 
   registerUser: Usario = {
-    username: 'test.test',
+    username: 'luis.villanueva',
     email: 'test.test@gmail.com',
     password: '_Temporal1',
   };
@@ -75,19 +75,6 @@ export class LoginPage implements OnInit {
 
                 }
 
-  ionViewDidLoad(){
-    this.network.onDisconnect().subscribe(() => {
-      console.log('Desconectado :-(');
-    });
-
-    this.network.onConnect().subscribe(() => {
-      console.log('Conectado!');
-      setTimeout(() => {
-        console.log('Tenemos una conexión '+this.network.type+', woohoo!')
-      }, 3000);
-    });
-  }
-
   ngOnInit() {
     /* this.slides.lockSwipes(true); */
     //bloquear la pantalla para que no se deslice
@@ -99,7 +86,7 @@ export class LoginPage implements OnInit {
     /* debugger; */
     if (fLogin.invalid){return;}
 
-    const valido = await this.usuarioService.login(this.loginUser.username, this.loginUser.password);
+    const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
 
     /* debugger; */
     if (valido[0] === true){

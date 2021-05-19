@@ -37,6 +37,10 @@ const routes: Routes = [
         loadChildren: () => import('../descarga/descarga.module').then( m => m.DescargaPageModule)
       },
       {
+        path: 'personas',
+        loadChildren: () => import('../personas/personas.module').then( m => m.PersonasPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'
