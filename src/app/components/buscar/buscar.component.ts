@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PersonasService } from '../../services/personas.service';
 import { Persona, PersonaLN, PersonaSeccion } from '../../interfaces/interfaces';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController } from '@ionic/angular';
 import { DetallepersonaComponent } from '../detallepersona/detallepersona.component';
 import { DatabaseService } from '../../services/database.service';
 
@@ -24,7 +24,8 @@ export class BuscarComponent implements OnInit {
 
   constructor( private personasService: PersonasService,
                private modalCtrl: ModalController,
-               private databaseService: DatabaseService,) {}
+               private databaseService: DatabaseService,
+               private alertCtrl: AlertController) {}
 
   ngOnInit() {
     this.mensaje = 'Resultados encontrados ' + this.total;
@@ -117,8 +118,38 @@ export class BuscarComponent implements OnInit {
     })
   }
 
-  votar(idpersona:string){
+  async votar(idpersona:number, nombre:string){
     console.log('has marcado como que si voto '+ idpersona);
+    let alert = await this.alertCtrl.create({
+      header: 'Votacion',
+      message: '¿Deseas marcar a ' + nombre + ' como que ha votado?',
+      buttons: [
+        {
+          text:'Cancelar',
+          role:'cancel',
+          cssClass: 'secondary',
+          handler:(blah) =>{
+            console.log('confirmar cancelar: '+blah);
+          }
+        },
+        {
+          text:'Aceptar',
+          handler:() =>{
+            console.log('confirmar aceptar:');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  async presentAlert() {
+    let alert = await this.alertCtrl.create({
+      header: 'Descarga',
+      message: 'Tú informacion de ha descargado correctamente',
+      buttons: ['Cerrar']
+    });
+    alert.present();
   }
 
 }

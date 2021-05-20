@@ -42,7 +42,7 @@ export interface PersonasObject {
 
 export interface PersonaSeccion {
   id?: number,
-  id_persona?: number;
+  persona_id?: number;
   nombre?: string;
   apellido_paterno?: string;
   apellido_materno?: string;
