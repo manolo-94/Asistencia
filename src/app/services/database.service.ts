@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { PersonaLN, PersonasObject, PersonaSeccion } from '../interfaces/interfaces';
+import { PersonaLN, PersonasObject, PersonaSeccion, Voto } from '../interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
@@ -17,6 +17,8 @@ export class DatabaseService {
   private personasObject: PersonasObject[] = []
   private personas: PersonaLN[] = [];
   token: string = null;
+
+  private voto: Voto[] = [];
 
   private personaSeccion: PersonaSeccion[] = [];
 
@@ -60,6 +62,9 @@ export class DatabaseService {
     this.dropTableTriggerInsertFTS();
     this.dropTableTriggerDeleteFTS();
     this.dropTableTriggerUpdateFTS()
+    this.dropTableVotacion();
+    this.dropTableDescargaConfig();
+    this.dropTableCasillaConfig();
   }
 
   dropTablePersonas(){
@@ -84,6 +89,21 @@ export class DatabaseService {
 
   dropTableTriggerUpdateFTS(){
     let sql = `DROP TRIGGER IF EXISTS persona_au`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableVotacion(){
+    let sql = `DROP TABLE IF EXISTS votacion`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableDescargaConfig(){
+    let sql = `DROP TABLE IF EXISTS descarga`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableCasillaConfig(){
+    let sql = `DROP TABLE IF EXISTS casilla`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -188,9 +208,19 @@ export class DatabaseService {
 
   }
 
+  createTableVotacion(){
+    let sql = `CREATE TABLE IF NOT EXISTS votacion(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              persona_id INTERGER,
+              status BOOLEAN,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')))`;
+
+    return this.database.executeSql(sql,[]);
+  }
+
   createTableCasillaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
-    let sql = `CREATE TABLE IF NOT EXISTS descarga(
+    let sql = `CREATE TABLE IF NOT EXISTS casilla(
               id INTEGER PRIMARY KEY CHECK (id = 0),
               status TEXT DEFAULT 'CERRADA',
               finalizado INTEGER NOT NULL DEFAULT 0,
@@ -212,16 +242,6 @@ export class DatabaseService {
     }else{
       return this.http.get<PersonasObject>(`${URL}/personas/persona/seccion/`,{headers});
     }
-              //  .subscribe(resp => {
-              //   console.log(resp.next);
-              //   console.log(resp.previous);
-              //   console.log(resp.results);
-              //   if(resp.next != null){
-
-              //   }
-              //   },(err)=>{
-              //    console.log(err['error']['error'])
-              //   });
 
   }
 
@@ -248,40 +268,32 @@ export class DatabaseService {
               fecha_voto, 
               hora_voto) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
     return this.database.executeSql(sql, data);
-    // return this.database.executeSql('INSERT INTO '+this.tables.personas+' (nombre_completo) VALUES (?)', data);
-    // .then(resp => {
-    //   console.log(resp);
-    // })
-    // .catch(error => {
-    //   Promise.reject(error);
-    // });
   }
 
   getPeople(){
     let sql = 'SELECT * FROM personas ORDER BY nombre_completo ASC'
     return this.database.executeSql(sql, []);
-          //  .then(resp => {
-          //    debugger
-          //     let personas = [];
-          //     if(resp.rows.length > 0) {
-          //       for(let i = 0; i < resp.rows.length; i++){
-          //         personas.push(resp.rows.item(i));
-          //         console.log('obtenido desde la base de datos '+resp.rows.item(i))
-          //       }
-          //       // return Promise.resolve(personas);
-          //       return personas;
-          //     }
-          //  })
-          //  .catch(error=> {
-          //   //  Promise.reject(error);
-          //   console.log(error);
-            
-          //  });
-    }
+  }
 
-    getFtsPeople(strNombres: String){
+  getFtsPeople(strNombres: String){
       let sql = `SELECT * FROM personas_tfs WHERE personas_tfs MATCH '${strNombres}'`
       return this.database.executeSql(sql,[])
-    }
+  }
+
+  async addPersonaVoto(persona_id:number){
+    
+    this.token = await this.storage.get('token') || null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return this.http.get<Voto[]>(`${URL}/personas/persona/voto/`+persona_id,{headers});
+            //  .subscribe(resp => {
+            //    console.log(resp);
+            //  },(err)=>{
+            //   console.log(err['error']['error'])
+            //  });
+  }
     
 }

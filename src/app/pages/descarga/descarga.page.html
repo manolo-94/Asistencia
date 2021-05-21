@@ -29,6 +29,7 @@
 
 
   <section *ngIf="status_progresbar">
+
     <ion-row>
       <ion-col size="12">
         <div class="progress-wrapper col-md-6">
@@ -43,6 +44,22 @@
         </div>
       </ion-col>
     </ion-row>
+
+    <ion-row>
+      <ion-col size="12">
+        <div class="progress-wrapper col-md-6">
+          <div class="progress-bar" [style.width]="porcentaje_personas_guardadas + '%'">
+              {{porcentaje_personas_guardadas}}%
+          </div>
+        </div>
+      </ion-col>
+      <ion-col size="12" style="text-align: center;">
+        <div text-center>
+          <label for="">{{total_personas_guardadas}}/{{total_personas}}</label>
+        </div>
+      </ion-col>
+    </ion-row>
+
   </section>
 
   <section *ngIf="status_completadoMsj">

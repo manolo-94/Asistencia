@@ -60,3 +60,9 @@ export interface PersonaSeccion {
   fecha_creacion?: Date;
   hora_creacion?: Time;
 }
+
+export interface Voto {
+  id: number;
+  guardado: boolean;
+  error?: any;
+}

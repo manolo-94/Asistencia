@@ -119,7 +119,7 @@ export class BuscarComponent implements OnInit {
   }
 
   async votar(idpersona:number, nombre:string){
-    console.log('has marcado como que si voto '+ idpersona);
+    console.log('has seleccionado a '+ nombre);
     let alert = await this.alertCtrl.create({
       header: 'Votacion',
       message: '¿Deseas marcar a ' + nombre + ' como que ha votado?',
@@ -129,13 +129,24 @@ export class BuscarComponent implements OnInit {
           role:'cancel',
           cssClass: 'secondary',
           handler:(blah) =>{
-            console.log('confirmar cancelar: '+blah);
+            console.log('cancelar ');
           }
         },
         {
           text:'Aceptar',
           handler:() =>{
-            console.log('confirmar aceptar:');
+            console.log('Has enviado el id :' + idpersona + ' de ' + nombre);
+             this.databaseService.addPersonaVoto(idpersona)
+                .then(then => {
+                 then.subscribe(resp =>{
+                  console.log(resp);
+                 },(error => {
+                   console.log(error.message);
+                 }))
+                })
+                .catch(error => {
+                  console.log('algo salio mal '+error)
+                })
           }
         }
       ]
