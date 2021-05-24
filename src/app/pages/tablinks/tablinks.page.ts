@@ -19,8 +19,10 @@ export class TablinksPage implements OnInit {
     console.log('listar encuestas');
   }
 
-  inicio(){
-    this.navCtrl.navigateRoot('/tablinks/inicio', {animated: true})
+  personas(){
+    // this.navCtrl.navigateRoot('/tablinks/inicio', {animated: true})
+    this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
+    
   }
 
   logout(){

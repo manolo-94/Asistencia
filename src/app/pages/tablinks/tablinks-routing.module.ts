@@ -41,6 +41,14 @@ const routes: Routes = [
         loadChildren: () => import('../personas/personas.module').then( m => m.PersonasPageModule)
       },
       {
+        path: 'casilla',
+        loadChildren: () => import('../casilla/casilla.module').then( m => m.CasillaPageModule)
+      },
+      {
+        path: 'votantes',
+        loadChildren: () => import('../votantes/votantes.module').then( m => m.VotantesPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'

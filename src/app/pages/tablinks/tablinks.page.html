@@ -19,9 +19,9 @@
 
 <ion-tabs>  
 
-  <ion-fab vertical="bottom" horizontal="center" translucent="true" (click)="inicio()">
+  <ion-fab vertical="bottom" horizontal="center" translucent="true" (click)="personas()">
     <ion-fab-button >
-      <ion-icon name="home"></ion-icon>
+      <ion-icon name="search"></ion-icon>
     </ion-fab-button>
   </ion-fab>
   
@@ -32,15 +32,15 @@
       <ion-badge ></ion-badge>
     </ion-tab-button>
 
-    <ion-tab-button tab="encuestas" (click)="verEncuesta()" class="comments">
-      <ion-icon name="folder-open"></ion-icon>
+    <ion-tab-button tab="casilla" class="comments">
+      <ion-icon name="cube-sharp"></ion-icon>
       <ion-badge ></ion-badge>
     </ion-tab-button>
 
     <svg height="50" viewBox="0 0 100 50" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M100 0v50H0V0c.543 27.153 22.72 49 50 49S99.457 27.153 99.99 0h.01z" fill="red" fill-rule="evenodd"></path></svg>
-
-    <ion-tab-button tab="personas" class="notifs">
-      <ion-icon name="search"></ion-icon>
+       
+    <ion-tab-button tab="votantes" class="notifs">
+      <ion-icon name="checkmark-done-sharp"></ion-icon>
       <ion-badge ></ion-badge>
     </ion-tab-button>
 
