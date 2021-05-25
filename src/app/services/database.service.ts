@@ -36,7 +36,7 @@ export class DatabaseService {
       .then((db:SQLiteObject) => {
         this.database = db;
         
-        this.deleteConfigDatabase();
+        // this.deleteConfigDatabase();
 
         this.createTablePersonas();
         this.createTablePersonasFTS();
@@ -308,7 +308,7 @@ export class DatabaseService {
   }
 
   getFtsPeople(strNombres: String){
-      let sql = `SELECT * FROM personas_tfs WHERE personas_tfs MATCH '${strNombres}'`
+      let sql = `SELECT * FROM personas_tfs WHERE personas_tfs MATCH '${strNombres}*'`
       return this.database.executeSql(sql,[])
   }
 

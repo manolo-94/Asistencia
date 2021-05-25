@@ -91,7 +91,7 @@ export class LoginPage implements OnInit {
     /* debugger; */
     if (valido[0] === true){
       /* console.log(this.loginUser) */
-      this.navCtrl.navigateRoot('/tablinks/inicio', {animated: true})
+      this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
     } else {
       /* console.log(this.loginUser) */
       this.uiService.alertaInformativa(valido[1])
