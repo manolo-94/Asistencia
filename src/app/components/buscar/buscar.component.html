@@ -38,7 +38,7 @@
                     <ion-item-option style="background-color: #28c04e;">voto</ion-item-option>
                  </ion-item-options> -->
 
-                 <ion-item (click)="votar(persona.persona_id, persona.nombre_completo)">
+                 <ion-item (click)="votar(persona.id, persona.nombre_completo, persona.persona_id)">
                     <ion-label color="primary">
                         <p>id_persona: {{persona.persona_id}}</p>
                         <p>Nombre: {{persona.nombre_completo}}</p>

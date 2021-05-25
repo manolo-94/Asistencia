@@ -66,3 +66,11 @@ export interface Voto {
   guardado: boolean;
   error?: any;
 }
+
+export interface personaVoto {
+  id?:number,
+  id_persona?:number,
+  nombre_completo?:string,
+  status?:boolean,
+  fecha_creacion?:Date
+}

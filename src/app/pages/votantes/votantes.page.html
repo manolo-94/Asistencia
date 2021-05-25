@@ -6,4 +6,19 @@
 
 <ion-content>
 
+  <ion-list *ngFor="let persona of personasVoto">
+      <ion-item>
+        <ion-label>
+          <p>{{persona.nombre_completo}}</p>
+          <h2 *ngIf="persona.status != false">
+            Enviado
+          </h2>
+          <h2 *ngIf="persona.status != true">
+            No enviado
+          </h2>
+          
+        </ion-label>
+      </ion-item>
+  </ion-list>
+
 </ion-content>

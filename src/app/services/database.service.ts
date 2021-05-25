@@ -18,7 +18,7 @@ export class DatabaseService {
   private personas: PersonaLN[] = [];
   token: string = null;
 
-  private voto: Voto[] = [];
+   voto: Voto[] = [];
 
   private personaSeccion: PersonaSeccion[] = [];
 
@@ -46,6 +46,8 @@ export class DatabaseService {
 
         this.createTableDescargaConfig();
         this.createTableCasillaConfig();
+
+        this.createTableVotacion();
       })
       .catch((e) => {
         console.log('Error al crear la base de datos ' + e);
@@ -134,6 +136,7 @@ export class DatabaseService {
   createTablePersonasFTS(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE VIRTUAL TABLE IF NOT EXISTS personas_tfs USING fts4(
+              id,
               persona_id,
               nombre, 
               apellido_paterno,
@@ -150,6 +153,7 @@ export class DatabaseService {
               fecha_voto TEXT,
               hora_voto TEXT,
               fecha_creacion,
+              NOTINDEXED=id,
               NOTINDEXED=persona_id,
               NOTINDEXED=direccion,
               NOTINDEXED=fecha_nacimiento,
@@ -176,12 +180,20 @@ export class DatabaseService {
     return this.database.executeSql(sql, []);
   }
 
+  // createTriggerDeleteFTS(){
+  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
+  //              BEGIN
+  //                  INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
+  //                  VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
+  //              END;`
+  //   return this.database.executeSql(sql, []);
+  // }
+
   createTriggerDeleteFTS(){
     let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
                BEGIN
-                   INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-                   VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
-               END;`
+                   DELETE FROM personas_tfs WHERE docid = old.rowid;
+               END`
     return this.database.executeSql(sql, []);
   }
 
@@ -208,16 +220,6 @@ export class DatabaseService {
 
   }
 
-  createTableVotacion(){
-    let sql = `CREATE TABLE IF NOT EXISTS votacion(
-              id INTEGER PRIMARY KEY AUTOINCREMENT,
-              persona_id INTERGER,
-              status BOOLEAN,
-              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')))`;
-
-    return this.database.executeSql(sql,[]);
-  }
-
   createTableCasillaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS casilla(
@@ -228,6 +230,28 @@ export class DatabaseService {
               fecha_cierre timestamp default current_timestamp)`;
     return this.database.executeSql(sql, []);
 
+  }
+
+  // createTableVotacion(){
+  //   let sql = `CREATE TABLE IF NOT EXISTS votacion(
+  //             id INTEGER PRIMARY KEY AUTOINCREMENT,
+  //             id_persona_fk INTERGER NOT NULL,
+  //             status BOOLEAN,
+  //             fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')),
+  //             FOREIGN KEY (id_persona_fk) REFERENCES personas (id) ON DELETE CASCADE)`;
+
+  //   return this.database.executeSql(sql,[]);
+  // }
+
+  createTableVotacion(){
+    let sql = `CREATE TABLE IF NOT EXISTS votacion(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              id_persona INTERGER NOT NULL,
+              nombre_completo VARCHAR(255),
+              status BOOLEAN,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')))`;
+
+    return this.database.executeSql(sql,[]);
   }
 
   async downloadPersonas(newURL:string){
@@ -270,6 +294,14 @@ export class DatabaseService {
     return this.database.executeSql(sql, data);
   }
 
+  deletePerson(id:number){
+
+    let sql = `DELETE FROM personas WHERE id = ${id}`;
+
+    return this.database.executeSql(sql,[]);
+
+  }
+
   getPeople(){
     let sql = 'SELECT * FROM personas ORDER BY nombre_completo ASC'
     return this.database.executeSql(sql, []);
@@ -288,12 +320,44 @@ export class DatabaseService {
       'Authorization' : 'Token ' + this.token
     });
 
-    return this.http.get<Voto[]>(`${URL}/personas/persona/voto/`+persona_id,{headers});
+    return this.http.get<Voto>(`${URL}/personas/persona/voto/`+persona_id,{headers});
             //  .subscribe(resp => {
             //    console.log(resp);
             //  },(err)=>{
             //   console.log(err['error']['error'])
             //  });
   }
+
+  // addVotacion(id_persona_fk:number,status:number){
+  //   let data = [id_persona_fk,status]
+  //   let sql = `INSERT INTO votacion(
+  //             id_persona_fk,
+  //             status
+  //             ) VALUES (?,?)`;
+  //   return this.database.executeSql(sql, data);
+  // }
+
+  addVotacion(id_persona:number,nombre_completo:string,status:number){
+    let data = [id_persona, nombre_completo, status]
+    let sql = `INSERT INTO votacion(
+              id_persona,
+              nombre_completo,
+              status
+              ) VALUES (?,?,?)`;
+    return this.database.executeSql(sql, data);
+  }
+
+  // getVotacion(){
+  //     let sql = `SELECT persona_id, nombre_completo, status
+  //               FROM personas as a INNER JOIN votacion as b
+  //               ON a.id = b.id_persona_fk
+  //               ORDER BY nombre_completo`;
+  //     return this.database.executeSql(sql, []);
+  // }
+
+  getVotacion(){
+    let sql = `SELECT * FROM votacion ORDER BY nombre_completo`;
+    return this.database.executeSql(sql, []);
+}
     
 }

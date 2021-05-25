@@ -22,6 +22,8 @@ export class BuscarComponent implements OnInit {
 
   personaSeccion:PersonaSeccion[] = [];
 
+  private status:number = 0;
+
   constructor( private personasService: PersonasService,
                private modalCtrl: ModalController,
                private databaseService: DatabaseService,
@@ -118,8 +120,8 @@ export class BuscarComponent implements OnInit {
     })
   }
 
-  async votar(idpersona:number, nombre:string){
-    console.log('has seleccionado a '+ nombre);
+  async votar(id:number, nombre:string, persona_id:number){
+    console.log('ID: '+id+' has seleccionado a '+ nombre + ' con persona_id ' +persona_id);
     let alert = await this.alertCtrl.create({
       header: 'Votacion',
       message: '¿Deseas marcar a ' + nombre + ' como que ha votado?',
@@ -135,17 +137,56 @@ export class BuscarComponent implements OnInit {
         {
           text:'Aceptar',
           handler:() =>{
-            console.log('Has enviado el id :' + idpersona + ' de ' + nombre);
-             this.databaseService.addPersonaVoto(idpersona)
+            console.log('Has enviado el id :' + persona_id + ' de ' + nombre);
+             this.databaseService.addPersonaVoto(persona_id)
                 .then(then => {
                  then.subscribe(resp =>{
                   console.log(resp);
+                  // var status:number = 0;
+                  if(resp.guardado != false){
+                     this.status = 1;
+                  }else{
+                    this.status = 0;
+                  }
+                  this.databaseService.addVotacion(persona_id,nombre,this.status);
+                  this.databaseService.getVotacion()
+                      .then(resp => {
+                        for(let i = 0; i < resp.rows.length; i++){
+                          console.log(resp.rows.item(i));
+                        }
+                      })
+                      .catch(error =>{
+                        console.log('No se pudo guardar por el siguiente error: '+error.message);
+                      });
+                  this.databaseService.deletePerson(id)
+                      .then( resp => {
+                        console.log(resp)
+                      })
+                      .catch(error => {
+                        console.log('No se pudo eliminar por el siguente error: '+error.message);
+                      });
                  },(error => {
-                   console.log(error.message);
+                   console.log('error ' + error.message);
+                   this.databaseService.addVotacion(persona_id,nombre,this.status);
+                   this.databaseService.deletePerson(id)
+                      .then( resp => {
+                        console.log(resp)
+                      })
+                      .catch(error => {
+                        console.log('No se pudo eliminar por el siguente error: '+error.message);
+                      });
                  }))
                 })
                 .catch(error => {
                   console.log('algo salio mal '+error)
+                  this.databaseService.addVotacion(persona_id,nombre,this.status);
+                  this.databaseService.deletePerson(id)
+                      .then( resp => {
+                        console.log(resp)
+                      })
+                      .catch(error => {
+                        console.log('No se pudo eliminar por el siguente error: '+error);
+                      });
                 })
           }
         }
