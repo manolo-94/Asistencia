@@ -37,6 +37,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/tablinks/tablinks.module').then( m => m.TablinksPageModule)
   },
   // {
+  //   path: 'incidencias',
+  //   loadChildren: () => import('./pages/incidencias/incidencias.module').then( m => m.IncidenciasPageModule)
+  // },
+  // {
+  //   path: 'resultados',
+  //   loadChildren: () => import('./pages/resultados/resultados.module').then( m => m.ResultadosPageModule)
+  // },
+  // {
   //   path: 'promovidos',
   //   loadChildren: () => import('./pages/promovidos/promovidos.module').then( m => m.PromovidosPageModule)
   // },

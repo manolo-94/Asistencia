@@ -49,6 +49,14 @@ const routes: Routes = [
         loadChildren: () => import('../votantes/votantes.module').then( m => m.VotantesPageModule)
       },
       {
+        path: 'incidencias',
+        loadChildren: () => import('../incidencias/incidencias.module').then( m => m.IncidenciasPageModule)
+      },
+      {
+        path: 'resultados',
+        loadChildren: () => import('../resultados/resultados.module').then( m => m.ResultadosPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'

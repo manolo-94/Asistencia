@@ -14,6 +14,8 @@ import { TablinksPageModule } from './pages/tablinks/tablinks.module';
 import { SQLite } from '@ionic-native/sqlite/ngx'
 
 import { Network } from '@ionic-native/network/ngx';
+import { ComponentsModule } from './components/components.module';
+import { ResultadosPageModule } from './pages/resultados/resultados.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { Network } from '@ionic-native/network/ngx';
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     HttpClientModule,
-    TablinksPageModule
+    TablinksPageModule,
+    ComponentsModule,
   ],
   providers: [
     SQLite, 

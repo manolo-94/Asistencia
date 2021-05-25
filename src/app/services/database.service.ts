@@ -36,7 +36,7 @@ export class DatabaseService {
       .then((db:SQLiteObject) => {
         this.database = db;
         
-        // this.deleteConfigDatabase();
+        this.deleteConfigDatabase();
 
         this.createTablePersonas();
         this.createTablePersonasFTS();

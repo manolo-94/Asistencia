@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -10,7 +10,8 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 export class TablinksPage implements OnInit {
 
   constructor( private usuarioService: UsuarioService,
-               private navCtrl: NavController) { }
+               private navCtrl: NavController,
+               private menuCtrl: MenuController) { }
 
   ngOnInit() {
   }
@@ -31,6 +32,10 @@ export class TablinksPage implements OnInit {
 
   buscarPersona(){
     console.log('Buscar persona');
+  }
+
+  toggleMenu(){
+    this.menuCtrl.toggle();
   }
 
 }
