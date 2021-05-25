@@ -16,26 +16,56 @@ export class CasillaPage implements OnInit {
   }
 
   openmodal()
-  {
-    
-    this.status = true;
+  {   
     console.log(this.status)
     Swal.fire({
-      title: 'Casilla!!',
-      text:   "La casilla se ha abierto.",
-      icon: 'success'
-    }); 
+      title: '¿Quieres abrir la casilla?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: `SI`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.status = true;
+        Swal.fire('Casilla abierta!', '', 'success')
+      }
+    })
   }
 
   closemodal()
   {
-    this.status = false;
+  //   this.status = false;
+  //   console.log(this.status)
+  //   Swal.fire({
+  //     icon: 'error',
+  //     input: 'textarea',
+  //     inputLabel: 'Cerrar casilla',
+  //     inputPlaceholder: '¿Porque quieres cerrar la casillas?',
+  //     inputAttributes: {
+  //       'aria-label': 'Type your message here'
+  //     },
+  // showCancelButton: true
+  //   });  
+
     console.log(this.status)
     Swal.fire({
-      title: 'Casilla!!',
-      text:   "La casilla se ha cerrado.",
-      icon: 'error'
-    });  
+      title: '¿Quieres cerrar la casilla?',
+      icon: 'question',
+      input: 'textarea',
+      inputPlaceholder: '¿Porque quieres cerrar la casillas?',
+      inputAttributes: {
+        'aria-label': 'Type your message here'
+      },
+      showCancelButton: true,
+      confirmButtonText: `Si`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.status = false;
+        Swal.fire('Casilla cerrada!', '', 'success')
+      }
+    })
+
   }
 
 }
