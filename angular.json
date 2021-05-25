@@ -31,12 +31,13 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": ["src/theme/variables.scss", "src/global.scss","node_modules/sweetalert2/src/sweetalert2.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "./node_modules/jquery-ui-sortable/jquery-ui.min.js",
               "./node_modules/formBuilder/dist/form-builder.min.js",
-              "./node_modules/formBuilder/dist/form-render.min.js"
+              "./node_modules/formBuilder/dist/form-render.min.js",
+              "node_modules/sweetalert2/dist/sweetalert2.js"
             ]
           },
           "configurations": {

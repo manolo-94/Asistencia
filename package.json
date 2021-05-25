@@ -35,6 +35,7 @@
     "formBuilder": "^3.6.2",
     "jquery": "^3.6.0",
     "rxjs": "~6.6.0",
+    "sweetalert2": "^11.0.11",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
