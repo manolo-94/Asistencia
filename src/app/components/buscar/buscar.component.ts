@@ -137,6 +137,7 @@ export class BuscarComponent implements OnInit {
         {
           text:'Aceptar',
           handler:() =>{
+            let ionSearchBar : HTMLElement = document.getElementById('ion-searchbar');
             console.log('Has enviado el id :' + persona_id + ' de ' + nombre);
              this.databaseService.addPersonaVoto(persona_id)
                 .then(then => {
@@ -161,6 +162,8 @@ export class BuscarComponent implements OnInit {
                   this.databaseService.deletePerson(id)
                       .then( resp => {
                         console.log(resp)
+                        
+                        ionSearchBar.setAttribute('value','')
                       })
                       .catch(error => {
                         console.log('No se pudo eliminar por el siguente error: '+error.message);
@@ -171,6 +174,8 @@ export class BuscarComponent implements OnInit {
                    this.databaseService.deletePerson(id)
                       .then( resp => {
                         console.log(resp)
+                        
+                        ionSearchBar.setAttribute('value','')
                       })
                       .catch(error => {
                         console.log('No se pudo eliminar por el siguente error: '+error.message);
@@ -183,6 +188,8 @@ export class BuscarComponent implements OnInit {
                   this.databaseService.deletePerson(id)
                       .then( resp => {
                         console.log(resp)
+                        
+                        ionSearchBar.setAttribute('value','')
                       })
                       .catch(error => {
                         console.log('No se pudo eliminar por el siguente error: '+error);

@@ -5,6 +5,8 @@ import { PersonaLN, PersonasObject, PersonaSeccion, Voto } from '../interfaces/i
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
+import { ConnectionStatus, NetworkService } from './network.service';
+import { from, Observable } from 'rxjs';
 
 const URL = environment.url;
 
@@ -25,7 +27,8 @@ export class DatabaseService {
   constructor( private platform:Platform,
                private sqlite:SQLite,
                private http: HttpClient,
-               private storage: Storage) {}
+               private storage: Storage,
+               private networkService: NetworkService) {}
 
   createDataBase(){
     this.platform.ready().then(() => {
@@ -64,6 +67,7 @@ export class DatabaseService {
     this.dropTableTriggerInsertFTS();
     this.dropTableTriggerDeleteFTS();
     this.dropTableTriggerUpdateFTS()
+    this.dropTableTriggerBeforeUpdateFTS()
     this.dropTableVotacion();
     this.dropTableDescargaConfig();
     this.dropTableCasillaConfig();
@@ -91,6 +95,11 @@ export class DatabaseService {
 
   dropTableTriggerUpdateFTS(){
     let sql = `DROP TRIGGER IF EXISTS persona_au`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableTriggerBeforeUpdateFTS(){
+    let sql = `DROP TRIGGER IF EXISTS persona_bu`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -171,11 +180,20 @@ export class DatabaseService {
 
   }
 
+  // createTriggerInsertFTS(){
+  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ai AFTER INSERT ON personas
+  //              BEGIN
+  //                  INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
+  //                  VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
+  //              END;`
+  //   return this.database.executeSql(sql, []);
+  // }
+
   createTriggerInsertFTS(){
     let sql = `CREATE TRIGGER IF NOT EXISTS persona_ai AFTER INSERT ON personas
                BEGIN
-                   INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-                   VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
+                   INSERT INTO personas_tfs (docid, nombre, apellido_paterno, apellido_materno, nombre_completo)
+                   VALUES (new.rowid, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
                END;`
     return this.database.executeSql(sql, []);
   }
@@ -189,24 +207,49 @@ export class DatabaseService {
   //   return this.database.executeSql(sql, []);
   // }
 
+  // createTriggerDeleteFTS(){
+  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
+  //              BEGIN
+  //                  DELETE FROM personas_tfs WHERE docid = old.rowid;
+  //              END`
+  //   return this.database.executeSql(sql, []);
+  // }
+
   createTriggerDeleteFTS(){
-    let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
+    let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad BEFORE DELETE ON personas
                BEGIN
                    DELETE FROM personas_tfs WHERE docid = old.rowid;
                END`
     return this.database.executeSql(sql, []);
   }
 
+  // createTriggerUpdateFTS(){
+  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_au AFTER UPDATE ON personas
+  //              BEGIN
+  //                  INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
+  //                  VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
+  //                  INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
+  //                  VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
+  //              END;`
+  //   return this.database.executeSql(sql, []);
+  // }
+
   createTriggerUpdateFTS(){
-    let sql = `CREATE TRIGGER IF NOT EXISTS persona_au AFTER UPDATE ON personas
-               BEGIN
-                   INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-                   VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
-                   INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-                   VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
-               END;`
-    return this.database.executeSql(sql, []);
-  }
+      let sql = `CREATE TRIGGER IF NOT EXISTS persona_au AFTER UPDATE ON personas
+                 BEGIN
+                     INSERT INTO personas_tfs (docid, id, nombre, apellido_paterno, apellido_materno, nombre_completo)
+                     VALUES (new.rowid, new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
+                 END;`
+      return this.database.executeSql(sql, []);
+    }
+
+    createTriggerBeforeUpdateFTS(){
+      let sql = `CREATE TRIGGER IF NOT EXISTS persona_bu BEFORE UPDATE ON personas
+                 BEGIN
+                     DELETE FROM personas_tfs WHERE WHERE docid = old.rowid;
+                 END;`
+      return this.database.executeSql(sql, []);
+    }
 
   createTableDescargaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
@@ -254,6 +297,17 @@ export class DatabaseService {
     return this.database.executeSql(sql,[]);
   }
 
+  checkDownload(newURL:string, forceRefresh:boolean = false): Observable<any>{
+
+    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh){
+      let mensaje = 'No tines conexion, conectese a una red wifi o por datos';
+      return from(mensaje);
+    }else{
+      this.downloadPersonas(newURL);
+    }
+
+  }
+
   async downloadPersonas(newURL:string){
     
     this.token = await this.storage.get('token') || null;
@@ -268,6 +322,21 @@ export class DatabaseService {
     }
 
   }
+
+  // async downloadPersonas(newURL:string){
+    
+  //   this.token = await this.storage.get('token') || null;
+    
+  //   const headers = new HttpHeaders({
+  //     'Authorization' : 'Token ' + this.token
+  //   });
+  //   if(newURL != null){
+  //     return this.http.get<PersonasObject>(`${newURL}`,{headers});
+  //   }else{
+  //     return this.http.get<PersonasObject>(`${URL}/personas/persona/seccion/`,{headers});
+  //   }
+
+  // }
 
   addPerson(id, nombre, apellido_paterno, apellido_materno, nombre_completo, direccion, fecha_nacimiento, edad,seccion, municipio, localidad, comisaria){
     
