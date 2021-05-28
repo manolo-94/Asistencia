@@ -30,7 +30,6 @@
     "@ionic/storage": "^2.3.1",
     "@types/jquery": "^3.5.5",
     "chart.js": "^2.9.4",
-    "cordova-android": "9.0.0",
     "cordova-ios": "6.2.0",
     "formBuilder": "^3.6.2",
     "jquery": "^3.6.0",
@@ -51,6 +50,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
+    "cordova-android": "^9.1.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-ionic-keyboard": "^2.2.0",
     "cordova-plugin-ionic-webview": "^4.2.1",
@@ -87,8 +87,8 @@
       "cordova-plugin-network-information": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }

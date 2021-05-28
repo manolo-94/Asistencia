@@ -6,6 +6,8 @@ import { Network } from '@ionic-native/network/ngx';
 import { ChangeDetectorRef } from '@angular/core';
 import { PersonaSeccion } from '../../interfaces/interfaces';
 // import { url } from 'node:inspector';
+import { NetworkService } from '../../services/network.service';
+
 
 @Component({
   selector: 'app-descarga',
@@ -27,6 +29,7 @@ export class DescargaPage implements OnInit {
   public porcentaje_personas_guardadas: number = 0;
 
   personaSeccion:PersonaSeccion[] = [];
+  isConnected = false;
   
   // url:string = 'http://10.0.2.40:8000/api/personas/persona/seccion/' ;
 
@@ -35,7 +38,8 @@ export class DescargaPage implements OnInit {
                private network: Network,
                private ref: ChangeDetectorRef,
                private plt: Platform,
-               private navCtrl: NavController) {
+               private navCtrl: NavController,
+               private networkService: NetworkService) {
 
                 // this.NetworkStatus = new BehaviorSubject(false);            // Assume Network is offline
                 // this.CheckNetworkStatus();
@@ -48,6 +52,37 @@ export class DescargaPage implements OnInit {
                 }
 
   ngOnInit() {
+    this.networkService.getNetworkStatus()
+        .subscribe((connected:boolean) => {
+          this.isConnected = connected;
+          if(!this.isConnected){
+            console.log('Por favor enciende tu conexión a Internet');
+            this.status_connection_internet = false;
+            this.ref.detectChanges();
+          }else{
+            this.status_connection_internet = true;
+            this.ref.detectChanges();
+          }
+        })
+
+
+    // this.networkService.testNetworkConnection()
+    //     .then(then => {
+    //       console.log(then)
+    //     })
+    //     .catch(error => {
+    //       console.log(error)
+    //     })
+
+    this.networkService.getNetworkTestRequest()
+        .subscribe(success =>{ 
+          console.log('success testNetworkConnection') 
+          this.status_connection_internet = true;
+        },error =>{
+          console.log('error testNetworkConnection');
+          this.status_connection_internet = false;
+        })
+
     // this.plt.ready().then(()=>{
     //   this.ionViewDidLoad();
     // })
@@ -156,15 +191,28 @@ export class DescargaPage implements OnInit {
     
   // }
 
-  loadData(url:string, refresh = false, refresher?){
-    this.databaseService.checkDownload(url,refresh)
-        .subscribe(res => {
-          console.log(res)
-          if(refresher){
-            refresher.target.complete();
-          }
-        })
-  }
+  // ionViewWillEnter() {
+  //   this.network.onDisconnect().subscribe(() => {
+  //     console.log('Desconectado :-(');
+  //     let estado = 'Desconectado';
+  //     let msj = 'Se requiere una conexion a internet para realizar la descarga de información';
+  //     this.conexionInternetAlert(estado, msj);
+  //     this.status_connection_internet = false;
+  //     this.ref.detectChanges();
+  //   });
+
+  //   this.network.onConnect().subscribe(() => {
+  //     this.status_connection_internet = true;
+  //     console.log('Conectado!');
+  //     let estado = 'Conectado';
+  //     let msj = 'Tenemos una conexión '+this.network.type+', woohoo!';
+  //     this.conexionInternetAlert(estado, msj);
+  //     setTimeout(() => {
+  //       console.log('Tenemos una conexión '+this.network.type+', woohoo!')
+  //     }, 3000);
+  //     this.ref.detectChanges();
+  //   });
+  // }
 
   async downloadPersonas(url:string){
     this.status_progresbar = true;

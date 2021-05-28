@@ -5,6 +5,7 @@ import { IonSlides, NavController } from '@ionic/angular';
 import { UiServicesService } from 'src/app/services/ui-services.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usario } from '../../interfaces/interfaces';
+import { NetworkService } from '../../services/network.service';
 
 @Component({
   selector: 'app-login',
@@ -69,7 +70,8 @@ export class LoginPage implements OnInit {
   constructor(  private usuarioService: UsuarioService,
                 private navCtrl: NavController,
                 private uiService: UiServicesService,
-                public network: Network) { 
+                public network: Network,
+                public networkService: NetworkService) { 
 
                   // this.ionViewDidLoad();
 
@@ -85,7 +87,7 @@ export class LoginPage implements OnInit {
 
     /* debugger; */
     if (fLogin.invalid){return;}
-
+    
     const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
 
     /* debugger; */
@@ -93,8 +95,17 @@ export class LoginPage implements OnInit {
       /* console.log(this.loginUser) */
       this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
     } else {
+
+      this.networkService.getNetworkTestRequest()
+        .subscribe(success =>{ 
+          console.log('success testNetworkConnection') 
+          this.uiService.alertaInformativa(valido[1])
+        },error =>{
+          console.log('error testNetworkConnection');
+          this.uiService.alertaInformativa('Verifique su conexion de internet')
+        })
       /* console.log(this.loginUser) */
-      this.uiService.alertaInformativa(valido[1])
+      // this.uiService.alertaInformativa(valido[1])
       //this.uiService.alertaInformativa('Usuario y contraseña no son correctos')
     }
 

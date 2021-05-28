@@ -47,7 +47,6 @@ export class UsuarioService {
       })
     } */
 
-
     const data = {username,password};
 
     return new Promise (resolve => {

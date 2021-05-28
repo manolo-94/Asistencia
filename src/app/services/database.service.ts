@@ -5,8 +5,6 @@ import { PersonaLN, PersonasObject, PersonaSeccion, Voto } from '../interfaces/i
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
-import { ConnectionStatus, NetworkService } from './network.service';
-import { from, Observable } from 'rxjs';
 
 const URL = environment.url;
 
@@ -27,8 +25,7 @@ export class DatabaseService {
   constructor( private platform:Platform,
                private sqlite:SQLite,
                private http: HttpClient,
-               private storage: Storage,
-               private networkService: NetworkService) {}
+               private storage: Storage) {}
 
   createDataBase(){
     this.platform.ready().then(() => {
@@ -295,17 +292,6 @@ export class DatabaseService {
               fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')))`;
 
     return this.database.executeSql(sql,[]);
-  }
-
-  checkDownload(newURL:string, forceRefresh:boolean = false): Observable<any>{
-
-    if (this.networkService.getCurrentNetworkStatus() == ConnectionStatus.Offline || !forceRefresh){
-      let mensaje = 'No tines conexion, conectese a una red wifi o por datos';
-      return from(mensaje);
-    }else{
-      this.downloadPersonas(newURL);
-    }
-
   }
 
   async downloadPersonas(newURL:string){
