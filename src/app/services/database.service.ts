@@ -39,6 +39,7 @@ export class DatabaseService {
         // this.deleteConfigDatabase();
 
         this.createTablePersonas();
+        this.createTableUsuario();
         this.createTablePersonasFTS();
         this.createTriggerInsertFTS();
         this.createTriggerDeleteFTS();
@@ -60,6 +61,7 @@ export class DatabaseService {
 
   deleteConfigDatabase(){
     this.dropTablePersonas();
+    this.dropTableUsuario();
     this.dropTablePersonasFTS();
     this.dropTableTriggerInsertFTS();
     this.dropTableTriggerDeleteFTS();
@@ -72,6 +74,11 @@ export class DatabaseService {
 
   dropTablePersonas(){
     let sql = `DROP TABLE IF EXISTS personas`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableUsuario(){
+    let sql = `DROP TABLE IF EXISTS usuario`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -238,15 +245,15 @@ export class DatabaseService {
                      VALUES (new.rowid, new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
                  END;`
       return this.database.executeSql(sql, []);
-    }
+  }
 
-    createTriggerBeforeUpdateFTS(){
+  createTriggerBeforeUpdateFTS(){
       let sql = `CREATE TRIGGER IF NOT EXISTS persona_bu BEFORE UPDATE ON personas
                  BEGIN
                      DELETE FROM personas_tfs WHERE WHERE docid = old.rowid;
                  END;`
       return this.database.executeSql(sql, []);
-    }
+  }
 
   createTableDescargaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
@@ -292,6 +299,19 @@ export class DatabaseService {
               fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')))`;
 
     return this.database.executeSql(sql,[]);
+  }
+
+  createTableUsuario(){
+    let sql = `CREATE TABLE IF NOT EXISTS usuario(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              username VARCHAR UNIQUE,
+              password VARCHAR,
+              token VARCHAR,
+              status BOOLEAN,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime'))
+              )`;
+
+    return this.database.executeSql(sql,[])
   }
 
   async downloadPersonas(newURL:string){
@@ -413,6 +433,31 @@ export class DatabaseService {
   getVotacion(){
     let sql = `SELECT * FROM votacion ORDER BY nombre_completo`;
     return this.database.executeSql(sql, []);
-}
+  }
+
+  validateUser(username:string, password:string){
+    let sql = `SELECT * FROM usuario WHERE username = '${username}' AND password = '${password}'`;
+    // let sql = `SELECT * FROM usuario`;
+    
+     return this.database.executeSql(sql, [])
+  }
+
+  saveUser(username:string, password:string, token:string, status:boolean){
+    let data = [username,password,token,status];
+    let sql = `INSERT INTO usuario(
+              username,
+              password,
+              token,
+              status
+              ) VALUES (?,?,?,?)`;
+
+    return this.database.executeSql(sql,data);
+  }
+
+  validateStatusUser(username:string, password:string){
+    let sql = `SELECT token, status FROM usuario WHERE username = '${username}' AND password = '${password}' `;
+
+    return this.database.executeSql(sql,[])
+  }
     
 }

@@ -99,4 +99,12 @@ export class UsuarioService {
     this.navCtrl.navigateRoot('/login', {animated:true})
   }
 
+  getToken(username:string, password:string){
+
+    let data = { username, password}
+
+    return this.http.post(`${URL}/auth/token/login/`, data);
+
+  }
+
 }

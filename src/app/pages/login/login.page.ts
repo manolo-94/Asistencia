@@ -6,6 +6,7 @@ import { UiServicesService } from 'src/app/services/ui-services.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usario } from '../../interfaces/interfaces';
 import { NetworkService } from '../../services/network.service';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-login',
@@ -63,6 +64,8 @@ export class LoginPage implements OnInit {
 
   registerUser: Usario = {
     username: 'luis.villanueva',
+    // username: 'test.test',
+    // username: 'noExisto.nopassword',
     email: 'test.test@gmail.com',
     password: '_Temporal1',
   };
@@ -71,7 +74,8 @@ export class LoginPage implements OnInit {
                 private navCtrl: NavController,
                 private uiService: UiServicesService,
                 public network: Network,
-                public networkService: NetworkService) { 
+                public networkService: NetworkService,
+                public databaseService: DatabaseService) { 
 
                   // this.ionViewDidLoad();
 
@@ -85,32 +89,105 @@ export class LoginPage implements OnInit {
 
   async login( fLogin: NgForm ){
 
-    /* debugger; */
+
     if (fLogin.invalid){return;}
-    
-    const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
 
-    /* debugger; */
-    if (valido[0] === true){
-      /* console.log(this.loginUser) */
-      this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
-    } else {
+    await this.databaseService.validateUser(this.registerUser.username,this.registerUser.password)
+        .then(then =>{
 
-      this.networkService.getNetworkTestRequest()
-        .subscribe(success =>{ 
-          console.log('success testNetworkConnection') 
-          this.uiService.alertaInformativa(valido[1])
-        },error =>{
-          console.log('error testNetworkConnection');
-          this.uiService.alertaInformativa('Verifique su conexion de internet')
+          let status: boolean = false;
+          // console.log(then)
+          // console.log(then.rows.length)
+          // for (let i = 0; i < then.rows.length; i++){
+          //   console.log(then.rows.item(i))
+          // }
+          if(then.rows.length > 0){
+            // console.log('el usuario si existe')
+            for (let i = 0; i < then.rows.length; i++){
+              // console.log(then.rows.item(i));
+              status = then.rows.item(i)['status'];
+            }
+
+            if (!status){
+              this.networkService.getNetworkTestRequest()
+                .subscribe( success => {
+                  // si tenemos acceso a internet o al servidor tratamos de obtener nuestro token
+                  this.usuarioService.getToken(this.registerUser.username, this.registerUser.password)
+                      .subscribe(resp =>{
+                        // si nuestro usuario y contraseña son validos obtendremos nuestro token y guardaremos la informacion en el telefono
+                        // e iniciaremos la app
+                        // console.log(resp['auth_token'])
+                        this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
+                            .then( then => {
+                              // console.log('usuario guardado correctamente');
+                              this.uiService.alertaInformativa('usuario guardado correctamente')
+                            })
+                        this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
+                      },error => {
+                        // si el usaurio y contraseña son incorrecto o no existen nos mostrara un error y no nos dejara iniciar la app
+                        // console.log(error['error']['non_field_errors']);
+                        this.uiService.alertaInformativa(error['error']['non_field_errors'])
+                      })
+
+                },error => {
+                  // si no tenemos acceso a internet o al servidor no mostrara un mensaje que validemos nuestra conexion a internet
+                  this.uiService.alertaInformativa('Verifique su conexion de internet')
+                })
+            }else{
+              this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
+            }
+          }else{
+            // console.log('el usuario no existe');
+            // EL usuario no existe validamos si tenemos conexion ha internet o con el servidor
+            this.networkService.getNetworkTestRequest()
+                .subscribe( success => {
+                  // si tenemos acceso a internet o al servidor tratamos de obtener nuestro token
+                  this.usuarioService.getToken(this.registerUser.username, this.registerUser.password)
+                      .subscribe(resp =>{
+                        // si nuestro usuario y contraseña son validos obtendremos nuestro token y guardaremos la informacion en el telefono
+                        // e iniciaremos la app
+                        // console.log(resp['auth_token'])
+                        this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
+                            .then( then => {
+                              // console.log('usuario guardado correctamente');
+                              this.uiService.alertaInformativa('usuario guardado correctamente')
+                            })
+                        this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
+                      },error => {
+                        // si el usaurio y contraseña son incorrecto o no existen nos mostrara un error y no nos dejara iniciar la app
+                        // console.log(error['error']['non_field_errors']);
+                        this.uiService.alertaInformativa(error['error']['non_field_errors'])
+                      })
+
+                },error => {
+                  // si no tenemos acceso a internet o al servidor no mostrara un mensaje que validemos nuestra conexion a internet
+                  this.uiService.alertaInformativa('Verifique su conexion de internet')
+                })
+          
+          }
+        },(error) =>{
+          console.log('No se puedo realizar la consulta');
+          this.uiService.alertaInformativa('No se pudo realizar la verificacion del usuario en la base de datos')
+          
         })
-      /* console.log(this.loginUser) */
-      // this.uiService.alertaInformativa(valido[1])
-      //this.uiService.alertaInformativa('Usuario y contraseña no son correctos')
-    }
+    
+    // const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
 
-    /* console.log(fLogin.valid);
-    console.log(this.loginUser) */
+    // if (valido[0] === true){
+
+    //   this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
+    // } else {
+
+    //   this.networkService.getNetworkTestRequest()
+    //     .subscribe(success =>{ 
+    //       console.log('success testNetworkConnection') 
+    //       this.uiService.alertaInformativa(valido[1])
+    //     },error =>{
+    //       console.log('error testNetworkConnection');
+    //       this.uiService.alertaInformativa('Verifique su conexion de internet')
+    //     })
+    // }
+
   }
 
   async registro( fRegistro: NgForm ){
