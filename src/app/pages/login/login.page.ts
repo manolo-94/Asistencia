@@ -120,7 +120,7 @@ export class LoginPage implements OnInit {
                         this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
-                              this.uiService.alertaInformativa('usuario guardado correctamente')
+                              this.uiService.alertaInformativa('Usuario guardado correctamente')
                             })
                         this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
                       },error => {
@@ -150,7 +150,7 @@ export class LoginPage implements OnInit {
                         this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
-                              this.uiService.alertaInformativa('usuario guardado correctamente')
+                              this.uiService.alertaInformativa('Usuario guardado correctamente')
                             })
                         this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
                       },error => {
@@ -161,7 +161,7 @@ export class LoginPage implements OnInit {
 
                 },error => {
                   // si no tenemos acceso a internet o al servidor no mostrara un mensaje que validemos nuestra conexion a internet
-                  this.uiService.alertaInformativa('Verifique su conexion de internet')
+                  this.uiService.alertaInformativa('Verifique su conexión de internet')
                 })
           
           }

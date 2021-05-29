@@ -82,7 +82,7 @@ export class DescargaPage implements OnInit {
             }
             console.log('ya has descargado la información')
             Swal.fire({
-              title: '¿Quieres descargar la informacion de nuevo?',
+              title: '¿Quieres descargar la información de nuevo?',
               text: "Al volver a descargar, se eliminaran todos tus registros",
               icon: 'warning',
               showCancelButton: true,
@@ -100,11 +100,11 @@ export class DescargaPage implements OnInit {
                   this.downloadPersonas(null);
                 },error =>{
                   console.log('error testNetworkConnection');
-                  this.messageAlert('Alerta','Verificacion de conexión','No Tines conexion con el servidor, verifica tu conexion a internet')
+                  this.messageAlert('Alerta','Verificación de conexión','No puedes conectarte con el servidor, verifica tu conexión a internet')
                 })
               }
             })
-          }else{ // si no existe, inicia el proceso de descarga ya que nunca se ha descargado informacion
+          }else{ // si no existe, inicia el proceso de descarga ya que nunca se ha descargado información
             console.log('inicia proceso de descarga');
             Swal.fire('Descarga iniciada!', '', 'success')
 
@@ -117,7 +117,7 @@ export class DescargaPage implements OnInit {
             this.networkService.getNetworkTestRequest()
             .subscribe(success =>{ 
               console.log('success testNetworkConnection') 
-              this.messageAlert('Alerta','Descarga de información','Tu información se va ha comenzar ha descargar, no cierres la app ni cambies de pantalla, hasta finalizar, por favor!')
+              this.messageAlert('Importante','Descarga de información','Tu información esta por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada!')
               this.downloadPersonas(null);
               // this.databaseService.recordStatusDownload(true)
               //   .then(then =>{
@@ -126,7 +126,7 @@ export class DescargaPage implements OnInit {
               //   })
             },error =>{
               console.log('error testNetworkConnection');
-              this.messageAlert('Alerta','Verificacion de conexión','No Tines conexion con el servidor, verifica tu conexion a internet')
+              this.messageAlert('Alerta','Verificación de conexión','No puedes conectarte con el servidor, verifica tu conexión a internet')
             })
           }
         }, erro =>{
@@ -187,7 +187,7 @@ export class DescargaPage implements OnInit {
   async presentAlert() {
     let alert = await this.alertCtrl.create({
       header: 'Descarga',
-      message: 'Tú informacion de ha descargado correctamente',
+      message: 'Tú información de ha descargado correctamente',
       buttons: ['Cerrar']
     });
     await alert.present();

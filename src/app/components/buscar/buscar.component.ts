@@ -64,7 +64,7 @@ export class BuscarComponent implements OnInit {
             this.total = resp.rows.length;
             if(this.total >= 31){
               // console.log('Se encontraron '+ resp.rows.length + ' resultados, necesitas ser mas especifico en tu busqueda')
-              this.mensaje = 'Se encontraron '+ this.total + ' resultados, necesitas ser mas especifico en tu busqueda.';
+              this.mensaje = 'Se encontraron '+ this.total + ' resultados, necesitas ser mas específico en tu busqueda.';
               this.buscando = false;
             }else{
               
@@ -83,7 +83,7 @@ export class BuscarComponent implements OnInit {
     }else{
       this.total = 0;
       this.personaSeccion = [];
-      this.mensaje = 'Necesitas ser mas especifico en tu busqueda.';
+      this.mensaje = 'Necesitas ser mas específico en tu busqueda.';
       // console.log('Necesitas ser mas especifico en tu busqueda')
     }
   }
@@ -123,8 +123,8 @@ export class BuscarComponent implements OnInit {
   async votar(id:number, nombre:string, persona_id:number){
     console.log('ID: '+id+' has seleccionado a '+ nombre + ' con persona_id ' +persona_id);
     let alert = await this.alertCtrl.create({
-      header: 'Votacion',
-      message: '¿Deseas marcar a ' + nombre + ' como que ha votado?',
+      // header: 'Votación',
+      message: '¿Deseas marcar a ' + nombre + ' que asistió a votar?',
       buttons: [
         {
           text:'Cancelar',
@@ -205,7 +205,7 @@ export class BuscarComponent implements OnInit {
   async presentAlert() {
     let alert = await this.alertCtrl.create({
       header: 'Descarga',
-      message: 'Tú informacion de ha descargado correctamente',
+      message: 'Tú información de ha descargado correctamente',
       buttons: ['Cerrar']
     });
     alert.present();
