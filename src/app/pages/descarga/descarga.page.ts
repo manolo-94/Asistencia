@@ -94,6 +94,7 @@ export class DescargaPage implements OnInit {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
+                this.status_completadoMsj = false;
                 this.porcentValue = 0;
                 this.paginaActual = 0;
                 this.paginasTotales = 0;

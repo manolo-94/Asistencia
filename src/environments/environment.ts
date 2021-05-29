@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  // url:'https://sipba.mx/api'
-  url:'http://10.0.2.40:8000/api'
+  url:'https://sipba.mx/api'
+  // url:'http://10.0.2.40:8000/api'
   // url:'https://f0cc7dd2b6f4.ngrok.io/api'
 };
 
