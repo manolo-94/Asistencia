@@ -131,7 +131,7 @@ export class LoginPage implements OnInit {
 
                 },error => {
                   // si no tenemos acceso a internet o al servidor no mostrara un mensaje que validemos nuestra conexion a internet
-                  this.uiService.alertaInformativa('Verifique su conexion de internet')
+                  this.uiService.alertaInformativa('Verifique su conexión de internet')
                 })
             }else{
               this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
@@ -167,7 +167,7 @@ export class LoginPage implements OnInit {
           }
         },(error) =>{
           console.log('No se puedo realizar la consulta');
-          this.uiService.alertaInformativa('No se pudo realizar la verificacion del usuario en la base de datos')
+          this.uiService.alertaInformativa('No se pudo realizar la verificación del usuario en la base de datos')
           
         })
     

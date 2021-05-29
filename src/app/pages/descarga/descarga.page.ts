@@ -92,11 +92,11 @@ export class DescargaPage implements OnInit {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
-                Swal.fire('Descarga iniciada!', '', 'success')
+                Swal.fire('Descarga iniciada', '', 'success')
                 this.networkService.getNetworkTestRequest()
                 .subscribe(success =>{ 
                   console.log('success testNetworkConnection') 
-                  this.messageAlert('Alerta','Descarga de información','Tu información se va ha comenzar ha descargar, no cierres la app ni cambies de pantalla, hasta finalizar, por favor!')
+                  this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
                   this.downloadPersonas(null);
                 },error =>{
                   console.log('error testNetworkConnection');
@@ -106,7 +106,7 @@ export class DescargaPage implements OnInit {
             })
           }else{ // si no existe, inicia el proceso de descarga ya que nunca se ha descargado información
             console.log('inicia proceso de descarga');
-            Swal.fire('Descarga iniciada!', '', 'success')
+            Swal.fire('Descarga iniciada', '', 'success')
 
             // this.databaseService.recordStatusDownload(true)
             //     .then(then =>{
@@ -117,7 +117,7 @@ export class DescargaPage implements OnInit {
             this.networkService.getNetworkTestRequest()
             .subscribe(success =>{ 
               console.log('success testNetworkConnection') 
-              this.messageAlert('Importante','Descarga de información','Tu información esta por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada!')
+              this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
               this.downloadPersonas(null);
               // this.databaseService.recordStatusDownload(true)
               //   .then(then =>{

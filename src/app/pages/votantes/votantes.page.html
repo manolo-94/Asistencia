@@ -1,6 +1,14 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title class="ion-text-capitalize">votantes</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="enviarVotos()" >
+        <ion-label>Enviar</ion-label>
+        <ion-icon slot="end" name="paper-plane"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 

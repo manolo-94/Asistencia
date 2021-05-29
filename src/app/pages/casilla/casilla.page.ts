@@ -50,6 +50,7 @@ export class CasillaPage implements OnInit {
     console.log(this.status)
     Swal.fire({
       title: '¿Quieres cerrar la casilla?',
+      text: "Una vez cerrada la casilla no podrás abrirla nuevamente, en caso de necesitarlo contacta a tu representante inmediatamente.",
       icon: 'question',
       input: 'textarea',
       inputPlaceholder: '¿Porque quieres cerrar la casillas?',

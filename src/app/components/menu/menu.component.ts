@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { UsuarioService } from '../../services/usuario.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 @Component({
   selector: 'app-menu',
@@ -24,7 +25,25 @@ export class MenuComponent implements OnInit {
   }
 
   logout(){
-    this.usuarioService.logout();
+    Swal.fire({
+      title: 'Cerrar sesión',
+      text: "¿Seguro que deseas salir de la aplicación?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Sesión finalizada',
+          '',
+          'success'
+        )
+        this.usuarioService.logout();
+      }
+    })
+    // this.usuarioService.logout();
   }
 
 }
