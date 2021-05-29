@@ -144,6 +144,21 @@ export class LoginPage implements OnInit {
                   // si tenemos acceso a internet o al servidor tratamos de obtener nuestro token
                   this.usuarioService.getToken(this.loginUser.username, this.loginUser.password)
                       .subscribe(resp =>{
+                        //Eliminamos todos la info del usuario logueado anteriormente
+                        this.databaseService.deleteInfoDescarga();
+                        this.databaseService.createInfoDescarga();
+
+                        this.databaseService.dropTableUsuario();
+                        this.databaseService.createTableUsuario();
+
+                        this.databaseService.dropTableDescargaConfig();
+                        this.databaseService.createTableDescargaConfig();
+
+                        this.databaseService.dropTableTriggerNoInsertDescarga();
+                        this.databaseService.createTriggerNoInsertDescarga();
+
+                        this.databaseService.dropTableVotacion();
+                        this.databaseService.createTableVotacion();
                         // si nuestro usuario y contraseña son validos obtendremos nuestro token y guardaremos la informacion en el telefono
                         // e iniciaremos la app
                         // console.log(resp['auth_token'])

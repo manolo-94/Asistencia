@@ -49,6 +49,7 @@ export class DatabaseService {
 
         this.createTableDescargaConfig();
         this.createTriggerNoInsertDescarga();
+        
         this.createTableCasillaConfig();
 
         this.createTableVotacion();
@@ -71,10 +72,11 @@ export class DatabaseService {
     this.dropTableTriggerUpdateFTS()
     this.dropTableTriggerBeforeUpdateFTS()
     this.dropTableVotacion();
+
     this.dropTableDescargaConfig();
-    
-    this.dropTableCasillaConfig();
     this.dropTableTriggerNoInsertDescarga();
+
+    this.dropTableCasillaConfig();
   }
 
   deleteInfoDescarga(){
