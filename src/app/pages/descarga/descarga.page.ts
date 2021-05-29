@@ -29,6 +29,8 @@ export class DescargaPage implements OnInit {
   public total_personas_guardadas:number = 0;
   public porcentaje_personas_guardadas: number = 0;
 
+  public token:string = null;
+
   personaSeccion:PersonaSeccion[] = [];
   isConnected = false;
   
@@ -92,6 +94,14 @@ export class DescargaPage implements OnInit {
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
+                this.porcentValue = 0;
+                this.paginaActual = 0;
+                this.paginasTotales = 0;
+                this.total_personas = 0;
+                this.total_personas_guardadas = 0;
+                this.porcentaje_personas_guardadas = 0;
+                this.databaseService.deleteInfoDescarga();
+                this.databaseService.createInfoDescarga();
                 Swal.fire('Descarga iniciada', '', 'success')
                 this.networkService.getNetworkTestRequest()
                 .subscribe(success =>{ 
@@ -136,7 +146,20 @@ export class DescargaPage implements OnInit {
 
   async downloadPersonas(url:string){
     this.status_progresbar = true;
-    await this.databaseService.downloadPersonas(url)
+    
+    await this.databaseService.getTokenUser()
+        .then( then => {
+          // console.log(then)
+          if(then.rows.length > 0){
+            for (let i = 0; i < then.rows.length; i++){
+              // console.log(then.rows.item(i)['token']);
+              
+              this.token = then.rows.item(i)['token'];
+            }
+          }
+        })
+        
+    await this.databaseService.downloadPersonas(url,this.token)
           .then(then => {
             then.subscribe(resp => {
               this.paginasTotales = Math.ceil(resp.count/100);
@@ -180,6 +203,9 @@ export class DescargaPage implements OnInit {
                   console.log('descarga finalizada, se ha guardado el status')
                 })
               }
+            },(err) => {
+              console.log(err.error['detail']);
+              this.messageAlert('Error','',err.error['detail'])
             })
           })
   }

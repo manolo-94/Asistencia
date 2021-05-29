@@ -38,12 +38,14 @@ export class DatabaseService {
         
         // this.deleteConfigDatabase();
 
-        this.createTablePersonas();
         this.createTableUsuario();
+
+        this.createTablePersonas();
         this.createTablePersonasFTS();
         this.createTriggerInsertFTS();
         this.createTriggerDeleteFTS();
         this.createTriggerUpdateFTS();
+        this.createTriggerBeforeUpdateFTS();
 
         this.createTableDescargaConfig();
         this.createTriggerNoInsertDescarga();
@@ -86,6 +88,19 @@ export class DatabaseService {
     this.dropTableVotacion();
     
     this.dropTableCasillaConfig();
+  }
+
+  createInfoDescarga(){
+    this.createTablePersonas();
+    this.createTablePersonasFTS();
+    this.createTriggerInsertFTS();
+    this.createTriggerDeleteFTS();
+    this.createTriggerUpdateFTS();
+    this.createTriggerBeforeUpdateFTS();
+
+    this.createTableVotacion();
+
+    this.createTableCasillaConfig();
   }
 
   dropTablePersonas(){
@@ -281,7 +296,7 @@ export class DatabaseService {
   createTriggerBeforeUpdateFTS(){
       let sql = `CREATE TRIGGER IF NOT EXISTS persona_bu BEFORE UPDATE ON personas
                  BEGIN
-                     DELETE FROM personas_tfs WHERE WHERE docid = old.rowid;
+                     DELETE FROM personas_tfs WHERE docid = old.rowid;
                  END;`
       return this.database.executeSql(sql, []);
   }
@@ -355,9 +370,11 @@ export class DatabaseService {
     return this.database.executeSql(sql,[])
   }
 
-  async downloadPersonas(newURL:string){
+  async downloadPersonas(newURL:string, token:string){
+   
+    // this.token = await this.storage.get('token') || null;
     
-    this.token = await this.storage.get('token') || null;
+    this.token = token || null;
     
     const headers = new HttpHeaders({
       'Authorization' : 'Token ' + this.token
@@ -515,6 +532,12 @@ export class DatabaseService {
     let sql = `SELECT * FROM descarga`;
 
     return this.database.executeSql(sql,[]);
+  }
+
+  getTokenUser(){
+    let sql = `SELECT token FROM usuario`;
+
+    return this.database.executeSql(sql,[])
   }
     
 }
