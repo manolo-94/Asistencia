@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Network } from '@ionic-native/network/ngx';
-import { IonSlides, NavController } from '@ionic/angular';
+import { IonSlides, NavController, ToastController } from '@ionic/angular';
 import { UiServicesService } from 'src/app/services/ui-services.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Usario } from '../../interfaces/interfaces';
@@ -75,7 +75,8 @@ export class LoginPage implements OnInit {
                 private uiService: UiServicesService,
                 public network: Network,
                 public networkService: NetworkService,
-                public databaseService: DatabaseService) { 
+                public databaseService: DatabaseService,
+                private toastController: ToastController) { 
 
                   // this.ionViewDidLoad();
 
@@ -120,7 +121,8 @@ export class LoginPage implements OnInit {
                         this.databaseService.saveUser(this.loginUser.username,this.loginUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
-                              this.uiService.alertaInformativa('Usuario guardado correctamente')
+                              // this.uiService.alertaInformativa('Usuario guardado correctamente')
+                              this.usuarioCreadoToast();
                             })
                         this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
                       },error => {
@@ -165,7 +167,8 @@ export class LoginPage implements OnInit {
                         this.databaseService.saveUser(this.loginUser.username,this.loginUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
-                              this.uiService.alertaInformativa('Usuario guardado correctamente')
+                              // this.uiService.alertaInformativa('Usuario guardado correctamente')
+                              this.usuarioCreadoToast();
                             })
                         this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
                       },error => {
@@ -236,6 +239,15 @@ export class LoginPage implements OnInit {
     this.slider.lockSwipes(false);
     this.slider.slideTo(1)
     this.slider.lockSwipes(true);
+  }
+
+  async usuarioCreadoToast(){
+    let toast = this.toastController.create({
+          message: `Usuario registrado`,
+          duration: 1500,
+          position:'middle'
+        });
+        toast.then(toast => toast.present());
   }
 
 }
