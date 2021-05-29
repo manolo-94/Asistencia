@@ -24,9 +24,11 @@
         <strong>Conectado</strong>
       </ion-card-content>
     </ion-card>
-    <ion-button (click)="downloadPersonas(null)" expand="block">Descargar información</ion-button>
-    <!-- <ion-button (click)="loadData(null)" expand="block">Descargar información</ion-button> -->
+    <!-- <ion-button (click)="downloadPersonas(null)" expand="block">Descargar información</ion-button> -->
+    
   </section>
+
+  <ion-button (click)="verificacionDescarga()" expand="block">Descargar información</ion-button>
 
 
   <section *ngIf="status_progresbar">

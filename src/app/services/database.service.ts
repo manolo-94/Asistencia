@@ -46,6 +46,7 @@ export class DatabaseService {
         this.createTriggerUpdateFTS();
 
         this.createTableDescargaConfig();
+        this.createTriggerNoInsertDescarga();
         this.createTableCasillaConfig();
 
         this.createTableVotacion();
@@ -69,6 +70,21 @@ export class DatabaseService {
     this.dropTableTriggerBeforeUpdateFTS()
     this.dropTableVotacion();
     this.dropTableDescargaConfig();
+    
+    this.dropTableCasillaConfig();
+    this.dropTableTriggerNoInsertDescarga();
+  }
+
+  deleteInfoDescarga(){
+    this.dropTablePersonas();
+    this.dropTablePersonasFTS();
+    this.dropTableTriggerInsertFTS();
+    this.dropTableTriggerDeleteFTS();
+    this.dropTableTriggerUpdateFTS()
+    this.dropTableTriggerBeforeUpdateFTS()
+
+    this.dropTableVotacion();
+    
     this.dropTableCasillaConfig();
   }
 
@@ -119,6 +135,11 @@ export class DatabaseService {
 
   dropTableCasillaConfig(){
     let sql = `DROP TABLE IF EXISTS casilla`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableTriggerNoInsertDescarga(){
+    let sql = `DROP TRIGGER IF EXISTS config_no_insert_descarga`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -247,6 +268,16 @@ export class DatabaseService {
       return this.database.executeSql(sql, []);
   }
 
+  createTriggerNoInsertDescarga(){
+    let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_descarga
+              BEFORE INSERT ON descarga
+              WHEN (SELECT COUNT(*) FROM descarga) >= 1
+              BEGIN
+                  SELECT RAISE(FAIL, 'only one row!');
+              END;`
+    return this.database.executeSql(sql,[]);
+  }
+
   createTriggerBeforeUpdateFTS(){
       let sql = `CREATE TRIGGER IF NOT EXISTS persona_bu BEFORE UPDATE ON personas
                  BEGIN
@@ -255,13 +286,23 @@ export class DatabaseService {
       return this.database.executeSql(sql, []);
   }
 
+  // createTableDescargaConfig(){
+  //   // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
+  //   let sql = `CREATE TABLE IF NOT EXISTS descarga(
+  //             id INTEGER PRIMARY KEY CHECK (id = 0),
+  //             preview TEXT,
+  //             next TEXT,
+  //             status BOOLEAN,
+  //             fecha_creacion timestamp DATE DEFAULT (datetime('now','localtime')))`;
+  //   return this.database.executeSql(sql, []);
+
+  // }
+
   createTableDescargaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS descarga(
               id INTEGER PRIMARY KEY CHECK (id = 0),
-              preview TEXT,
-              next TEXT,
-              status INTEGER NOT NULL DEFAULT 0,
+              status BOOLEAN,
               fecha_creacion timestamp DATE DEFAULT (datetime('now','localtime')))`;
     return this.database.executeSql(sql, []);
 
@@ -458,6 +499,22 @@ export class DatabaseService {
     let sql = `SELECT token, status FROM usuario WHERE username = '${username}' AND password = '${password}' `;
 
     return this.database.executeSql(sql,[])
+  }
+
+  recordStatusDownload(status:boolean){
+    let data = [0,status]
+    let sql = `INSERT INTO descarga(
+              id,
+              status
+              ) VALUES (0,${status})`;
+
+    return this.database.executeSql(sql,[])
+  }
+
+  getStatusDownload(){
+    let sql = `SELECT * FROM descarga`;
+
+    return this.database.executeSql(sql,[]);
   }
     
 }
