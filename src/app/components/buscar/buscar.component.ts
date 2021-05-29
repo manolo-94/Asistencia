@@ -24,6 +24,8 @@ export class BuscarComponent implements OnInit {
 
   private status:number = 0;
 
+  public token:string = null;
+
   constructor( private personasService: PersonasService,
                private modalCtrl: ModalController,
                private databaseService: DatabaseService,
@@ -121,7 +123,15 @@ export class BuscarComponent implements OnInit {
   }
 
   async votar(id:number, nombre:string, persona_id:number){
-    console.log('ID: '+id+' has seleccionado a '+ nombre + ' con persona_id ' +persona_id);
+    await this.databaseService.getTokenUser()
+              .then( then => {
+                if(then.rows.length > 0){
+                  for (let i = 0; i < then.rows.length; i++){
+                    this.token = then.rows.item(i)['token'];
+                  }
+                }
+              })
+    // console.log('ID: '+id+' has seleccionado a '+ nombre + ' con persona_id ' +persona_id);
     let alert = await this.alertCtrl.create({
       // header: 'Votación',
       message: '¿Deseas marcar a ' + nombre + ' que asistió a votar?',
@@ -138,8 +148,8 @@ export class BuscarComponent implements OnInit {
           text:'Aceptar',
           handler:() =>{
             let ionSearchBar : HTMLElement = document.getElementById('ion-searchbar');
-            console.log('Has enviado el id :' + persona_id + ' de ' + nombre);
-             this.databaseService.addPersonaVoto(persona_id)
+            // console.log('Has enviado el id :' + persona_id + ' de ' + nombre);
+             this.databaseService.addPersonaVoto(persona_id, this.token)
                 .then(then => {
                  then.subscribe(resp =>{
                   console.log(resp);

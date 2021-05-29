@@ -445,9 +445,10 @@ export class DatabaseService {
       return this.database.executeSql(sql,[])
   }
 
-  async addPersonaVoto(persona_id:number){
+  async addPersonaVoto(persona_id:number, token:string){
     
-    this.token = await this.storage.get('token') || null;
+    // this.token = await this.storage.get('token') || null;
+    this.token = token|| null;
 
     const headers = new HttpHeaders({
       'Authorization' : 'Token ' + this.token
@@ -489,7 +490,7 @@ export class DatabaseService {
   // }
 
   getVotacion(){
-    let sql = `SELECT * FROM votacion ORDER BY nombre_completo`;
+    let sql = `SELECT * FROM votacion ORDER BY fecha_guardado DESC`;
     return this.database.executeSql(sql, []);
   }
 
