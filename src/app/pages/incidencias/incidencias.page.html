@@ -9,11 +9,11 @@
   <section>
     <ion-card>
       <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
-        <ion-textarea placeholder="Describa su incidencia..."></ion-textarea>
-        
+        <!-- <ion-textarea placeholder="Describa su incidencia..." required></ion-textarea> -->
+        <ion-button (click)="enviarIncidencia()" expand="block">Enviar incidencia<ion-icon name="paper-plane"></ion-icon></ion-button>
       </ion-card-content>
     </ion-card>
-    <ion-button (click)="enviarIncidencia()" expand="block">Enviar incidencia<ion-icon name="paper-plane"></ion-icon></ion-button>
+    
   </section>
 
   <section>

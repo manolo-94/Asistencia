@@ -80,3 +80,9 @@ export interface Casilla {
   abierta: boolean;
   error?: any;
 }
+
+export interface Incidencia {
+  procesado: boolean;
+  error?: any;
+  id: number;
+}

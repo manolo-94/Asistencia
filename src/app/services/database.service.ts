@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla } from '../interfaces/interfaces';
+import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla, Incidencia } from '../interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
@@ -17,6 +17,8 @@ export class DatabaseService {
   private personasObject: PersonasObject[] = []
   private personas: PersonaLN[] = [];
   token: string = null;
+
+  incidencia:string = null;
 
    voto: Voto[] = [];
 
@@ -278,18 +280,6 @@ export class DatabaseService {
       return this.database.executeSql(sql, []);
   }
 
-  // createTableDescargaConfig(){
-  //   // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
-  //   let sql = `CREATE TABLE IF NOT EXISTS descarga(
-  //             id INTEGER PRIMARY KEY CHECK (id = 0),
-  //             preview TEXT,
-  //             next TEXT,
-  //             status BOOLEAN,
-  //             fecha_creacion timestamp DATE DEFAULT (datetime('now','localtime')))`;
-  //   return this.database.executeSql(sql, []);
-
-  // }
-
   createTriggerNoInsertDescarga(){
     let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_descarga
               BEFORE INSERT ON descarga
@@ -301,7 +291,6 @@ export class DatabaseService {
   }
 
   createTableDescargaConfig(){
-    // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS descarga(
               id INTEGER PRIMARY KEY CHECK (id = 0),
               status BOOLEAN,
@@ -311,7 +300,6 @@ export class DatabaseService {
   }
 
   createTableCasillaConfig(){
-    // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS casilla(
               id INTEGER PRIMARY KEY CHECK (id = 0),
               status TEXT,
@@ -367,17 +355,6 @@ export class DatabaseService {
     return this.database.executeSql(sql, data)
   }
 
-  // createTableVotacion(){
-  //   let sql = `CREATE TABLE IF NOT EXISTS votacion(
-  //             id INTEGER PRIMARY KEY AUTOINCREMENT,
-  //             id_persona_fk INTERGER NOT NULL,
-  //             status BOOLEAN,
-  //             fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')),
-  //             FOREIGN KEY (id_persona_fk) REFERENCES personas (id) ON DELETE CASCADE)`;
-
-  //   return this.database.executeSql(sql,[]);
-  // }
-
   createTableVotacion(){
     let sql = `CREATE TABLE IF NOT EXISTS votacion(
               id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -419,26 +396,9 @@ export class DatabaseService {
 
   }
 
-  // async downloadPersonas(newURL:string){
-    
-  //   this.token = await this.storage.get('token') || null;
-    
-  //   const headers = new HttpHeaders({
-  //     'Authorization' : 'Token ' + this.token
-  //   });
-  //   if(newURL != null){
-  //     return this.http.get<PersonasObject>(`${newURL}`,{headers});
-  //   }else{
-  //     return this.http.get<PersonasObject>(`${URL}/personas/persona/seccion/`,{headers});
-  //   }
-
-  // }
-
   addPerson(id, nombre, apellido_paterno, apellido_materno, nombre_completo, direccion, fecha_nacimiento, edad,seccion, municipio, localidad, comisaria){
     
     this.personaSeccion = [];
-    // this.personaSeccion.push(persona)
-    // let data = [persona.id, persona.nombre, persona.apellido_paterno, persona.apellido_materno, persona.nombre_completo, persona.direccion, persona.fecha_nacimiento, persona.edad,persona.seccion, persona.municipio, persona.localidad, persona.comisaria ];
     let data = [id, nombre, apellido_paterno, apellido_materno, nombre_completo, direccion, fecha_nacimiento, edad,seccion, municipio, localidad, comisaria];
     let sql = `INSERT INTO personas(
               persona_id, 
@@ -479,7 +439,6 @@ export class DatabaseService {
 
   async addPersonaVoto(persona_id:number, token:string){
     
-    // this.token = await this.storage.get('token') || null;
     this.token = token|| null;
 
     const headers = new HttpHeaders({
@@ -487,21 +446,8 @@ export class DatabaseService {
     });
 
     return this.http.get<Voto>(`${URL}/personas/persona/voto/`+persona_id,{headers});
-            //  .subscribe(resp => {
-            //    console.log(resp);
-            //  },(err)=>{
-            //   console.log(err['error']['error'])
-            //  });
-  }
 
-  // addVotacion(id_persona_fk:number,status:number){
-  //   let data = [id_persona_fk,status]
-  //   let sql = `INSERT INTO votacion(
-  //             id_persona_fk,
-  //             status
-  //             ) VALUES (?,?)`;
-  //   return this.database.executeSql(sql, data);
-  // }
+  }
 
   addVotacion(id_persona:number,nombre_completo:string,status:number){
     let data = [id_persona, nombre_completo, status]
@@ -513,14 +459,6 @@ export class DatabaseService {
     return this.database.executeSql(sql, data);
   }
 
-  // getVotacion(){
-  //     let sql = `SELECT persona_id, nombre_completo, status
-  //               FROM personas as a INNER JOIN votacion as b
-  //               ON a.id = b.id_persona_fk
-  //               ORDER BY nombre_completo`;
-  //     return this.database.executeSql(sql, []);
-  // }
-
   getVotacion(){
     let sql = `SELECT * FROM votacion ORDER BY fecha_guardado DESC`;
     return this.database.executeSql(sql, []);
@@ -528,7 +466,6 @@ export class DatabaseService {
 
   validateUser(username:string, password:string){
     let sql = `SELECT * FROM usuario WHERE username = '${username}' AND password = '${password}'`;
-    // let sql = `SELECT * FROM usuario`;
     
      return this.database.executeSql(sql, [])
   }
@@ -595,6 +532,22 @@ export class DatabaseService {
 
     return this.http.get<Casilla>(`${URL}/cartografia/casilla/cerrar/0`,{headers});
             
+  }
+
+  addIncidencia(token:string, incidencia:string){
+    
+    this.token = token|| null;
+    this.incidencia = incidencia || null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    const formData = new FormData();
+    formData.append('incidencia', this.incidencia);
+
+    return this.http.post<Incidencia>(`${URL}/promovidos/votacion/incindecia/add/`,formData,{headers});
+
   }
     
 }
