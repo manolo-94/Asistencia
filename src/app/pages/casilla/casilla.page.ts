@@ -78,12 +78,12 @@ export class CasillaPage implements OnInit {
                       this.ref.detectChanges();
                       // console.log(then);
                     
-                      this.databaseService.getConfigCasilla()
-                          .then(result => {
-                            for (let i = 0; i < result.rows.length; i++){
-                              console.log(result.rows.item(i));
-                            }
-                          })
+                      // this.databaseService.getConfigCasilla()
+                      //     .then(result => {
+                      //       for (let i = 0; i < result.rows.length; i++){
+                      //         console.log(result.rows.item(i));
+                      //       }
+                      //     })
 
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
@@ -191,12 +191,12 @@ export class CasillaPage implements OnInit {
                 // console.log(resp);
                 // console.log('informacion actualizada');
 
-                this.databaseService.getConfigCasilla()
-                    .then(result => {
-                      for (let i = 0; i < result.rows.length; i++){
-                        console.log(result.rows.item(i));
-                      }
-                    })
+                // this.databaseService.getConfigCasilla()
+                //     .then(result => {
+                //       for (let i = 0; i < result.rows.length; i++){
+                //         console.log(result.rows.item(i));
+                //       }
+                //     })
 
                 this.networkService.getNetworkTestRequest()
                     .subscribe(success =>{ 
