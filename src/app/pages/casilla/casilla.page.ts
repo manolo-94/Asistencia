@@ -157,6 +157,7 @@ export class CasillaPage implements OnInit {
 
   closemodal()
   {
+    let msj : string;
     // console.log(this.status)
     Swal.fire({
       title: '¿Quieres cerrar la casilla?',
@@ -169,25 +170,33 @@ export class CasillaPage implements OnInit {
       },
       showCancelButton: true,
       confirmButtonText: `Si`,
+      inputValidator:(value) => {
+        msj = value;
+        // console.log(value)
+        if (!value) {
+          return 'Este campo es obligatorio'
+        }
+      }
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         // this.status = false;
         // Swal.fire('Casilla cerrada!', '', 'success')
+        console.log(msj);
         
-        this.databaseService.updateConfigCasilla('CERRADA',true,'Horario concluido')
+        this.databaseService.updateConfigCasilla('CERRADA',true,msj)
             .then( resp => {
               this.status = false;
               this.ref.detectChanges();
                 // console.log(resp);
                 // console.log('informacion actualizada');
 
-                // this.databaseService.getConfigCasilla()
-                //     .then(result => {
-                //       for (let i = 0; i < result.rows.length; i++){
-                //         console.log(result.rows.item(i));
-                //       }
-                //     })
+                this.databaseService.getConfigCasilla()
+                    .then(result => {
+                      for (let i = 0; i < result.rows.length; i++){
+                        console.log(result.rows.item(i));
+                      }
+                    })
 
                 this.networkService.getNetworkTestRequest()
                     .subscribe(success =>{ 
