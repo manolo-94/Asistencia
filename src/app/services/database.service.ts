@@ -52,6 +52,7 @@ export class DatabaseService {
         
         this.createTableCasillaConfig();
         this.createTriggerNoInsertCasilla()
+        this.createTriggerUpdateCierreCasilla();
 
         this.createTableVotacion();
       })
@@ -78,7 +79,8 @@ export class DatabaseService {
     this.dropTableTriggerNoInsertDescarga();
 
     this.dropTableCasillaConfig();
-    this.dropTableTriggerNoInsertCasilla()
+    this.dropTableTriggerNoInsertCasilla();
+    this.dropTableTriggerUpdateCierreCasilla();
     
   }
 
@@ -93,7 +95,8 @@ export class DatabaseService {
     this.dropTableVotacion();
     
     this.dropTableCasillaConfig();
-    this.dropTableTriggerNoInsertCasilla()
+    this.dropTableTriggerNoInsertCasilla();
+    this.dropTableTriggerUpdateCierreCasilla();
   }
 
   createInfoDescarga(){
@@ -107,7 +110,9 @@ export class DatabaseService {
     this.createTableVotacion();
 
     this.createTableCasillaConfig();
-    this.createTriggerNoInsertCasilla()
+    this.createTriggerNoInsertCasilla();
+    this.createTriggerUpdateCierreCasilla();
+
   }
 
   dropTablePersonas(){
@@ -167,6 +172,11 @@ export class DatabaseService {
 
   dropTableTriggerNoInsertCasilla(){
     let sql = `DROP TRIGGER IF EXISTS config_no_insert_casilla`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableTriggerUpdateCierreCasilla(){
+    let sql = `DROP TRIGGER IF EXISTS config_update_last_time_casilla`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -300,6 +310,19 @@ export class DatabaseService {
 
   }
 
+  createTableCasillaConfig(){
+    // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
+    let sql = `CREATE TABLE IF NOT EXISTS casilla(
+              id INTEGER PRIMARY KEY CHECK (id = 0),
+              status TEXT,
+              finalizado BOOLEAN,
+              mensaje TEXT,
+              fecha_apertura timestamp DATE DEFAULT (datetime('now','localtime')),
+              fecha_cierre timestamp DATE DEFAULT (datetime('now','localtime')))`;
+    return this.database.executeSql(sql, []);
+
+  }
+
   createTriggerNoInsertCasilla(){
     let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_casilla
               BEFORE INSERT ON casilla
@@ -309,18 +332,15 @@ export class DatabaseService {
               END;`
     return this.database.executeSql(sql,[]);
   }
+  
+  createTriggerUpdateCierreCasilla(){
+    let sql = `CREATE TRIGGER if NOT EXISTS config_update_last_time_casilla 	
+                AFTER UPDATE on casilla 
+                BEGIN 
+                UPDATE casilla SET fecha_cierre = datetime('now','localtime') WHERE id = 0;
+                end;`
 
-  createTableCasillaConfig(){
-    // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
-    let sql = `CREATE TABLE IF NOT EXISTS casilla(
-              id INTEGER PRIMARY KEY CHECK (id = 0),
-              status TEXT,
-              finalizado BOOLEAN,
-              mensaje TEXT,
-              fecha_apertura timestamp DATE DEFAULT (datetime('now','localtime')),
-              fecha_cierre timestamp default current_timestamp)`;
-    return this.database.executeSql(sql, []);
-
+    return this.database.executeSql(sql,[])
   }
 
   insertConfigCasilla(status:string, finalizado:boolean, mensaje:string){

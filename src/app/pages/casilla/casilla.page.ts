@@ -72,18 +72,18 @@ export class CasillaPage implements OnInit {
                 }
               }else{
                 // console.log('vas a abrir casilla por primera vez')
-                this.databaseService.insertConfigCasilla('ABIERTA',false,'prueba')
+                this.databaseService.insertConfigCasilla('ABIERTA',false,'Apertura de casilla')
                     .then(then => {
                       this.status = true;
                       this.ref.detectChanges();
                       // console.log(then);
                     
-                      // this.databaseService.getConfigCasilla()
-                      //     .then(result => {
-                      //       for (let i = 0; i < result.rows.length; i++){
-                      //         console.log(result.rows.item(i));
-                      //       }
-                      //     })
+                      this.databaseService.getConfigCasilla()
+                          .then(result => {
+                            for (let i = 0; i < result.rows.length; i++){
+                              console.log(result.rows.item(i));
+                            }
+                          })
 
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
