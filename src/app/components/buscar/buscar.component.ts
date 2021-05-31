@@ -4,6 +4,7 @@ import { Persona, PersonaLN, PersonaSeccion } from '../../interfaces/interfaces'
 import { ModalController, AlertController } from '@ionic/angular';
 import { DetallepersonaComponent } from '../detallepersona/detallepersona.component';
 import { DatabaseService } from '../../services/database.service';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 @Component({
   selector: 'app-buscar',
@@ -71,7 +72,7 @@ export class BuscarComponent implements OnInit {
             }else{
               
               for(let i = 0; i < resp.rows.length; i++){
-                console.log(resp.rows.item(i));
+                // console.log(resp.rows.item(i));
                 this.personaSeccion.push(resp.rows.item(i));
               }
               this.mensaje = 'Se encontraron '+ this.total + ' resultados.';
@@ -112,7 +113,7 @@ export class BuscarComponent implements OnInit {
       this.total = data.rows.length;
       
       for(let i = 0; i < data.rows.length; i++){
-        console.log(data.rows.item(i));
+        // console.log(data.rows.item(i));
         this.personaSeccion.push(data.rows.item(i));
       }
       this.buscando = false;
@@ -132,84 +133,228 @@ export class BuscarComponent implements OnInit {
                 }
               })
     // console.log('ID: '+id+' has seleccionado a '+ nombre + ' con persona_id ' +persona_id);
-    let alert = await this.alertCtrl.create({
-      // header: 'Votación',
-      message: '¿Deseas marcar a ' + nombre + ' que asistió a votar?',
-      buttons: [
-        {
-          text:'Cancelar',
-          role:'cancel',
-          cssClass: 'secondary',
-          handler:(blah) =>{
-            console.log('cancelar ');
-          }
-        },
-        {
-          text:'Aceptar',
-          handler:() =>{
-            let ionSearchBar : HTMLElement = document.getElementById('ion-searchbar');
-            // console.log('Has enviado el id :' + persona_id + ' de ' + nombre);
-             this.databaseService.addPersonaVoto(persona_id, this.token)
-                .then(then => {
-                 then.subscribe(resp =>{
-                  console.log(resp);
-                  // var status:number = 0;
-                  if(resp.guardado != false){
-                     this.status = 1;
+    // let alert = await this.alertCtrl.create({
+    //   message: '¿Deseas marcar a ' + nombre + ' que asistió a votar?',
+    //   buttons: [
+    //     {
+    //       text:'Cancelar',
+    //       role:'cancel',
+    //       cssClass: 'secondary',
+    //       handler:(blah) =>{
+    //         console.log('cancelar ');
+    //       }
+    //     },
+    //     {
+    //       text:'Aceptar',
+    //       handler:() =>{
+    //         let ionSearchBar : HTMLElement = document.getElementById('ion-searchbar');
+    //          this.databaseService.addPersonaVoto(persona_id, this.token)
+    //             .then(then => {
+    //              then.subscribe(resp =>{
+    //               console.log(resp);
+    //               // var status:number = 0;
+    //               if(resp.guardado != false){
+    //                  this.status = 1;
+    //               }else{
+    //                 this.status = 0;
+    //               }
+    //               this.databaseService.addVotacion(persona_id,nombre,this.status);
+    //               this.databaseService.getVotacion()
+    //                   .then(resp => {
+    //                     for(let i = 0; i < resp.rows.length; i++){
+    //                       console.log(resp.rows.item(i));
+    //                     }
+    //                   })
+    //                   .catch(error =>{
+    //                     console.log('No se pudo guardar por el siguiente error: '+error.message);
+    //                   });
+    //               this.databaseService.deletePerson(id)
+    //                   .then( resp => {
+    //                     console.log(resp)
+                        
+    //                     ionSearchBar.setAttribute('value','')
+    //                   })
+    //                   .catch(error => {
+    //                     console.log('No se pudo eliminar por el siguente error: '+error.message);
+    //                   });
+    //              },(error => {
+    //                console.log('error ' + error.message);
+    //                this.databaseService.addVotacion(persona_id,nombre,this.status);
+    //                this.databaseService.deletePerson(id)
+    //                   .then( resp => {
+    //                     console.log(resp)
+                        
+    //                     ionSearchBar.setAttribute('value','')
+    //                   })
+    //                   .catch(error => {
+    //                     console.log('No se pudo eliminar por el siguente error: '+error.message);
+    //                   });
+    //              }))
+    //             })
+    //             .catch(error => {
+    //               console.log('algo salio mal '+error)
+    //               this.databaseService.addVotacion(persona_id,nombre,this.status);
+    //               this.databaseService.deletePerson(id)
+    //                   .then( resp => {
+    //                     console.log(resp)
+                        
+    //                     ionSearchBar.setAttribute('value','')
+    //                   })
+    //                   .catch(error => {
+    //                     console.log('No se pudo eliminar por el siguente error: '+error);
+    //                   });
+    //             })
+    //       }
+    //     }
+    //   ]
+    // });
+    // alert.present();
+
+    Swal.fire({
+      title: '¿Deseas marcar a ' + nombre + ' que asistió a votar?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let ionSearchBar : HTMLElement = document.getElementById('ion-searchbar');
+            // Validar que la casi lla este abierta antes de de poder puntear a una persona
+
+            this.databaseService.getConfigCasilla()
+                .then( result => {
+                  let status:string;
+                  if(result.rows.length > 0){
+                    for (let i = 0; i < result.rows.length; i++){
+                      status = result.rows.item(i)['status']
+                    }
+    
+                    if(status == 'CERRADA'){
+                      // console.log('la casilla ya fue cerrada definitivamente')
+                      Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Tu casilla esta cerrada debe de estar abierta para comenzar a marcar la asistencia de las personas que fueron a votar'
+                      })
+                    }
+                    if(status == 'ABIERTA'){
+
+                      /* COMENZAMOS A PUNTEAR PERSONAS */
+                      this.databaseService.addPersonaVoto(persona_id, this.token) // tratamos de enviar la informacion al servidor
+                          .then(then => {
+                            then.subscribe(resp =>{
+                              Swal.fire(
+                                'Se a registrado correctamente la asistencia de ' + nombre,
+                                '',
+                                'success'
+                              )
+                              // console.log(resp);
+                              // var status:number = 0;
+                              if(resp.guardado != false){
+                                 this.status = 1;
+                              }else{
+                                this.status = 0;
+                              }
+                            
+                              this.databaseService.addVotacion(persona_id,nombre,this.status) // la guardamo en la base de datos local 
+                                  .then(then => {
+                                    Swal.fire(
+                                      'Se a registrado correctamente la asistencia de ' + nombre,
+                                      '',
+                                      'success'
+                                    )
+                                  })
+                                  .catch( err =>{
+                                    Swal.fire({
+                                      icon: 'error',
+                                      title: 'Oops...',
+                                      text: 'No se pudo registrar la asistencia de esta persona correctamente'
+                                    })
+                                  })
+                              // this.databaseService.getVotacion()
+                              //     .then(resp => {
+                              //       for(let i = 0; i < resp.rows.length; i++){
+                              //         console.log(resp.rows.item(i));
+                              //       }
+                              //     })
+                              //     .catch(error =>{
+                              //       console.log('No se pudo cosultar la informacion por el siguiente error: '+error.message);
+                              //     });
+                              this.databaseService.deletePerson(id)
+                                  .then( resp => {
+                                    // console.log(resp)
+
+                                    ionSearchBar.setAttribute('value','')
+                                  })
+                                  .catch(error => {
+                                    // console.log('No se pudo eliminar por el siguente error: '+error.message);
+                                    Swal.fire({
+                                      icon: 'error',
+                                      title: 'Oops...',
+                                      text: 'No se pudo eliminar de la lista de busque esta persona por el siguente error: '+error.message
+                                    })
+                                  });
+                           },(error => { // si el servidor marca algun error aun asi lo guarmadamos en la base de datos y despues lo eliminamos de la busqueda
+                              // console.log('error ' + error.message);
+                              this.databaseService.addVotacion(persona_id,nombre,this.status)
+                                  .then(then => {
+                                    Swal.fire(
+                                      'Se a registrado correctamente la asistencia de ' + nombre,
+                                      '',
+                                      'success'
+                                    )
+                                  })
+                                  .catch( err => {
+                                    Swal.fire({
+                                      icon: 'error',
+                                      title: 'Oops...',
+                                      text: 'No se pudo registrar la asistencia de esta persona correctamente'
+                                    })
+                                  })
+                              this.databaseService.deletePerson(id)
+                                 .then( resp => {
+                                  //  console.log(resp)
+
+                                   ionSearchBar.setAttribute('value','')
+                                 })
+                                 .catch(error => {
+                                  //  console.log('No se pudo eliminar por el siguente error: '+error.message);
+                                   Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'No se pudo eliminar de la lista de busque esta persona por el siguente error: '+error.message
+                                  })
+                                 });
+                           }))
+                          })
+                          .catch(error => { // si la consulta es erronea la guardamos en la base de datos local y la eliminamos de la busqueda
+                            console.log('algo salio mal '+error)
+                            this.databaseService.addVotacion(persona_id,nombre,this.status);
+                            this.databaseService.deletePerson(id)
+                                .then( resp => {
+                                  console.log(resp)
+
+                                  ionSearchBar.setAttribute('value','')
+                                })
+                                .catch(error => {
+                                  console.log('No se pudo eliminar por el siguente error: '+error);
+                                });
+                          })
+                      /* COMENZAMOS A PUNTEAR PERSONAS */
+
+                    }
                   }else{
-                    this.status = 0;
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Tu casilla esta cerrada debe de estar abierta para comenzar a marcar la asistencia de las personas que fueron a votar'
+                    })
                   }
-                  this.databaseService.addVotacion(persona_id,nombre,this.status);
-                  this.databaseService.getVotacion()
-                      .then(resp => {
-                        for(let i = 0; i < resp.rows.length; i++){
-                          console.log(resp.rows.item(i));
-                        }
-                      })
-                      .catch(error =>{
-                        console.log('No se pudo guardar por el siguiente error: '+error.message);
-                      });
-                  this.databaseService.deletePerson(id)
-                      .then( resp => {
-                        console.log(resp)
-                        
-                        ionSearchBar.setAttribute('value','')
-                      })
-                      .catch(error => {
-                        console.log('No se pudo eliminar por el siguente error: '+error.message);
-                      });
-                 },(error => {
-                   console.log('error ' + error.message);
-                   this.databaseService.addVotacion(persona_id,nombre,this.status);
-                   this.databaseService.deletePerson(id)
-                      .then( resp => {
-                        console.log(resp)
-                        
-                        ionSearchBar.setAttribute('value','')
-                      })
-                      .catch(error => {
-                        console.log('No se pudo eliminar por el siguente error: '+error.message);
-                      });
-                 }))
                 })
-                .catch(error => {
-                  console.log('algo salio mal '+error)
-                  this.databaseService.addVotacion(persona_id,nombre,this.status);
-                  this.databaseService.deletePerson(id)
-                      .then( resp => {
-                        console.log(resp)
-                        
-                        ionSearchBar.setAttribute('value','')
-                      })
-                      .catch(error => {
-                        console.log('No se pudo eliminar por el siguente error: '+error);
-                      });
-                })
-          }
-        }
-      ]
-    });
-    alert.present();
+       
+      }
+    })
   }
 
   async presentAlert() {
