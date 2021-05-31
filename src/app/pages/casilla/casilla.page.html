@@ -6,7 +6,7 @@
 
 <ion-content>
 
-  <section *ngIf="status == false">
+  <section *ngIf="!status">
     <ion-card>
       <ion-card-content text-center style="background-color: rgb(177, 36, 26); color:#FFFFFF;">
         <strong>Casilla cerrada</strong> 
@@ -16,7 +16,7 @@
     <ion-button (click)="openmodal()" expand="block">¿Abrir Casilla?</ion-button>
   </section>
 
-  <section *ngIf="status == true">
+  <section *ngIf="status">
     <ion-card>
       <ion-card-content text-center style="background-color: rgb(80, 146, 42); color:#FFFFFF;">
         <strong>Casilla abierta</strong>

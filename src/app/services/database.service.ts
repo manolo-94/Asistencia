@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { PersonaLN, PersonasObject, PersonaSeccion, Voto } from '../interfaces/interfaces';
+import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla } from '../interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
@@ -51,6 +51,7 @@ export class DatabaseService {
         this.createTriggerNoInsertDescarga();
         
         this.createTableCasillaConfig();
+        this.createTriggerNoInsertCasilla()
 
         this.createTableVotacion();
       })
@@ -77,6 +78,8 @@ export class DatabaseService {
     this.dropTableTriggerNoInsertDescarga();
 
     this.dropTableCasillaConfig();
+    this.dropTableTriggerNoInsertCasilla()
+    
   }
 
   deleteInfoDescarga(){
@@ -90,6 +93,7 @@ export class DatabaseService {
     this.dropTableVotacion();
     
     this.dropTableCasillaConfig();
+    this.dropTableTriggerNoInsertCasilla()
   }
 
   createInfoDescarga(){
@@ -103,6 +107,7 @@ export class DatabaseService {
     this.createTableVotacion();
 
     this.createTableCasillaConfig();
+    this.createTriggerNoInsertCasilla()
   }
 
   dropTablePersonas(){
@@ -157,6 +162,11 @@ export class DatabaseService {
 
   dropTableTriggerNoInsertDescarga(){
     let sql = `DROP TRIGGER IF EXISTS config_no_insert_descarga`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  dropTableTriggerNoInsertCasilla(){
+    let sql = `DROP TRIGGER IF EXISTS config_no_insert_casilla`;
     return this.database.executeSql(sql, []);  
   }
 
@@ -222,14 +232,6 @@ export class DatabaseService {
 
   }
 
-  // createTriggerInsertFTS(){
-  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ai AFTER INSERT ON personas
-  //              BEGIN
-  //                  INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-  //                  VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
-  //              END;`
-  //   return this.database.executeSql(sql, []);
-  // }
 
   createTriggerInsertFTS(){
     let sql = `CREATE TRIGGER IF NOT EXISTS persona_ai AFTER INSERT ON personas
@@ -240,22 +242,6 @@ export class DatabaseService {
     return this.database.executeSql(sql, []);
   }
 
-  // createTriggerDeleteFTS(){
-  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
-  //              BEGIN
-  //                  INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-  //                  VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
-  //              END;`
-  //   return this.database.executeSql(sql, []);
-  // }
-
-  // createTriggerDeleteFTS(){
-  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad AFTER DELETE ON personas
-  //              BEGIN
-  //                  DELETE FROM personas_tfs WHERE docid = old.rowid;
-  //              END`
-  //   return this.database.executeSql(sql, []);
-  // }
 
   createTriggerDeleteFTS(){
     let sql = `CREATE TRIGGER IF NOT EXISTS persona_ad BEFORE DELETE ON personas
@@ -265,17 +251,6 @@ export class DatabaseService {
     return this.database.executeSql(sql, []);
   }
 
-  // createTriggerUpdateFTS(){
-  //   let sql = `CREATE TRIGGER IF NOT EXISTS persona_au AFTER UPDATE ON personas
-  //              BEGIN
-  //                  INSERT INTO personas_tfs (personas_tfs, rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-  //                  VALUES ('delete', old.id, old.nombre, old.apellido_paterno, old.apellido_materno, old.nombre_completo);
-  //                  INSERT INTO personas_tfs (rowid, nombre, apellido_paterno, apellido_materno, nombre_completo)
-  //                  VALUES (new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
-  //              END;`
-  //   return this.database.executeSql(sql, []);
-  // }
-
   createTriggerUpdateFTS(){
       let sql = `CREATE TRIGGER IF NOT EXISTS persona_au AFTER UPDATE ON personas
                  BEGIN
@@ -283,16 +258,6 @@ export class DatabaseService {
                      VALUES (new.rowid, new.id, new.nombre, new.apellido_paterno, new.apellido_materno, new.nombre_completo);
                  END;`
       return this.database.executeSql(sql, []);
-  }
-
-  createTriggerNoInsertDescarga(){
-    let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_descarga
-              BEFORE INSERT ON descarga
-              WHEN (SELECT COUNT(*) FROM descarga) >= 1
-              BEGIN
-                  SELECT RAISE(FAIL, 'only one row!');
-              END;`
-    return this.database.executeSql(sql,[]);
   }
 
   createTriggerBeforeUpdateFTS(){
@@ -315,6 +280,16 @@ export class DatabaseService {
 
   // }
 
+  createTriggerNoInsertDescarga(){
+    let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_descarga
+              BEFORE INSERT ON descarga
+              WHEN (SELECT COUNT(*) FROM descarga) >= 1
+              BEGIN
+                  SELECT RAISE(FAIL, 'only one row!');
+              END;`
+    return this.database.executeSql(sql,[]);
+  }
+
   createTableDescargaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS descarga(
@@ -325,16 +300,51 @@ export class DatabaseService {
 
   }
 
+  createTriggerNoInsertCasilla(){
+    let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_casilla
+              BEFORE INSERT ON casilla
+              WHEN (SELECT COUNT(*) FROM casilla) >= 1
+              BEGIN
+                  SELECT RAISE(FAIL, 'only one row!');
+              END;`
+    return this.database.executeSql(sql,[]);
+  }
+
   createTableCasillaConfig(){
     // let sql = 'CREATE TABLE IF NOT EXISTS personas(id INTEGER PRIMARY KEY AUTOINCREMENT, nombre_completo VARCHAR(255))';
     let sql = `CREATE TABLE IF NOT EXISTS casilla(
               id INTEGER PRIMARY KEY CHECK (id = 0),
-              status TEXT DEFAULT 'CERRADA',
-              finalizado INTEGER NOT NULL DEFAULT 0,
+              status TEXT,
+              finalizado BOOLEAN,
+              mensaje TEXT,
               fecha_apertura timestamp DATE DEFAULT (datetime('now','localtime')),
               fecha_cierre timestamp default current_timestamp)`;
     return this.database.executeSql(sql, []);
 
+  }
+
+  insertConfigCasilla(status:string, finalizado:boolean, mensaje:string){
+    let sql = `INSERT INTO casilla(
+              id,
+              status,
+              finalizado,
+              mensaje
+              ) VALUES (0,'${status}',${finalizado},'${mensaje}')`;
+
+    return this.database.executeSql(sql,[])
+  }
+
+  getConfigCasilla(){
+    let sql = `SELECT * FROM casilla`;
+
+    return this.database.executeSql(sql,[])
+  }
+
+  updateConfigCasilla(status:string, finalizado:boolean, mensaje:string){
+    let data = [status,finalizado,mensaje]
+    let sql = `UPDATE casilla SET status = ?, finalizado = ?, mensaje = ? WHERE id = 0`;
+
+    return this.database.executeSql(sql, data)
   }
 
   // createTableVotacion(){
@@ -541,6 +551,30 @@ export class DatabaseService {
     let sql = `SELECT token FROM usuario`;
 
     return this.database.executeSql(sql,[])
+  }
+
+  abrirCasilla(token:string){
+
+    this.token = token|| null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return  this.http.get<Casilla>(`${URL}/cartografia/casilla/abrir/0`,{headers});
+            
+  }
+
+  cerrarCasilla(token:string){
+    
+    this.token = token|| null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return this.http.get<Casilla>(`${URL}/cartografia/casilla/cerrar/0`,{headers});
+            
   }
     
 }

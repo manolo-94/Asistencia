@@ -74,3 +74,9 @@ export interface personaVoto {
   status?:boolean,
   fecha_creacion?:Date
 }
+
+export interface Casilla {
+  casilla: number;
+  abierta: boolean;
+  error?: any;
+}
