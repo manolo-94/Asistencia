@@ -21,6 +21,8 @@ export class BuscarComponent implements OnInit {
   total:number = 0;
   mensaje:string = null;
 
+  btnAddpersona = false;
+
   personaSeccion:PersonaSeccion[] = [];
 
   private status:number = 0;
@@ -33,7 +35,7 @@ export class BuscarComponent implements OnInit {
                private alertCtrl: AlertController) {}
 
   ngOnInit() {
-    this.mensaje = 'Resultados encontrados ' + this.total;
+    this.mensaje = 'Escribe un nombre para comenzar a buscar';
   }
 
   // async buscarPersona(event) {
@@ -69,15 +71,25 @@ export class BuscarComponent implements OnInit {
               // console.log('Se encontraron '+ resp.rows.length + ' resultados, necesitas ser mas especifico en tu busqueda')
               this.mensaje = 'Se encontraron '+ this.total + ' resultados, necesitas ser mas específico en tu busqueda.';
               this.buscando = false;
+              this.btnAddpersona = true;
             }else{
               
               for(let i = 0; i < resp.rows.length; i++){
                 // console.log(resp.rows.item(i));
                 this.personaSeccion.push(resp.rows.item(i));
               }
-              this.mensaje = 'Se encontraron '+ this.total + ' resultados.';
-              // this.mensaje = null;
-              this.buscando = false;
+              if(this.total != 0){
+                this.mensaje = 'Se encontraron '+ this.total + ' resultados.';
+                // this.mensaje = null;
+                this.buscando = false;
+                this.btnAddpersona = false;
+              }else{
+                this.mensaje = 'Se encontraron '+ this.total + ' resultados.';
+                // this.mensaje = null;
+                this.buscando = false;
+                this.btnAddpersona = true;
+              }
+              
             }
           })
           .catch(error => {
@@ -86,16 +98,17 @@ export class BuscarComponent implements OnInit {
     }else{
       this.total = 0;
       this.personaSeccion = [];
-      this.mensaje = 'Necesitas ser mas específico en tu busqueda.';
+      this.mensaje = 'Necesitas ser mas específico en tu busqueda en caso de no aparecer puedes agregarla manual mente';
+      this.btnAddpersona = true;
       // console.log('Necesitas ser mas especifico en tu busqueda')
     }
   }
 
-  async detalle(persona:Persona){
+  async detalle(){
     const modal = await this.modalCtrl.create({
       component: DetallepersonaComponent,
       componentProps:{
-        persona
+        
       }
     });
 
@@ -366,4 +379,8 @@ export class BuscarComponent implements OnInit {
     alert.present();
   }
 
+  addPersona(){
+    console.log('agregar persona');
+    
+  }
 }

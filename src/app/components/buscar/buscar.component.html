@@ -32,6 +32,30 @@
         </ion-row>
     </section>
 
+    <section *ngIf="btnAddpersona">
+        <ion-row>
+            <ion-fab bottom>
+                <ion-row text-center>
+                  <ion-col size="12">
+                    <ion-fab-button (click)="detalle()" size="small"><ion-icon name="person-add"></ion-icon></ion-fab-button>
+                  </ion-col>
+                </ion-row>
+            </ion-fab>
+        </ion-row>
+    </section>
+
+    <!-- <section *ngIf="btnAddpersona">
+        <ion-row class="ion-text-center">
+            <ion-col size="12">
+                <label for="">Agregar persona</label>
+            </ion-col>
+        </ion-row>
+    </section> -->
+
+    
+
+    
+
     <ion-list>
         <ion-item-sliding *ngFor="let persona of personaSeccion">
                  <!-- <ion-item-options side="start">
