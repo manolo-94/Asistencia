@@ -21,23 +21,23 @@
         
         <ion-row>
           <ion-col>
-            <ion-label>PRI</ion-label>
+            <ion-label>PARTIDO ACCIÓN NACIONAL (PAN)</ion-label>
           </ion-col>
         </ion-row>
 
         <ion-item>
           <ion-label color="primary">ALCALDÍA:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.pm_pan placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.df_pan placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO LOCAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.dl_pan placeholder="total de votos"></ion-input>
         </ion-item>
         
       </ion-card-content>
@@ -50,23 +50,23 @@
         
         <ion-row>
           <ion-col>
-            <ion-label>PAN</ion-label>
+            <ion-label>PARTIDO REVOLUCIONARIO INSTITUCIONAL (PRI)</ion-label>
           </ion-col>
         </ion-row>
 
         <ion-item>
           <ion-label color="primary">ALCALDÍA:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.pm_pri placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.df_pri placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO LOCAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.dl_pri placeholder="total de votos"></ion-input>
         </ion-item>
         
       </ion-card-content>
@@ -79,23 +79,82 @@
         
         <ion-row>
           <ion-col>
-            <ion-label>MORENA</ion-label>
+            <ion-label>PARTIDO DE LA REVOLUCIÓN DEMOCRATICA (PRD)</ion-label>
           </ion-col>
         </ion-row>
 
         <ion-item>
           <ion-label color="primary">ALCALDÍA:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.pm_prd placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.df_prd placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO LOCAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.dl_prd placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>PARTIDO VERDE ECOLOGISTA DE MEXICO (VERDE)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_verde placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_verde placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_verde placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>PARTIDO DEL TRABAJO (PT)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_pt placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_pt placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_pt placeholder="total de votos"></ion-input>
         </ion-item>
         
       </ion-card-content>
@@ -114,17 +173,17 @@
 
         <ion-item>
           <ion-label color="primary">ALCALDÍA:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.pm_mc placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.df_mc placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO LOCAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.dl_mc placeholder="total de votos"></ion-input>
         </ion-item>
         
       </ion-card-content>
@@ -137,30 +196,225 @@
         
         <ion-row>
           <ion-col>
-            <ion-label>PT</ion-label>
+            <ion-label>MORENA</ion-label>
           </ion-col>
         </ion-row>
 
         <ion-item>
           <ion-label color="primary">ALCALDÍA:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.pm_morena placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.df_morena placeholder="total de votos"></ion-input>
         </ion-item>
 
         <ion-item>
           <ion-label color="primary">DISTRITO LOCAL:</ion-label>
-          <ion-input placeholder="total de votos"></ion-input>
+          <ion-input [(ngModel)]=fromResultados.dl_morena placeholder="total de votos"></ion-input>
         </ion-item>
         
       </ion-card-content>
     </ion-card>
   </section>
 
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>NUEVA ALIANZA YUCATAN</ion-label>
+          </ion-col>
+        </ion-row>
 
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_na placeholder="total de votos"></ion-input>
+        </ion-item>
 
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_na placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>PARTIDO ENCUENTRO SOLIDARIO (PES)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_pes placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_pes placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_pes placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>REDES SOCIALES PROGRESISTAS (RSP)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_rsp placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_rsp placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_rsp placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>FUERZA POR MÉXICO</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_fpm placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_fpm placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_fpm placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>CANDIDATO INDEPEDIENTE/A (1)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_cia placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_cia placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_cia placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>CANDIDATO INDEPEDIENTE/A (2)</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_cib placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_cib placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_cib placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style="background-color: rgb(170, 201, 219); color:#0e0c0c;">
+        
+        <ion-row>
+          <ion-col>
+            <ion-label>CANDIDATO NO REGISTRADO/A</ion-label>
+          </ion-col>
+        </ion-row>
+
+        <ion-item>
+          <ion-label color="primary">ALCALDÍA:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.pm_nulos placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO FEDERAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.df_nulos placeholder="total de votos"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label color="primary">DISTRITO LOCAL:</ion-label>
+          <ion-input [(ngModel)]=fromResultados.dl_nulos placeholder="total de votos"></ion-input>
+        </ion-item>
+        
+      </ion-card-content>
+    </ion-card>
+  </section>
 
 </ion-content>

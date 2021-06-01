@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla, Incidencia } from '../interfaces/interfaces';
+import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla, Incidencia, Resultados } from '../interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
@@ -19,6 +19,8 @@ export class DatabaseService {
   token: string = null;
 
   incidencia:string = null;
+
+  private resultados:string = null;
 
    voto: Voto[] = [];
 
@@ -604,6 +606,22 @@ export class DatabaseService {
               fecha_envio = datetime('now','localtime') 
               WHERE id = ?;`;
     return this.database.executeSql(sql,data);
+  }
+
+  SendResultados(token:string, resultados:string){
+    
+    this.token = token|| null;
+    this.resultados = resultados || null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    const formData = new FormData();
+    formData.append('resultados', this.resultados);
+
+    return this.http.post<Resultados>(`${URL}/promovidos/votacion/resultado/add/`,formData,{headers});
+
   }
     
 }

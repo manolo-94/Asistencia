@@ -86,3 +86,9 @@ export interface Incidencia {
   error?: any;
   id: number;
 }
+
+export interface Resultados  {
+  procesado: boolean;
+  error?: any;
+  id: number;
+}
