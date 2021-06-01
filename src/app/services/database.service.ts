@@ -57,6 +57,8 @@ export class DatabaseService {
         this.createTriggerUpdateCierreCasilla();
 
         this.createTableVotacion();
+
+        this.createTableIncidencias();
       })
       .catch((e) => {
         console.log('Error al crear la base de datos ' + e);
@@ -83,6 +85,8 @@ export class DatabaseService {
     this.dropTableCasillaConfig();
     this.dropTableTriggerNoInsertCasilla();
     this.dropTableTriggerUpdateCierreCasilla();
+
+    this.dropTableIncidencias();
     
   }
 
@@ -99,6 +103,7 @@ export class DatabaseService {
     this.dropTableCasillaConfig();
     this.dropTableTriggerNoInsertCasilla();
     this.dropTableTriggerUpdateCierreCasilla();
+    
   }
 
   createInfoDescarga(){
@@ -548,6 +553,57 @@ export class DatabaseService {
 
     return this.http.post<Incidencia>(`${URL}/promovidos/votacion/incindecia/add/`,formData,{headers});
 
+  }
+
+  createTableIncidencias(){
+    let sql = `CREATE TABLE IF NOT EXISTS incidencias(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              procesado BOOLEAN,
+              mensaje TEXT,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')),
+              fecha_envio date);`;
+    
+    return this.database.executeSql(sql,[]);
+  }
+
+  dropTableIncidencias(){
+    let sql = `DROP TABLE IF EXISTS incidencias`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  saveIncidencia(procesado:boolean, mensaje:string){
+    let data = [procesado, mensaje]
+    let sql = `INSERT INTO incidencias(
+               procesado,
+               mensaje
+               ) VALUES (?, ?);`;
+    return this.database.executeSql(sql,data)
+  }
+
+  getIncidenciaById(id:number){
+    let data = [id];
+
+    let sql = `SELECT * from incidencias 
+              WHERE id = ?`;
+
+    return this.database.executeSql(sql, data);
+  }
+
+  getAllIncidencia(){
+
+    let sql = `SELECT * from incidencias`;
+
+    return this.database.executeSql(sql,[]);
+  }
+
+  updateIncidencia(procesado:boolean, mensaje:string, id:number){
+    let data = [procesado,mensaje,id];
+    let sql = `UPDATE incidencias 
+              SET procesado = ?, 
+              mensaje = ?, 
+              fecha_envio = datetime('now','localtime') 
+              WHERE id = ?;`;
+    return this.database.executeSql(sql,data);
   }
     
 }

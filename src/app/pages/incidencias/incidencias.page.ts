@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { NetworkService } from '../../services/network.service';
 import { DatabaseService } from '../../services/database.service';
@@ -14,10 +14,64 @@ export class IncidenciasPage implements OnInit {
 
   private token:string = null;
 
+  public enviados:number = 0;
+  public noenviados:number = 0;
+
+  procesado:any = [];
+  noprocesado:any =[];
+
   constructor(private networkServices: NetworkService,  
-              private databaseService: DatabaseService) { }
+              private databaseService: DatabaseService,
+              private ref: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.conteoInicidencias();
+    // this.ref.detectChanges();
+  }
+
+  conteoInicidencias(){
+
+    this.enviados = 0;
+    this.noenviados =0;
+    this.procesado = [];
+    this.noprocesado = [];
+
+    this.databaseService.getAllIncidencia()
+        .then(then =>{
+
+          if(then.rows.length > 0){
+            for (let i = 0; i < then.rows.length; i++){
+              console.log(then.rows.item(i));
+              if(then.rows.item(i)['procesado'] == 'true'){
+                this.procesado.push(then.rows.item(i)['id'])
+                // this.ref.detectChanges();
+              }
+              if(then.rows.item(i)['procesado'] == 'false'){
+                this.noprocesado.push(then.rows.item(i)['id'])
+                // this.ref.detectChanges();
+              }
+            }
+            
+            this.enviados = this.procesado.length;
+            this.noenviados = this.noprocesado.length; 
+            console.log(this.enviados,this.noenviados);
+            
+            // this.ref.detectChanges();
+          }else{
+            console.log('No se obtuvo registros');
+            this.enviados = 0;
+            this.noenviados = 0;
+            this.procesado = [];
+            this.noprocesado = [];
+            console.log(this.enviados,this.noenviados);
+            // this.ref.detectChanges();
+          }
+        })
+        .catch( err =>{
+          console.log(err);
+          console.log('no se pudo ejecutar la consulta');
+        })
+        // this.ref.detectChanges();
   }
 
   enviarIncidencia(){
@@ -59,12 +113,48 @@ export class IncidenciasPage implements OnInit {
                           .subscribe(resp =>{
                             console.log(resp);
                             
-                            console.log('incidencia enviado correctamente');
+                            // console.log('incidencia enviado correctamente');
                             Swal.fire(
-                              'Enviado!',
+                              'Enviado',
                               'Tu información se envió correctamente.',
                               'success'
                             )
+
+                            this.databaseService.saveIncidencia(true,msj)
+                                .then(resp =>{
+
+                                      this.conteoInicidencias();
+
+                                      Swal.fire(
+                                        'Guardado',
+                                        'Incidencia guardada y enviada correctamente',
+                                        'success'
+                                      )
+                                    })
+                                    .catch(err =>{
+                                      Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente'
+                                      })
+                                    })
+                                  
+                                // this.databaseService.getAllIncidencia()
+                                //     .then(then =>{
+                                //       if(then.rows.length > 0){
+
+                                //         for (let i = 0; i < then.rows.length; i++){
+                                //           console.log(then.rows.item(i));
+                                //         }
+                                //       }else{
+                                //         console.log('No se obtuvo registros');
+                                //       }
+                                //     })
+                                //     .catch( err =>{
+                                //       console.log(err);
+                                //       console.log('no se pudo ejecutar la consulta');
+
+                                //     })
                             
                           },err =>{
                             console.log(err);
@@ -75,18 +165,61 @@ export class IncidenciasPage implements OnInit {
                               text: 'No se pudo enviar tu incidencia, algo salio mal intenta de nuevo'
                             })
                           })
-                          
-                          
 
+                          // this.conteoInicidencias();
+                          // this.ref.detectChanges();
+                          
                     }
                   })
             },error =>{
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Verifica tu conexion a internet, para poder enviar tu incidencia, no te preocupes tu infromación sigue guardada en el telefono y mas tarde se pordra enviar'
-              })
+
+              this.databaseService.saveIncidencia(false,msj)
+                  .then(resp =>{
+
+                    this.conteoInicidencias();
+                    
+                    Swal.fire(
+                      'Guardado',
+                      'No se pudo enviar tu incidencia en este momento, no te preocupes tu información sigue guardada en el telefono, se enviara cuando tengas conexion a internet',
+                      'success'
+                    )
+                    
+                  })
+                  .catch(err =>{
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'No se pudo guardar tu incidencia correctamente intentalo de nuevo.'
+                    })
+                  })
+
+              // this.databaseService.getAllIncidencia()
+              //     .then(then =>{
+              //       if(then.rows.length > 0){
+                                  
+              //         for (let i = 0; i < then.rows.length; i++){
+              //           console.log(then.rows.item(i));
+              //         }
+              //       }else{
+              //         console.log('No se obtuvo registros');
+              //       }
+              //     })
+              //     .catch( err =>{
+              //       console.log(err);
+              //       console.log('no se pudo ejecutar la consulta correctamente');
+                    
+              //     })
+
+                // this.conteoInicidencias();
+                // this.ref.detectChanges();
+              // Swal.fire({
+              //   icon: 'error',
+              //   title: 'Oops...',
+              //   text: 'Verifica tu conexion a internet, para poder enviar tu incidencia, no te preocupes tu infromación sigue guardada en el telefono y mas tarde se pordra enviar'
+              // })
             })
+            // this.conteoInicidencias();
+            // this.ref.detectChanges();
       }
     })
   }
