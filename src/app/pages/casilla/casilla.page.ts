@@ -76,6 +76,8 @@ export class CasillaPage implements OnInit {
                     .then(then => {
                       this.status = true;
                       this.ref.detectChanges();
+
+                      let msj:string = 'Casilla abierta'
                       // console.log(then);
                     
                       // this.databaseService.getConfigCasilla()
@@ -84,6 +86,42 @@ export class CasillaPage implements OnInit {
                       //         console.log(result.rows.item(i));
                       //       }
                       //     })
+                      this.databaseService.getTokenUser()
+                      .then( then => {
+                        if(then.rows.length > 0){
+                              
+                          for (let i = 0; i < then.rows.length; i++){
+                            this.token = then.rows.item(i)['token'];
+                          }
+  
+                          this.databaseService.addIncidencia(this.token,msj)
+                              .subscribe(resp => {
+                                console.log('incidencia enviado correctamente')
+  
+                                this.databaseService.saveIncidencia(true,msj)
+                                  .then(resp =>{
+                                    console.log('Incidencia guardada y enviada correctamente');
+                                  })
+                                  .catch(err =>{
+                                    console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
+                                  })
+                              },err =>{
+                                console.log(err);
+                                console.log('algo salio mal');
+                                this.databaseService.saveIncidencia(false,msj)
+                                  .then(resp =>{
+                                    console.log('Incidencia guardada y enviada correctamente');
+                                  })
+                                  .catch(err =>{
+                                    console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
+                                  })
+                              })
+                        }
+                      })
+                      .catch( err => {
+                        console.log('No se encontro el Token del usuario');
+                      })
+  
 
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
@@ -197,6 +235,41 @@ export class CasillaPage implements OnInit {
                 //         console.log(result.rows.item(i));
                 //       }
                 //     })
+                this.databaseService.getTokenUser()
+                    .then( then => {
+                      if(then.rows.length > 0){
+                            
+                        for (let i = 0; i < then.rows.length; i++){
+                          this.token = then.rows.item(i)['token'];
+                        }
+
+                        this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
+                            .subscribe(resp => {
+                              console.log('incidencia enviado correctamente')
+
+                              this.databaseService.saveIncidencia(true,'Casilla cerrada: Motivo: '+msj)
+                                .then(resp =>{
+                                  console.log('Incidencia guardada y enviada correctamente');
+                                })
+                                .catch(err =>{
+                                  console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
+                                })
+                            },err =>{
+                              console.log(err);
+                              console.log('algo salio mal');
+                              this.databaseService.saveIncidencia(false,'Casilla cerrada: Motivo: '+msj)
+                                .then(resp =>{
+                                  console.log('Incidencia guardada y enviada correctamente');
+                                })
+                                .catch(err =>{
+                                  console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
+                                })
+                            })
+                      }
+                    })
+                    .catch( err => {
+                      console.log('No se encontro el Token del usuario');
+                    })
 
                 this.networkService.getNetworkTestRequest()
                     .subscribe(success =>{ 
