@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, merge, of, fromEvent} from 'rxjs';
 import { Network } from '@ionic-native/network/ngx';
-import { ToastController, Platform } from '@ionic/angular';
+import { ToastController, Platform, AlertController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { mapTo } from 'rxjs/operators';
+import { DatabaseService } from './database.service';
 
 // export enum  ConnectionStatus {
 //    Online,
@@ -73,14 +74,42 @@ export class NetworkService {
   constructor(
         private network: Network,
         private platform: Platform,
-        private http: HttpClient) {
+        private http: HttpClient,
+        private alertController: AlertController,
+        private databaseService: DatabaseService) {
 
 
           if (this.platform.is('cordova')) {
             // on Device
             this.network.onConnect().subscribe(() => {
-                console.log('network was connected :-)');
+                console.log('network was connected 1 :-)');
                 this.hasConnection.next(true);
+
+                // this.databaseService.getVotacion()
+                //     .then(result =>{
+                //         let noEnviados = []
+                //         // let noEnviados = []
+                //         // if(result.rows.length > 0){
+                //         //     for (let i = 0; i < result.rows.length; i++){
+                //         //         console.log(result.rows.item(i)['status']);
+                //         //         if(result.rows.item(i)['status'] == false){
+                //         //             noEnviados.push(result.rows.item(i)['status']);
+                //         //         }
+
+                //         //         console.log(noEnviados.length);
+                                
+                //         //         if(status.length > 0){
+                //         //             this.presentAlertConfirm();
+                //         //         } 
+                //         //       }
+                //         // }
+                //         for(let i = 0; i < result.rows.length; i++){
+                //           console.log(result.rows.item(i));
+                //         }
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                //     })
                 return;
             });
             this.network.onDisconnect().subscribe(() => {
@@ -99,7 +128,30 @@ export class NetworkService {
             this.online.subscribe((isOnline) =>{
                 if (isOnline) {
                     this.hasConnection.next(true);
-                   console.log('network was connected :-)');
+                   console.log('network was connected 2 :-)');
+
+                //    this.databaseService.getVotacion()
+                //     .then(result =>{
+                //         let noEnviados = []
+                //         if(result.rows.length > 0){
+                //             for (let i = 0; i < result.rows.length; i++){
+                //                 console.log(result.rows.item(i)['status']);
+                //                 if(result.rows.item(i)['status'] == false){
+                //                     noEnviados.push(result.rows.item(i)['status']);
+                //                 }
+
+                //                 console.log(noEnviados.length);
+                                
+                //                 if(status.length > 0){
+                //                     this.presentAlertConfirm();
+                //                 }
+                //               }
+                //         }
+                //     })
+                //     .catch(err => {
+                //         console.log(err);
+                        
+                //     })
                 } else {
                     console.log('network was disconnected :-(');
                     this.hasConnection.next(false);
@@ -141,6 +193,32 @@ export class NetworkService {
             return;
        }
     }
+
+    async presentAlertConfirm() {
+        const alert = await this.alertController.create({
+          cssClass: 'my-custom-class',
+          header: 'Tienes información para enviar',
+          message: '¿Quieres enviarla ahora?',
+          buttons: [
+            {
+              text: 'No',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: (blah) => {
+                console.log('Confirm Cancel: blah');
+
+              }
+            }, {
+              text: 'Si',
+              handler: () => {
+                console.log('Confirm Okay');
+              }
+            }
+          ]
+        });
+    
+        await alert.present();
+      }
 
 
 }

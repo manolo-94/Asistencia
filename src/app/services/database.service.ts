@@ -478,6 +478,18 @@ export class DatabaseService {
 
   }
 
+  reenviarPersonaVoto(persona_id:number, token:string){
+    
+    this.token = token|| null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return this.http.get<Voto>(`${URL}/personas/persona/voto/`+persona_id,{headers});
+
+  }
+
   addVotacion(id_persona:number,nombre_completo:string,status:number){
     let data = [id_persona, nombre_completo, status]
     let sql = `INSERT INTO votacion(
@@ -487,6 +499,7 @@ export class DatabaseService {
               ) VALUES (?,?,?)`;
     return this.database.executeSql(sql, data);
   }
+
 
   getVotacion(){
     let sql = `SELECT * FROM votacion ORDER BY fecha_guardado DESC`;
@@ -785,6 +798,11 @@ export class DatabaseService {
     return this.database.executeSql(sql, data)
   }
 
+  updateVotacion(id_persona:number,status:number){
+    let data = [status,id_persona]
+    let sql = `UPDATE votacion SET status = ? WHERE id_persona = ?`;
+    return this.database.executeSql(sql, data);
+  }
 
     
   ping(token:string){
