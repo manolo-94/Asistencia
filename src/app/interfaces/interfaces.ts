@@ -92,3 +92,9 @@ export interface Resultados  {
   error?: any;
   id: number;
 }
+
+export interface PromovidoNoLN {
+  procesado: boolean;
+  error?: any;
+  id: number;
+}

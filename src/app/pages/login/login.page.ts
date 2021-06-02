@@ -93,7 +93,7 @@ export class LoginPage implements OnInit {
 
     if (fLogin.invalid){return;}
 
-    await this.databaseService.validateUser(this.loginUser.username,this.loginUser.password)
+    await this.databaseService.validateUser(this.registerUser.username,this.registerUser.password)
         .then(then =>{
 
           let status: boolean = false;
@@ -113,12 +113,12 @@ export class LoginPage implements OnInit {
               this.networkService.getNetworkTestRequest()
                 .subscribe( success => {
                   // si tenemos acceso a internet o al servidor tratamos de obtener nuestro token
-                  this.usuarioService.getToken(this.loginUser.username, this.loginUser.password)
+                  this.usuarioService.getToken(this.registerUser.username, this.registerUser.password)
                       .subscribe(resp =>{
                         // si nuestro usuario y contraseña son validos obtendremos nuestro token y guardaremos la informacion en el telefono
                         // e iniciaremos la app
                         // console.log(resp['auth_token'])
-                        this.databaseService.saveUser(this.loginUser.username,this.loginUser.password,resp['auth_token'],true)
+                        this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
                               // this.uiService.alertaInformativa('Usuario guardado correctamente')
@@ -144,7 +144,7 @@ export class LoginPage implements OnInit {
             this.networkService.getNetworkTestRequest()
                 .subscribe( success => {
                   // si tenemos acceso a internet o al servidor tratamos de obtener nuestro token
-                  this.usuarioService.getToken(this.loginUser.username, this.loginUser.password)
+                  this.usuarioService.getToken(this.registerUser.username, this.registerUser.password)
                       .subscribe(resp =>{
                         //Eliminamos todos la info del usuario logueado anteriormente
                         this.databaseService.deleteInfoDescarga();
@@ -164,7 +164,7 @@ export class LoginPage implements OnInit {
                         // si nuestro usuario y contraseña son validos obtendremos nuestro token y guardaremos la informacion en el telefono
                         // e iniciaremos la app
                         // console.log(resp['auth_token'])
-                        this.databaseService.saveUser(this.loginUser.username,this.loginUser.password,resp['auth_token'],true)
+                        this.databaseService.saveUser(this.registerUser.username,this.registerUser.password,resp['auth_token'],true)
                             .then( then => {
                               // console.log('usuario guardado correctamente');
                               // this.uiService.alertaInformativa('Usuario guardado correctamente')

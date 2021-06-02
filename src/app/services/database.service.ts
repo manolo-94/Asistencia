@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { Platform } from '@ionic/angular';
-import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla, Incidencia, Resultados } from '../interfaces/interfaces';
+import { PersonaLN, PersonasObject, PersonaSeccion, Voto, Casilla, Incidencia, Resultados, PromovidoNoLN } from '../interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Storage } from '@ionic/storage';
@@ -621,6 +621,22 @@ export class DatabaseService {
     formData.append('resultados', this.resultados);
 
     return this.http.post<Resultados>(`${URL}/promovidos/votacion/resultado/add/`,formData,{headers});
+
+  }
+
+  addPromovidoNoLN(token:string, data:any){
+    
+    this.token = token|| null;
+    this.resultados = data || null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    const formData = new FormData();
+    formData.append('persona', this.resultados);
+
+    return this.http.post<PromovidoNoLN>(`${URL}/promovidos/votacion/votante/add/`,formData,{headers});
 
   }
     
