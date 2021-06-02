@@ -118,42 +118,120 @@ export class DetallepersonaComponent implements OnInit {
 
            json = JSON.stringify(formData);
           
-          console.log(json);
+          // console.log(json);
 
-          this.database.getTokenUser()
-              .then( then => {
-                // console.log(then)
-                if(then.rows.length > 0){
-                  for (let i = 0; i < then.rows.length; i++){
-                    // console.log(then.rows.item(i)['token']);
-                  
-                    this.token = then.rows.item(i)['token'];
-                  }
-                
-                  this.database.addPromovidoNoLN(this.token,json)
-                      .subscribe(resp => {
-                        console.log(resp);
-                        Swal.fire(
-                          'Información guardada correctamente.',
-                          '',
-                          'success'
-                        )
-                        
-                        
-                      }, err => {
-                        console.log(err);
-                        // console.log('No se pudo agregar');
-                        Swal.fire({
-                          icon: 'error',
-                          title: 'Oops...',
-                          text: 'No se pudo agregar correctamente.'
+          this.networkService.getNetworkTestRequest()
+            .subscribe(success =>{ 
+              this.database.getTokenUser()
+                  .then( then => {
+                    // console.log(then)
+                    if(then.rows.length > 0){
+                      for (let i = 0; i < then.rows.length; i++){
+                        // console.log(then.rows.item(i)['token']);
+                      
+                        this.token = then.rows.item(i)['token'];
+                      }
+                    
+                      this.database.addPromovidoNoLN(this.token,json)
+                          .subscribe(resp => {
+                            console.log(resp);
+                            Swal.fire(
+                              'Información guardada correctamente.',
+                              '',
+                              'success'
+                            )
+                            
+                            this.database.savePersonaNoLN(true,json)
+                                .then(then =>{
+                                  console.log('Información enviada y guardada correctamen');
+                                  
+                                  this.database.getAllPersonaNoLNB()
+                                      .then(then =>{
+                                        if(then.rows.length > 0){
+
+                                          // for (let i = 0; i < then.rows.length; i++){
+                                          //   console.log(then.rows.item(i));
+                                          // }
+                                          console.log('si hay registros');
+                                          
+                                        }else{
+                                          console.log('No se obtuvo registros');
+                                        }
+                                      })
+
+                                })
+                                .catch(err =>{
+                                  console.log(('No se pudo ejecutar la consulta correctamente'));
+                                  
+                                })
+                            
+                          }, err => {
+                            console.log(err);
+                            // console.log('No se pudo agregar');
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: 'No se pudo enviar la información por el momento, no te preocupes la intentaremos enviar mas tarde.'
+                            })
+
+                            this.database.savePersonaNoLN(true,json)
+                                .then(then =>{
+                                  console.log('Información enviada y guardada correctamen');
+                                  
+                                  this.database.getAllPersonaNoLNB()
+                                      .then(then =>{
+                                        if(then.rows.length > 0){
+
+                                          // for (let i = 0; i < then.rows.length; i++){
+                                          //   console.log(then.rows.item(i));
+                                          // }
+                                          console.log('si hay registros');
+                                        }else{
+                                          console.log('No se obtuvo registros');
+                                        }
+                                      })
+
+                                })
+                                .catch(err =>{
+                                  console.log(('No se pudo ejecutar la consulta correctamente'));
+                                  
+                                })
+
+                          })
+
+                    }
+                  })
+                  .catch(err => {
+                    console.log('no se realizo la consulta');
+
+                  })
+            }, err =>{
+              Swal.fire(
+                'Información guardada correctamente.',
+                '',
+                'success'
+              )
+              this.database.savePersonaNoLN(false,json)
+                  .then(then =>{
+                    console.log('Información guardada correctamen');
+                    
+                    this.database.getAllPersonaNoLNB()
+                        .then(then =>{
+                          if(then.rows.length > 0){
+                            // for (let i = 0; i < then.rows.length; i++){
+                            //   console.log(then.rows.item(i));
+                            // }
+                            console.log('si hay registros');
+                          }else{
+                            console.log('No se obtuvo registros');
+                          }
                         })
-                      })
-                }
-              })
-              .catch(err => {
-                console.log('no realizar la consulta');
-              })
+                  })
+                  .catch(err =>{
+                    console.log(('No se pudo ejecutar la consulta correctamente'));
+                    
+                  })
+            })
               
             
         this.modalCtrl.dismiss();

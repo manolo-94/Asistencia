@@ -61,6 +61,8 @@ export class DatabaseService {
         this.createTableVotacion();
 
         this.createTableIncidencias();
+
+        this.createTablePersonaNoLN();
       })
       .catch((e) => {
         console.log('Error al crear la base de datos ' + e);
@@ -89,6 +91,8 @@ export class DatabaseService {
     this.dropTableTriggerUpdateCierreCasilla();
 
     this.dropTableIncidencias();
+
+    this.dropTablePersonaNoLN();
     
   }
 
@@ -638,6 +642,57 @@ export class DatabaseService {
 
     return this.http.post<PromovidoNoLN>(`${URL}/promovidos/votacion/votante/add/`,formData,{headers});
 
+  }
+
+  createTablePersonaNoLN(){
+    let sql = `CREATE TABLE IF NOT EXISTS personanoln(
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              procesado BOOLEAN,
+              value TEXT,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')),
+              fecha_envio date);`;
+    
+    return this.database.executeSql(sql,[]);
+  }
+
+  dropTablePersonaNoLN(){
+    let sql = `DROP TABLE IF EXISTS personanoln`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  savePersonaNoLN(procesado:boolean, value:any){
+    let data = [procesado, value]
+    let sql = `INSERT INTO personanoln(
+               procesado,
+               value
+               ) VALUES (?, ?);`;
+    return this.database.executeSql(sql,data)
+  }
+
+  getAllPersonaNoLNB(){
+
+    let sql = `SELECT * from personanoln`;
+
+    return this.database.executeSql(sql,[]);
+  }
+
+  getPersonaNoLNById(id:number){
+    let data = [id];
+
+    let sql = `SELECT * from personanoln 
+              WHERE id = ?`;
+
+    return this.database.executeSql(sql, data);
+  }
+
+  updatePersonaNoLNB(procesado:boolean, value:string, id:number){
+    let data = [procesado,value,id];
+    let sql = `UPDATE personanoln 
+              SET procesado = ?, 
+              value = ?, 
+              fecha_envio = datetime('now','localtime') 
+              WHERE id = ?;`;
+    return this.database.executeSql(sql,data);
   }
     
 }
