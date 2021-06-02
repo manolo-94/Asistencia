@@ -21,17 +21,54 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
-    <ion-label position="floating">Nombre(s)</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Apellido paterno</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="floating">Apellido materno</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
+
+  <!-- <form [formGroup]="form">
+    <ion-item>
+      <ion-label position="floating">Nombre(s)</ion-label>
+      <ion-input formControlName='nombre' [(ngModel)]="newPerson.nombre"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Apellido paterno</ion-label>
+      <ion-input [(ngModel)]="newPerson.apellido_paterno"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Apellido materno</ion-label>
+      <ion-input [(ngModel)]="newPerson.apellido_materno"></ion-input>
+    </ion-item>
+  </form> -->
+
+  <div class="container">
+    <form [formGroup]="form" (ngSubmit)="guardar()">
+        <!-- <div class="form-group">
+          <input class="form-control" placeholder="nombre" formControlName="nombre">
+        </div> -->
+        <ion-item>
+          <ion-label position="floating">Nombre(s)</ion-label>
+          <ion-input formControlName='nombre' class="form-control"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Apellido paterno</ion-label>
+          <ion-input formControlName='apellido_paterno'></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Apellido materno</ion-label>
+          <ion-input formControlName='apellido_materno'></ion-input>
+        </ion-item>
+
+        <!-- <div class="form-group input-group-lg">
+            <input class="form-control" placeholder="Apellido paterno" formControlName="apellido_paterno">
+        </div>
+
+        <div class="form-group input-group-lg">
+          <input class="form-control" placeholder="Apellido materno" formControlName="apellido_materno">
+      </div>
+
+        <div class="form-group">
+            <button class="btn btn-danger btn-block btn-lg">Guardar</button>
+        </div> -->
+    </form>
+</div>
+
 </ion-content>
 

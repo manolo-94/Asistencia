@@ -8,6 +8,7 @@ import { DetailencuestaComponent } from './detailencuesta/detailencuesta.compone
 import { BuscarComponent } from './buscar/buscar.component';
 import { DetallepersonaComponent } from './detallepersona/detallepersona.component';
 import { MenuComponent } from './menu/menu.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -31,7 +32,9 @@ import { MenuComponent } from './menu/menu.component';
   ],
   imports: [
     CommonModule,
-    IonicModule
+    IonicModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class ComponentsModule { }
