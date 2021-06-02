@@ -8,12 +8,15 @@ import { Usario } from '../../interfaces/interfaces';
 import { NetworkService } from '../../services/network.service';
 import { DatabaseService } from '../../services/database.service';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+
+  private token:string = null;
 
 
   @ViewChild('sliderPrincipal', {static: true}) slider: IonSlides;
@@ -86,6 +89,7 @@ export class LoginPage implements OnInit {
     /* this.slides.lockSwipes(true); */
     //bloquear la pantalla para que no se deslice
     this.slider.lockSwipes(true);
+    
   }
 
   async login( fLogin: NgForm ){

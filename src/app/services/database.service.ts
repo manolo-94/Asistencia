@@ -784,5 +784,18 @@ export class DatabaseService {
 
     return this.database.executeSql(sql, data)
   }
+
+
     
+  ping(token:string){
+    
+    this.token = token|| null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return this.http.get<any>(`${URL}/promovidos/votacion/resultado/add/`,{headers});
+
+  }
 }
