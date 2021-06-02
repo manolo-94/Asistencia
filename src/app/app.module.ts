@@ -16,6 +16,7 @@ import { SQLite } from '@ionic-native/sqlite/ngx'
 import { Network } from '@ionic-native/network/ngx';
 import { ComponentsModule } from './components/components.module';
 import { ResultadosPageModule } from './pages/resultados/resultados.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -25,11 +26,15 @@ import { ResultadosPageModule } from './pages/resultados/resultados.module';
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule,
     IonicStorageModule.forRoot(),
     HttpClientModule,
+    
     TablinksPageModule,
     ComponentsModule,
+    
   ],
   providers: [
     SQLite, 

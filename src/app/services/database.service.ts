@@ -612,7 +612,7 @@ export class DatabaseService {
     return this.database.executeSql(sql,data);
   }
 
-  SendResultados(token:string, resultados:string){
+  SendResultados(token:string, resultados:any){
     
     this.token = token|| null;
     this.resultados = resultados || null;
