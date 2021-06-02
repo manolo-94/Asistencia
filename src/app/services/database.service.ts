@@ -22,6 +22,8 @@ export class DatabaseService {
 
   private resultados:string = null;
 
+  private persona:string = null;
+
    voto: Voto[] = [];
 
   private personaSeccion: PersonaSeccion[] = [];
@@ -631,14 +633,14 @@ export class DatabaseService {
   addPromovidoNoLN(token:string, data:any){
     
     this.token = token|| null;
-    this.resultados = data || null;
+    this.persona = data || null;
 
     const headers = new HttpHeaders({
       'Authorization' : 'Token ' + this.token
     });
 
     const formData = new FormData();
-    formData.append('persona', this.resultados);
+    formData.append('persona', this.persona);
 
     return this.http.post<PromovidoNoLN>(`${URL}/promovidos/votacion/votante/add/`,formData,{headers});
 
