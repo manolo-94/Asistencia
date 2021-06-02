@@ -518,57 +518,248 @@ export class ResultadosPage implements OnInit {
 
         json =JSON.stringify(formData);
 
-        console.log(json)
+        // console.log(json)
 
-        this.networkServices.getNetworkTestRequest()
-            .subscribe(success => {
-              this.databaseServices.getTokenUser()
-                  .then(then => {
-                    if(then.rows.length > 0){
+        this.databaseServices.getConfigResultados()
+            .then(result =>{
 
-                      for (let i = 0; i < then.rows.length; i++){
-                        // console.log(then.rows.item(i)['token']);
-                        this.token = then.rows.item(i)['token'];
-                      }
+              let procesado:boolean;
 
-                      this.databaseServices.SendResultados(this.token,json)
-                          .subscribe(resp => {
-                            console.log(resp)
-                            // console.log('se envio correctamente la información');
+              if(result.rows.length > 0){
+                // for (let i = 0; i < result.rows.length; i++){
+                //   procesado = result.rows.item(i)['procesado']
+                // }
+
+                this.networkServices.getNetworkTestRequest()
+                    .subscribe(success => {
+                      this.databaseServices.getTokenUser()
+                          .then(then => {
+                            if(then.rows.length > 0){
+                              console.log('hay registros');
+                              
+                            
+                              for (let i = 0; i < then.rows.length; i++){
+                                // console.log(then.rows.item(i)['token']);
+                                this.token = then.rows.item(i)['token'];
+                              }
+                            
+                              this.databaseServices.SendResultados(this.token,json)
+                                  .subscribe(resp => {
+                                    console.log(resp)
+                                    // console.log('se envio correctamente la información');
+                                    
+                                    this.databaseServices.updateConfigResultados(true,json)
+                                        .then(resp =>{
+                                          Swal.fire(
+                                            'Enviado!',
+                                            'Tu información se envió y actualizo correctamente.',
+                                            'success'
+                                          )
+                                        })
+                                        .catch(err =>{
+                                          console.log(err);
+                                          Swal.fire(
+                                            'Enviado!',
+                                            'Tu información se envió correctamente..',
+                                            'success'
+                                          )
+                                        })
+
+                                  },err => {
+                                    console.log(err);
+                                    console.log('algo salio mal');
+                                    Swal.fire({
+                                      icon: 'error',
+                                      title: 'Oops...',
+                                      text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet'
+                                    })
+                                  })
+
+                                  this.databaseServices.getConfigResultados()
+                                      .then(result => {
+                                        for (let i = 0; i < result.rows.length; i++){
+                                          console.log(result.rows.item(i));
+                                        }
+                                      })
+                                
+                            }else{
+                              console.log('no se encontro resultados');
+
+                            }
+                          })
+                          .catch( err => {
+                            console.log(err);
+                            console.log('no ejecutar la consulta');
+                          })
+                    },err => {
+                      console.log('No tienes internet');
+                      this.databaseServices.updateConfigResultados(false,json)
+                          .then(resp =>{
                             Swal.fire(
-                              'Enviado!',
-                              'Tu información se envió correctamente.',
+                              'Actualizado',
+                              'Tu información se actualizo correctamente.',
                               'success'
                             )
-                          },err => {
-                            console.log(err);
-                            console.log('algo salio mal');
+                          })
+                          .catch(err =>{
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos'
+                              text: 'Tu información no se pudo actualizar correctamente.'
                             })
                           })
-                      
-                    }else{
-                      console.log('no se encontro resultados');
-                      
-                    }
-                  })
-                  .catch( err => {
-                    console.log(err);
-                    console.log('no ejecutar la consulta');
-                  })
-            },err => {
-              console.log('No tienes internet');
-              
+
+                      this.databaseServices.getConfigResultados()
+                          .then(result => {
+                            for (let i = 0; i < result.rows.length; i++){
+                              console.log(result.rows.item(i));
+                            }
+                          })
+
+                    })
+                
+              }else{
+                console.log('no hay registros');
+                
+                this.networkServices.getNetworkTestRequest()
+                    .subscribe(success => {
+                      this.databaseServices.getTokenUser()
+                          .then(then => {
+                            if(then.rows.length > 0){
+                            
+                              for (let i = 0; i < then.rows.length; i++){
+                                // console.log(then.rows.item(i)['token']);
+                                this.token = then.rows.item(i)['token'];
+                              }
+                            
+                              this.databaseServices.SendResultados(this.token,json)
+                                  .subscribe(resp => {
+                                    console.log(resp)
+                                    // console.log('se envio correctamente la información');
+                                    // Swal.fire(
+                                    //   'Enviado!',
+                                    //   'Tu información se envió correctamente.',
+                                    //   'success'
+                                    // )
+                                    this.databaseServices.insertConfigResultados(true,json)
+                                        .then(then => {
+                                          Swal.fire(
+                                            'Enviado!',
+                                            'Tu información se envió y guardo correctamente.',
+                                            'success'
+                                          )
+                                        })
+                                        .catch(err => {
+                                          console.log(err);
+                                          
+                                          Swal.fire(
+                                            'Guardado',
+                                            'Tu información se envió correctamente.',
+                                            'success'
+                                          )
+                                        })
+                                    
+                                    this.databaseServices.getConfigResultados()
+                                        .then(result => {
+                                          for (let i = 0; i < result.rows.length; i++){
+                                            console.log(result.rows.item(i));
+                                          }
+                                        })
+
+                                  },err => {
+                                    console.log(err);
+                                    console.log('algo salio mal');
+                                    Swal.fire({
+                                      icon: 'error',
+                                      title: 'Oops...',
+                                      text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos'
+                                    })
+                                  })
+                                
+                            }else{
+                              console.log('no se encontro resultados');
+                              
+                            }
+                          })
+                          .catch( err => {
+                            console.log(err);
+                            console.log('no ejecutar la consulta');
+                          })
+                    },err => {
+                      console.log('No tienes internet');
+                      this.databaseServices.insertConfigResultados(true,json)
+                          .then(then => {
+                            Swal.fire(
+                              'Guardado',
+                              'Tu información se guardo correctamente.',
+                              'success'
+                            )
+                          })
+                          .catch(err => {
+                            console.log(err);
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: 'Tu información no se pudo guardar correctamente.'
+                            })
+                          })
+
+                      this.databaseServices.getConfigResultados()
+                          .then(result => {
+                            for (let i = 0; i < result.rows.length; i++){
+                              console.log(result.rows.item(i));
+                            }
+                          })
+                    })
+
+              }
+
             })
 
-        // Swal.fire(
-        //   'Enviado!',
-        //   'Tu información se envió correctamente.',
-        //   'success'
-        // )
+        // this.networkServices.getNetworkTestRequest()
+        //     .subscribe(success => {
+        //       this.databaseServices.getTokenUser()
+        //           .then(then => {
+        //             if(then.rows.length > 0){
+
+        //               for (let i = 0; i < then.rows.length; i++){
+        //                 // console.log(then.rows.item(i)['token']);
+        //                 this.token = then.rows.item(i)['token'];
+        //               }
+
+        //               this.databaseServices.SendResultados(this.token,json)
+        //                   .subscribe(resp => {
+        //                     console.log(resp)
+        //                     // console.log('se envio correctamente la información');
+        //                     Swal.fire(
+        //                       'Enviado!',
+        //                       'Tu información se envió correctamente.',
+        //                       'success'
+        //                     )
+        //                   },err => {
+        //                     console.log(err);
+        //                     console.log('algo salio mal');
+        //                     Swal.fire({
+        //                       icon: 'error',
+        //                       title: 'Oops...',
+        //                       text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos'
+        //                     })
+        //                   })
+                      
+        //             }else{
+        //               console.log('no se encontro resultados');
+                      
+        //             }
+        //           })
+        //           .catch( err => {
+        //             console.log(err);
+        //             console.log('no ejecutar la consulta');
+        //           })
+        //     },err => {
+        //       console.log('No tienes internet');
+              
+        //     })
+
       }
     })
   }

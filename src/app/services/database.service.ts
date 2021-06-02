@@ -65,6 +65,10 @@ export class DatabaseService {
         this.createTableIncidencias();
 
         this.createTablePersonaNoLN();
+
+        this.createTableResultados();
+        this.createTriggerNoInsertResultados();
+        this.createTriggerUpdateFechaResultados();
       })
       .catch((e) => {
         console.log('Error al crear la base de datos ' + e);
@@ -95,6 +99,10 @@ export class DatabaseService {
     this.dropTableIncidencias();
 
     this.dropTablePersonaNoLN();
+
+    this.dropTableResultados();
+    this.dropTriggerNoInsertResultados();
+    this.dropTriggerUpdateFechaResultados();
     
   }
 
@@ -111,6 +119,10 @@ export class DatabaseService {
     this.dropTableCasillaConfig();
     this.dropTableTriggerNoInsertCasilla();
     this.dropTableTriggerUpdateCierreCasilla();
+
+    this.dropTableResultados();
+    this.dropTriggerNoInsertResultados();
+    this.dropTriggerUpdateFechaResultados();    
     
   }
 
@@ -127,6 +139,10 @@ export class DatabaseService {
     this.createTableCasillaConfig();
     this.createTriggerNoInsertCasilla();
     this.createTriggerUpdateCierreCasilla();
+
+    this.createTableResultados()
+    this.createTriggerNoInsertResultados();
+    this.createTriggerUpdateFechaResultados();
 
   }
 
@@ -695,6 +711,78 @@ export class DatabaseService {
               fecha_envio = datetime('now','localtime') 
               WHERE id = ?;`;
     return this.database.executeSql(sql,data);
+  }
+
+  createTableResultados(){
+    let sql = `CREATE TABLE IF NOT EXISTS resultados(
+              id INTEGER PRIMARY KEY CHECK (id = 0),
+              procesado BOOLEAN,
+              value TEXT,
+              fecha_guardado timestamp DATE DEFAULT (datetime('now','localtime')),
+              fecha_actualizacion timestamp DATE DEFAULT (datetime('now','localtime')))`;
+    return this.database.executeSql(sql, []);
+
+  }
+
+  dropTableResultados(){
+    let sql = `DROP TABLE IF EXISTS resultados`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  createTriggerNoInsertResultados(){
+    let sql = `CREATE TRIGGER IF NOT EXISTS config_no_insert_resultados
+              BEFORE INSERT ON resultados
+              WHEN (SELECT COUNT(*) FROM resultados) >= 1
+              BEGIN
+                  SELECT RAISE(FAIL, 'only one row!');
+              END;`
+    return this.database.executeSql(sql,[]);
+  }
+
+  
+  
+  createTriggerUpdateFechaResultados(){
+
+    let sql = `CREATE TRIGGER if NOT EXISTS config_update_last_time_resultados	
+                AFTER UPDATE on resultados
+                BEGIN 
+                UPDATE resultados SET fecha_actualizacion = datetime('now','localtime') WHERE id = 0;
+                end;`
+
+    return this.database.executeSql(sql,[])
+  }
+
+  dropTriggerNoInsertResultados(){
+    let sql = `DROP TRIGGER IF EXISTS config_no_insert_resultados`;
+    return this.database.executeSql(sql, []);  
+  }
+  
+  dropTriggerUpdateFechaResultados(){
+    let sql = `DROP TRIGGER IF EXISTS config_update_last_time_resultados`;
+    return this.database.executeSql(sql, []);  
+  }
+
+  insertConfigResultados(procesado:boolean, value:any){
+    let sql = `INSERT INTO resultados(
+              id,
+              procesado,
+              value
+              ) VALUES (0,${procesado},'${value}')`;
+
+    return this.database.executeSql(sql,[])
+  }
+
+  getConfigResultados(){
+    let sql = `SELECT * FROM resultados`;
+
+    return this.database.executeSql(sql,[])
+  }
+
+  updateConfigResultados(procesado:boolean, value:any){
+    let data = [procesado, value]
+    let sql = `UPDATE resultados SET procesado = ?, value = ? WHERE id = 0`;
+
+    return this.database.executeSql(sql, data)
   }
     
 }
