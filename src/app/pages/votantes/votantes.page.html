@@ -18,6 +18,9 @@
     <ion-card>
       <ion-card-content text-center style=" color:#0e0c0c;">
         <ion-row>
+          <ion-col text-center size="12">
+            <ion-label> Personas que aparecen en el listado nominal</ion-label>
+          </ion-col>
           <ion-col size="12">
             <ion-label> Enviados : {{enviados}}</ion-label>
           </ion-col>
@@ -29,6 +32,27 @@
     </ion-card>
     
   </section>
+
+  <section>
+    <ion-card>
+      <ion-card-content text-center style=" color:#0e0c0c;">
+        <ion-row>
+          <ion-col text-center size="12">
+            <ion-label> Personas agregadas</ion-label>
+          </ion-col>
+          <ion-col size="12">
+            <ion-label> Enviados : {{enviadosNOLN}}</ion-label>
+          </ion-col>
+          <ion-col size="12">
+            <ion-label> No enviados : {{noenviadosNOLN}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-card-content>
+    </ion-card>
+    
+  </section>
+
+  
 
   <ion-list *ngFor="let persona of personasVoto">
       <ion-item>

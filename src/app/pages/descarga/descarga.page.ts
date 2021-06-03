@@ -88,9 +88,11 @@ export class DescargaPage implements OnInit {
               text: "Al volver a descargar, se eliminaran todos tus registros",
               icon: 'warning',
               showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
               confirmButtonText: `Si, descargar`,
               cancelButtonText: 'No, ¡cancelar!',
-              reverseButtons: true
+              
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {

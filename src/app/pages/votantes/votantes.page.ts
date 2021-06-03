@@ -18,6 +18,9 @@ export class VotantesPage implements OnInit {
   public enviados:number;
   public noenviados:number;
 
+  public enviadosNOLN:number;
+  public noenviadosNOLN:number;
+
   private token:string = null;
 
   constructor( private databaseService: DatabaseService, private networkService:NetworkService, private toastController: ToastController) { }
@@ -33,7 +36,7 @@ export class VotantesPage implements OnInit {
           let noviadosArr = [];
           this.personasVoto = [];
             for(let i = 0; i < resp.rows.length; i++){
-              console.log(resp.rows.item(i));
+              // console.log(resp.rows.item(i));
               if(resp.rows.item(i)['status'] == 1){
                 enviadosArr.push(resp.rows.item(i)['status'])
               }
@@ -45,6 +48,25 @@ export class VotantesPage implements OnInit {
               this.noenviados = noviadosArr.length;
               
               this.personasVoto.push(resp.rows.item(i));
+            }
+          })
+
+    this.databaseService.getAllPersonaNoLNB()
+        .then(resp => {
+          let enviadosArrNoLn = [];
+          let noviadosArrNoLn = [];
+            for(let i = 0; i < resp.rows.length; i++){
+              // console.log(resp.rows.item(i));
+              if(resp.rows.item(i)['procesado'] == 'true'){
+                enviadosArrNoLn.push(resp.rows.item(i)['procesado'])
+              }
+              if(resp.rows.item(i)['procesado'] == 'false'){
+                noviadosArrNoLn.push(resp.rows.item(i)['procesado'])
+              }
+
+              this.enviadosNOLN = enviadosArrNoLn.length;
+              this.noenviadosNOLN = noviadosArrNoLn.length;
+              
             }
           })
   }
@@ -89,7 +111,7 @@ export class VotantesPage implements OnInit {
                     noviadosArr.push(resp.rows.item(i)['id_persona'])
                   }
                 }
-                console.log(noviadosArr);
+                // console.log(noviadosArr);
                   
                 totalpersonasNoEnviadas = noviadosArr.length;
 
@@ -125,14 +147,43 @@ export class VotantesPage implements OnInit {
                               text: 'Verifica tu conexion a internet para intentar enviar.'
                             })
                           })
-
-                    //  delay(500)
                 }
-
-                
-                          
-
               })
+
+        this.databaseService.getAllPersonaNoLNB()
+            .then(resp =>{
+
+              for(let i = 0; i < resp.rows.length; i++){
+                // console.log(resp.rows.item(i));
+                if(resp.rows.item(i)['procesado'] == "false"){
+                  console.log(resp.rows.item(i));
+                
+                let value = resp.rows.item(i)['value'];
+                 let id = resp.rows.item(i)['id'];
+
+                this.databaseService.addPromovidoNoLN(this.token,value)
+                    .subscribe(resp => {
+                      console.log(resp)
+                      console.log(value);
+                      console.log(id);
+                      this.databaseService.updatePersonaNoLNB(true,value,id)
+                          .then(resp =>{
+                            console.log(resp);
+                            
+                            this.enviomsj('enviado y actualizado')
+                          })
+                          .catch(err => {
+                            console.log(err);
+                            
+                            this.enviomsj('enviado')
+                          })
+                    }, err =>{
+                      this.enviomsj('no enviado')
+                    })
+                }
+              }
+              
+            })
       }
     })
   }

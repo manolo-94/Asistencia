@@ -50,7 +50,10 @@ export class CasillaPage implements OnInit {
       title: '¿Quieres abrir la casilla?',
       icon: 'question',
       showCancelButton: true,
-      confirmButtonText: `SI`,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: `Si`,
+      cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
 
@@ -168,7 +171,6 @@ export class CasillaPage implements OnInit {
     // console.log(this.status)
     Swal.fire({
       title: '¿Quieres cerrar la casilla?',
-      text: "Una vez cerrada la casilla no podrás abrirla nuevamente, en caso de necesitarlo contacta a tu representante inmediatamente.",
       icon: 'question',
       input: 'textarea',
       inputPlaceholder: '¿Porque quieres cerrar la casillas?',
@@ -176,7 +178,10 @@ export class CasillaPage implements OnInit {
         'aria-label': 'Type your message here'
       },
       showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
       confirmButtonText: `Si`,
+      cancelButtonText: 'Cancelar',
       inputValidator:(value) => {
         msj = value;
         // console.log(value)

@@ -261,11 +261,7 @@ export class BuscarComponent implements OnInit {
                               this.databaseService.addPersonaVoto(persona_id, this.token) // tratamos de enviar la informacion al servidor
                               .then(then => {
                                 then.subscribe(resp =>{
-                                  Swal.fire(
-                                    'Se a registrado correctamente la asistencia de ' + nombre,
-                                    '',
-                                    'success'
-                                  )
+                                  
                                   // console.log(resp);
                                   // var status:number = 0;
                                   if(resp.guardado != false){
@@ -277,27 +273,18 @@ export class BuscarComponent implements OnInit {
                                   this.databaseService.addVotacion(persona_id,nombre,this.status) // la guardamo en la base de datos local 
                                       .then(then => {
                                         Swal.fire(
-                                          'Se a registrado correctamente la asistencia de ' + nombre,
+                                          'Se a registrado y guardado correctamente la asistencia de ' + nombre,
                                           '',
                                           'success'
                                         )
                                       })
                                       .catch( err =>{
-                                        Swal.fire({
-                                          icon: 'error',
-                                          title: 'Oops...',
-                                          text: 'No se pudo registrar la asistencia de esta persona correctamente'
-                                        })
+                                        Swal.fire(
+                                          'Se a registrado correctamente la asistencia de ' + nombre,
+                                          '',
+                                          'success'
+                                        )
                                       })
-                                  // this.databaseService.getVotacion()
-                                  //     .then(resp => {
-                                  //       for(let i = 0; i < resp.rows.length; i++){
-                                  //         console.log(resp.rows.item(i));
-                                  //       }
-                                  //     })
-                                  //     .catch(error =>{
-                                  //       console.log('No se pudo cosultar la informacion por el siguiente error: '+error.message);
-                                  //     });
                                   this.databaseService.deletePerson(id)
                                       .then( resp => {
                                         // console.log(resp)
@@ -305,19 +292,14 @@ export class BuscarComponent implements OnInit {
                                         ionSearchBar.setAttribute('value','')
                                       })
                                       .catch(error => {
-                                        // console.log('No se pudo eliminar por el siguente error: '+error.message);
-                                        Swal.fire({
-                                          icon: 'error',
-                                          title: 'Oops...',
-                                          text: 'No se pudo eliminar de la lista de busque esta persona por el siguente error: '+error.message
-                                        })
+                                        console.log('No se pudo eliminar por el siguente error: '+error.message);
                                       });
                                },(error => { // si el servidor marca algun error aun asi lo guarmadamos en la base de datos y despues lo eliminamos de la busqueda
                                   // console.log('error ' + error.message);
                                   this.databaseService.addVotacion(persona_id,nombre,this.status)
                                       .then(then => {
                                         Swal.fire(
-                                          'Se a registrado correctamente la asistencia de ' + nombre,
+                                          'Se a guardado correctamente la asistencia de ' + nombre,
                                           '',
                                           'success'
                                         )
@@ -326,7 +308,7 @@ export class BuscarComponent implements OnInit {
                                         Swal.fire({
                                           icon: 'error',
                                           title: 'Oops...',
-                                          text: 'No se pudo registrar la asistencia de esta persona correctamente'
+                                          text: 'No se pudo guardar la asistencia de esta persona correctamente'
                                         })
                                       })
                                   this.databaseService.deletePerson(id)
@@ -336,12 +318,7 @@ export class BuscarComponent implements OnInit {
                                        ionSearchBar.setAttribute('value','')
                                      })
                                      .catch(error => {
-                                      //  console.log('No se pudo eliminar por el siguente error: '+error.message);
-                                       Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'No se pudo eliminar de la lista de busque esta persona por el siguente error: '+error.message
-                                      })
+                                       console.log('No se pudo eliminar por el siguente error: '+error.message);
                                      });
                                }))
                               })
@@ -363,7 +340,7 @@ export class BuscarComponent implements OnInit {
                             this.databaseService.addVotacion(persona_id,nombre,0) // la guardamo en la base de datos local 
                                 .then(then => {
                                         Swal.fire(
-                                          'Se a registrado correctamente la asistencia de ' + nombre,
+                                          'Se a guardado correctamente la asistencia de ' + nombre,
                                           '',
                                           'success'
                                         )
@@ -372,7 +349,7 @@ export class BuscarComponent implements OnInit {
                                         Swal.fire({
                                           icon: 'error',
                                           title: 'Oops...',
-                                          text: 'No se pudo registrar la asistencia de esta persona correctamente'
+                                          text: 'No se pudo guardar la asistencia de esta persona correctamente'
                                         })
                                       })
                                   // this.databaseService.getVotacion()
