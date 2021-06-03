@@ -68,6 +68,8 @@ export class CasillaPage implements OnInit {
                       this.status = true;
                       this.ref.detectChanges();
 
+                      let msj:string = 'Casilla abierta'
+
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
 
@@ -80,14 +82,33 @@ export class CasillaPage implements OnInit {
                                     this.token = then.rows.item(i)['token'];
                                   }
 
-                                  //tratamos e enviar incidencia
-                                  this.databaseService.addIncidencia(this.token,'Reapertura de casilla')
-                                      .subscribe(resp => {
-                                        //pudimos enviar la incidencia
-                                        Swal.fire('Información enviada y actualizada, has abierto la casilla de nuevo', '', 'success')
+                                  //abrimo casila remotamente
 
-                                      },err =>{
-                                        Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                                  this.databaseService.abrirCasilla(this.token)
+                                      .subscribe(resp =>{
+                                        this.databaseService.addIncidencia(this.token,msj)
+                                            .subscribe(resp => {
+                                              this.databaseService.saveIncidencia(true,'has abierto la casilla de nuevo')
+                                                  .then(resp => {
+                                                    Swal.fire('Información enviada y guardada', 'has abierto la casilla de nuevo', 'success')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Información enviada', 'has abierto la casilla de nuevo', 'success')
+                                                  })
+                                            }, err => {
+                                              this.databaseService.saveIncidencia(false,'has abierto la casilla de nuevo')
+                                                  .then(resp => {
+                                                    Swal.fire('guardada', 'has abierto la casilla de nuevo', 'success')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Información enviada', 'has abierto la casilla de nuevo', 'success')
+                                                  })
+                                            })
+                                      }, err =>{
+                                        this.databaseService.saveIncidencia(false,'has abierto la casilla de nuevo')
+                                            .then(resp => {
+                                              Swal.fire('guardada', 'has abierto la casilla de nuevo', 'success')
+                                            })
                                       })
                                 }
 
@@ -129,23 +150,38 @@ export class CasillaPage implements OnInit {
                                     for (let i = 0; i < then.rows.length; i++){
                                       this.token = then.rows.item(i)['token'];
                                     }
-                                    this.databaseService.addIncidencia(this.token,msj)
-                                        .subscribe(resp => {
-                                          this.databaseService.saveIncidencia(true,'Casilla abierta')
+                                    //abrimo casila remotamente
+
+                                    this.databaseService.abrirCasilla(this.token)
+                                        .subscribe(resp =>{
+                                          this.databaseService.addIncidencia(this.token,msj)
+                                              .subscribe(resp => {
+                                                this.databaseService.saveIncidencia(true,'Casilla abierta')
+                                                    .then(resp => {
+                                                      Swal.fire('Información enviada y guardada', 'Casilla abierta', 'success')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Información enviada', 'Casilla abierta', 'success')
+                                                    })
+                                              }, err => {
+                                                this.databaseService.saveIncidencia(false,'Casilla abierta')
+                                                    .then(resp => {
+                                                      Swal.fire('guardada', 'Casilla abierta', 'success')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Información enviada', 'Casilla abierta', 'success')
+                                                    })
+                                              })
+                                        }, err =>{
+                                          this.databaseService.saveIncidencia(false,'Casilla abierta')
                                               .then(resp => {
-                                                Swal.fire('Información enviada y guardada', 'Casilla abierta', 'success')
+                                                Swal.fire('guardada', 'Casilla abierta', 'success')
                                               })
-                                              .catch(err=>{
-                                                Swal.fire('Información guardada', 'Casilla abierta', 'success')
-                                              })
-                                          // Swal.fire('Información guardada y enviada', 'Casilla abierta', 'success')
-                                        }, err => {
-                                          Swal.fire('Información guardada', 'Casilla abierta', 'success')
                                         })
                                   }
                                 
                                 },err =>{
-                                  //informacion guardada, casilla abierta
+                                  Swal.fire('guardada', 'Casilla abierta', 'success')
                                 })
                           }, err => {
                             Swal.fire('Información guardada', 'Casilla abierta', 'success')
@@ -155,7 +191,7 @@ export class CasillaPage implements OnInit {
                       Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'No se pudo guardar la informacion correctamente'
+                        text: 'Tu casilla no se pudo abrir intenta de nuevo'
                       })   
                     })
               }
@@ -210,30 +246,50 @@ export class CasillaPage implements OnInit {
                             for (let i = 0; i < then.rows.length; i++){
                               this.token = then.rows.item(i)['token'];
                             }
-                            //tratamos e enviar incidencia
-                            this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
-                                .subscribe(resp => {
-                                  //pudimos enviar la incidencia
-                                  Swal.fire('Información enviada y actualizada, has cerrado la casilla', '', 'success')
-                                },err =>{
-                                  Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
+                            //cerramos casilla
+                            this.databaseService.cerrarCasilla(this.token)
+                                .subscribe(resp =>{
+                                  this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
+                                      .subscribe(resp => {
+                                        this.databaseService.saveIncidencia(true,'Casilla cerrada: Motivo: '+msj)
+                                            .then(resp => {
+                                              Swal.fire('Información enviada y guardada', 'Casilla cerrada', 'success')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Información enviada', 'Casilla cerrada', 'success')
+                                            })
+                                      }, err => {
+                                        this.databaseService.saveIncidencia(false,'Casilla cerrada')
+                                            .then(resp => {
+                                              Swal.fire('guardada', 'Casilla cerrada', 'success')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Información enviada', 'Casilla cerrada', 'success')
+                                            })
+                                      })
+                                }, err =>{
+                                  this.databaseService.saveIncidencia(false,'Casilla abierta')
+                                      .then(resp => {
+                                        Swal.fire('guardada', 'Casilla cerrada', 'success')
+                                      })
                                 })
+
                           }
                         })
                         .catch( err => {
                           //no se pudo obtener el token
-                          Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
+                          Swal.fire('guardada', 'Casilla cerrada', 'success')
                         })
                     }, err =>{
                       //no tienes internet
-                      Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
+                      Swal.fire('guardada', 'Casilla cerrada', 'success')
                     })
               })
               .catch( err =>{
                 Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Tu casilla no se pudo cerrar'
+                      text: 'Tu casilla no se pudo cerrar, intenta de nuevo'
                     })
               })
 

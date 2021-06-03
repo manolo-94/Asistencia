@@ -124,17 +124,21 @@ export class VotantesPage implements OnInit {
 
                                 this.databaseService.reenviarPersonaVoto(noviadosArr[i], this.token) // tratamos de enviar la informacion al servidor
                                 .subscribe(resp => {
-                                  
-                                  console.log(resp);
-                                  this.databaseService.updateVotacion(noviadosArr[i],1)
-                                      .then(then =>{
-                                        console.log(then);
-                                        
-                                        this.enviomsj('enviado y actualizado')
-                                      })
-                                      .catch(err =>{
-                                        this.enviomsj('enviado')
-                                      })
+
+                                  if(resp.error != null){
+                                    this.enviomsj('No se pudo enviar en este momento intenta mas tarde')
+                                  }else{
+                                    console.log(resp);
+                                    this.databaseService.updateVotacion(noviadosArr[i],1)
+                                        .then(then =>{
+                                          console.log(then);
+
+                                          this.enviomsj('enviado y actualizado')
+                                        })
+                                        .catch(err =>{
+                                          this.enviomsj('enviado')
+                                        })
+                                  }
                                 },err =>{
                                   this.enviomsj('no enviado')
                                 })

@@ -122,7 +122,11 @@ export class DatabaseService {
 
     this.dropTableResultados();
     this.dropTriggerNoInsertResultados();
-    this.dropTriggerUpdateFechaResultados();    
+    this.dropTriggerUpdateFechaResultados(); 
+    
+    this.dropTableIncidencias();
+    
+    this.dropTablePersonaNoLN();
     
   }
 
@@ -143,6 +147,9 @@ export class DatabaseService {
     this.createTableResultados()
     this.createTriggerNoInsertResultados();
     this.createTriggerUpdateFechaResultados();
+
+    this.createTableIncidencias();
+    this.createTablePersonaNoLN();
 
   }
 
@@ -560,7 +567,7 @@ export class DatabaseService {
       'Authorization' : 'Token ' + this.token
     });
 
-    return  this.http.get<Casilla>(`${URL}/cartografia/casilla/abrir/0`,{headers});
+    return  this.http.get<Casilla>(`${URL}/cartografia/casilla/abrir/0/`,{headers});
             
   }
 
@@ -572,7 +579,7 @@ export class DatabaseService {
       'Authorization' : 'Token ' + this.token
     });
 
-    return this.http.get<Casilla>(`${URL}/cartografia/casilla/cerrar/0`,{headers});
+    return this.http.get<Casilla>(`${URL}/cartografia/casilla/cerrar/0/`,{headers});
             
   }
 

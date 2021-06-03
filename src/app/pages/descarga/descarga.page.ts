@@ -105,21 +105,26 @@ export class DescargaPage implements OnInit {
                 this.porcentaje_personas_guardadas = 0;
                 this.databaseService.deleteInfoDescarga();
                 this.databaseService.createInfoDescarga();
-                Swal.fire('Descarga iniciada', '', 'success')
+                
                 this.networkService.getNetworkTestRequest()
                 .subscribe(success =>{ 
+                  Swal.fire('Descarga iniciada', '', 'success')
                   console.log('success testNetworkConnection') 
                   this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
                   this.downloadPersonas(null);
                 },error =>{
                   console.log('error testNetworkConnection');
-                  this.messageAlert('Alerta','Verificación de conexión','No puedes conectarte con el servidor, verifica tu conexión a internet')
+                  Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Verifica tu conexion a internet para intentar descargar.'
+                  })
                 })
               }
             })
           }else{ // si no existe, inicia el proceso de descarga ya que nunca se ha descargado información
             console.log('inicia proceso de descarga');
-            Swal.fire('Descarga iniciada', '', 'success')
+            
 
             // this.databaseService.recordStatusDownload(true)
             //     .then(then =>{
@@ -127,8 +132,19 @@ export class DescargaPage implements OnInit {
             //       console.log('descarga finalizada, se ha guardado el status')
             //     })
 
+            this.status_completadoMsj = false;
+            this.porcentValue = 0;
+            this.paginaActual = 0;
+            this.paginasTotales = 0;
+            this.total_personas = 0;
+            this.total_personas_guardadas = 0;
+            this.porcentaje_personas_guardadas = 0;
+            this.databaseService.deleteInfoDescarga();
+            this.databaseService.createInfoDescarga();
+
             this.networkService.getNetworkTestRequest()
             .subscribe(success =>{ 
+              Swal.fire('Descarga iniciada', '', 'success')
               console.log('success testNetworkConnection') 
               this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
               this.downloadPersonas(null);
@@ -139,7 +155,11 @@ export class DescargaPage implements OnInit {
               //   })
             },error =>{
               console.log('error testNetworkConnection');
-              this.messageAlert('Alerta','Verificación de conexión','No puedes conectarte con el servidor, verifica tu conexión a internet')
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Verifica tu conexion a internet para intentar descargar.'
+              })
             })
           }
         }, erro =>{
