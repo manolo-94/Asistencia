@@ -19,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CallNumber } from '@ionic-native/call-number/ngx';
+import { InterceptorService } from './interceptors/interceptor.service';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,11 @@ import { CallNumber } from '@ionic-native/call-number/ngx';
     Network,
     { provide: RouteReuseStrategy, 
       useClass: IonicRouteStrategy 
+    },
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass: InterceptorService,
+      multi: true
     }
   ],
   bootstrap: [AppComponent],

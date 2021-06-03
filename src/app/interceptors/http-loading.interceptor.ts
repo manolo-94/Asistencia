@@ -10,6 +10,7 @@ export class HttpRequestInterceptor  implements HttpInterceptor{
     constructor(private loadingCtrl: LoadingController){ }
 
     intercept(request:HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
+
         this.loadingCtrl.getTop().then(hasLoading => {
             if(!hasLoading){
                 this.loadingCtrl.create({
@@ -33,5 +34,7 @@ export class HttpRequestInterceptor  implements HttpInterceptor{
                 )
             })
         );
+
+        
     }
 }

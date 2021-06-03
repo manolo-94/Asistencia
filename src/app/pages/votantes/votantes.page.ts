@@ -3,7 +3,7 @@ import { DatabaseService } from '../../services/database.service';
 import { personaVoto } from '../../interfaces/interfaces';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { NetworkService } from '../../services/network.service';
-import { ToastController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { delay } from 'rxjs/operators';
 
 @Component({
@@ -23,7 +23,7 @@ export class VotantesPage implements OnInit {
 
   private token:string = null;
 
-  constructor( private databaseService: DatabaseService, private networkService:NetworkService, private toastController: ToastController) { }
+  constructor( private databaseService: DatabaseService, private networkService:NetworkService, private toastController: ToastController, public loadingController:LoadingController) { }
 
   ngOnInit() {
     
@@ -121,8 +121,7 @@ export class VotantesPage implements OnInit {
                     this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
 
-                           
-                               
+
                                 this.databaseService.reenviarPersonaVoto(noviadosArr[i], this.token) // tratamos de enviar la informacion al servidor
                                 .subscribe(resp => {
                                   
@@ -196,5 +195,12 @@ export class VotantesPage implements OnInit {
         });
         toast.then(toast => toast.present());
   }
-
+  
+  async loading(status:boolean){
+    if(status){
+      let loading = this.loadingController.create({spinner:'circular',translucent:true})
+      .then(loading => loading.present());
+    }
+    
+  }
 }
