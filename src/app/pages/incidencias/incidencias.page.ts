@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { NetworkService } from '../../services/network.service';
 import { DatabaseService } from '../../services/database.service';
+import { CallNumber } from '@ionic-native/call-number/ngx';
 
 @Component({
   selector: 'app-incidencias',
@@ -22,11 +23,18 @@ export class IncidenciasPage implements OnInit {
 
   constructor(private networkServices: NetworkService,  
               private databaseService: DatabaseService,
-              private ref: ChangeDetectorRef) { }
+              private ref: ChangeDetectorRef,
+              private callNumber: CallNumber) { }
 
   ngOnInit() {
     this.conteoInicidencias();
     // this.ref.detectChanges();
+  }
+
+  llamar(phoneNumber:any){
+    this.callNumber.callNumber(phoneNumber,true)
+        .then(()=> console.log('¡Llamada existosa'))
+        .catch(() => console.log('Error al intentar llamar'));
   }
 
   conteoInicidencias(){

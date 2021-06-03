@@ -17,6 +17,9 @@ import { Network } from '@ionic-native/network/ngx';
 import { ComponentsModule } from './components/components.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,6 +39,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     
   ],
   providers: [
+    CallNumber,
+    AndroidPermissions,
     SQLite, 
     Network,
     { provide: RouteReuseStrategy, 
