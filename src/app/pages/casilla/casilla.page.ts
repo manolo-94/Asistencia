@@ -25,19 +25,20 @@ export class CasillaPage implements OnInit {
             if(result.rows.length > 0){
               for (let i = 0; i < result.rows.length; i++){
                 // console.log(result.rows.item(i)['status']);
-                finalizado = result.rows.item(i)['finalizado'];
+                this.status = result.rows.item(i)['status'];
                 this.ref.detectChanges();
               }
 
-              if(finalizado){
-                this.status = false
-                this.ref.detectChanges();
-              }
+              // if(finalizado){
+              //   this.status = false
+              //   this.ref.detectChanges();
+              // }
               
-            }else{
-              this.status = false;
-              this.ref.detectChanges();
             }
+            // else{
+            //   this.status = false;
+            //   this.ref.detectChanges();
+            // }
             
           })
   }
@@ -55,140 +56,108 @@ export class CasillaPage implements OnInit {
 
         this.databaseService.getConfigCasilla()
             .then(result => {
-              let finalizado:boolean;
               
               if(result.rows.length > 0){
-                for (let i = 0; i < result.rows.length; i++){
-                  finalizado = result.rows.item(i)['finalizado']
-                }
 
-                if(finalizado){
-                  // console.log('la casilla ya fue cerrada definitivamente')
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Tu casilla ya ha sido cerrada definitivamente, si deseas abrirla de nuevo ponte en contato con tu representante'
-                  })
-                }
+                this.databaseService.updateConfigCasilla('ABIERTA',false,'Reapertura de casilla')
+                    .then(success =>{
+
+                      this.status = true;
+                      this.ref.detectChanges();
+
+                      this.networkService.getNetworkTestRequest()
+                          .subscribe(success =>{ 
+
+                            this.databaseService.getTokenUser()
+                              .then( then => {
+                                //se ejecuto la consulta para ontener el token
+                                if(then.rows.length > 0){
+                                  //obtuvimos el token
+                                  for (let i = 0; i < then.rows.length; i++){
+                                    this.token = then.rows.item(i)['token'];
+                                  }
+
+                                  //tratamos e enviar incidencia
+                                  this.databaseService.addIncidencia(this.token,'Reapertura de casilla')
+                                      .subscribe(resp => {
+                                        //pudimos enviar la incidencia
+                                        Swal.fire('Información enviada y actualizada, has abierto la casilla de nuevo', '', 'success')
+
+                                      },err =>{
+                                        Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                                      })
+                                }
+
+                              })
+                              .catch( err => {
+                                //no se pudo obtener el token
+                                Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                              })
+                          }, err =>{
+                            //no tienes internet
+                            Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                          })
+                    })
+                    .catch( err =>{
+                      Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Tu casilla ya no se pudo volver a abrir'
+                          })
+                    })
               }else{
                 // console.log('vas a abrir casilla por primera vez')
                 this.databaseService.insertConfigCasilla('ABIERTA',false,'Apertura de casilla')
                     .then(then => {
+                      
                       this.status = true;
                       this.ref.detectChanges();
 
                       let msj:string = 'Casilla abierta'
-                      // console.log(then);
-                    
-                      // this.databaseService.getConfigCasilla()
-                      //     .then(result => {
-                      //       for (let i = 0; i < result.rows.length; i++){
-                      //         console.log(result.rows.item(i));
-                      //       }
-                      //     })
-                      this.databaseService.getTokenUser()
-                      .then( then => {
-                        if(then.rows.length > 0){
-                              
-                          for (let i = 0; i < then.rows.length; i++){
-                            this.token = then.rows.item(i)['token'];
-                          }
-  
-                          this.databaseService.addIncidencia(this.token,msj)
-                              .subscribe(resp => {
-                                console.log('incidencia enviado correctamente')
-  
-                                this.databaseService.saveIncidencia(true,msj)
-                                  .then(resp =>{
-                                    console.log('Incidencia guardada y enviada correctamente');
-                                  })
-                                  .catch(err =>{
-                                    console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
-                                  })
-                              },err =>{
-                                console.log(err);
-                                console.log('algo salio mal');
-                                this.databaseService.saveIncidencia(false,msj)
-                                  .then(resp =>{
-                                    console.log('Incidencia guardada y enviada correctamente');
-                                  })
-                                  .catch(err =>{
-                                    console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
-                                  })
-                              })
-                        }
-                      })
-                      .catch( err => {
-                        console.log('No se encontro el Token del usuario');
-                      })
-  
 
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
-                            // console.log('success testNetworkConnection') 
 
                             this.databaseService.getTokenUser()
                                 .then( then => {
+                                
                                   if(then.rows.length > 0){
-                                  
+
                                     for (let i = 0; i < then.rows.length; i++){
                                       this.token = then.rows.item(i)['token'];
                                     }
-                                  
-                                    this.databaseService.abrirCasilla(this.token)
-                                        .subscribe( resp => {
-                                          // console.log(resp);
-                                        
-                                          this.status = true;
-                                          Swal.fire('Casilla abierta!', '', 'success')
-                                        
-                                        },(err) =>{
-                                            // console.log(err.error['detail']);
-                                            // console.log('algo salio mal')
-                                        
-                                            Swal.fire({
-                                                icon: 'error',
-                                                title: 'Oops...',
-                                                text: err.error['detail']
-                                            })
+                                    this.databaseService.addIncidencia(this.token,msj)
+                                        .subscribe(resp => {
+                                          this.databaseService.saveIncidencia(true,'Casilla abierta')
+                                              .then(resp => {
+                                                Swal.fire('Información enviada y guardada', 'Casilla abierta', 'success')
+                                              })
+                                              .catch(err=>{
+                                                Swal.fire('Información guardada', 'Casilla abierta', 'success')
+                                              })
+                                          // Swal.fire('Información guardada y enviada', 'Casilla abierta', 'success')
+                                        }, err => {
+                                          Swal.fire('Información guardada', 'Casilla abierta', 'success')
                                         })
-                                      
                                   }
+                                
+                                },err =>{
+                                  //informacion guardada, casilla abierta
                                 })
-                                .catch( err => {
-                                  // console.log(err);
-                                  Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'No se encontro el Token del usuario'
-                                  })
-                                })
-
-                          },error =>{
-                            // console.log('error testNetworkConnection');
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Oops...',
-                              text: 'Verifica tu conexion a internet, para poder enviar que has cerrado casilla, no te preocupes tu infromación sigue guardada en el telefono'
-                            })
-                          })
-                        
-                      
+                          }, err => {
+                            Swal.fire('Información guardada', 'Casilla abierta', 'success')
+                          })                    
                     })
                     .catch( err => {
-                      // console.log(err)
-                      // console.log('No se pudo guarda la informacion correctamente');
                       Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'No se pudo guarda la informacion correctamente'
+                        text: 'No se pudo guardar la informacion correctamente'
                       })   
                     })
-
               }
-              
+
             })
-        
       }
     })
   }
@@ -218,118 +187,50 @@ export class CasillaPage implements OnInit {
     }).then((result) => {
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        // this.status = false;
-        // Swal.fire('Casilla cerrada!', '', 'success')
         console.log(msj);
-        
-        this.databaseService.updateConfigCasilla('CERRADA',true,msj)
-            .then( resp => {
+
+          this.databaseService.updateConfigCasilla('CERRADA',true,'Casilla cerrada: Motivo: '+msj)
+              .then(success =>{
+
               this.status = false;
               this.ref.detectChanges();
-                // console.log(resp);
-                // console.log('informacion actualizada');
-
-                // this.databaseService.getConfigCasilla()
-                //     .then(result => {
-                //       for (let i = 0; i < result.rows.length; i++){
-                //         console.log(result.rows.item(i));
-                //       }
-                //     })
-                this.databaseService.getTokenUser()
-                    .then( then => {
-                      if(then.rows.length > 0){
-                            
-                        for (let i = 0; i < then.rows.length; i++){
-                          this.token = then.rows.item(i)['token'];
-                        }
-
-                        this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
-                            .subscribe(resp => {
-                              console.log('incidencia enviado correctamente')
-
-                              this.databaseService.saveIncidencia(true,'Casilla cerrada: Motivo: '+msj)
-                                .then(resp =>{
-                                  console.log('Incidencia guardada y enviada correctamente');
-                                })
-                                .catch(err =>{
-                                  console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
-                                })
-                            },err =>{
-                              console.log(err);
-                              console.log('algo salio mal');
-                              this.databaseService.saveIncidencia(false,'Casilla cerrada: Motivo: '+msj)
-                                .then(resp =>{
-                                  console.log('Incidencia guardada y enviada correctamente');
-                                })
-                                .catch(err =>{
-                                  console.log('No se pudo guardar tu incidencia, pero no te preocupes ya fue enviado correctamente');
-                                })
-                            })
-                      }
-                    })
-                    .catch( err => {
-                      console.log('No se encontro el Token del usuario');
-                    })
 
                 this.networkService.getNetworkTestRequest()
                     .subscribe(success =>{ 
-                      // console.log('success testNetworkConnection') 
                       this.databaseService.getTokenUser()
-                          .then( then => {
-                            if(then.rows.length > 0){
-                            
-                              for (let i = 0; i < then.rows.length; i++){
-                                this.token = then.rows.item(i)['token'];
-                              }
-                            
-                              this.databaseService.cerrarCasilla(this.token)
-                              .subscribe( resp => {
-                                // console.log(resp);
-                                this.status = false;
-                                Swal.fire('Casilla cerrada!', '', 'success')
-                              },(err) =>{
-                                  // console.log(err.error['detail']);
-                                  // console.log('algo salio mal')
-                              
-                                  Swal.fire({
-                                      icon: 'error',
-                                      title: 'Oops...',
-                                      text: err.error['detail']
-                                  })
-                              })
-                            
+                        .then( then => {
+                          //se ejecuto la consulta para ontener el token
+                          if(then.rows.length > 0){
+                            //obtuvimos el token
+                            for (let i = 0; i < then.rows.length; i++){
+                              this.token = then.rows.item(i)['token'];
                             }
-                          })
-                          .catch( err => {
-                            // console.log(err);
-                            Swal.fire({
-                              icon: 'error',
-                              title: 'Oops...',
-                              text: 'No se encontro el Token del usuario'
-                            })
-                          })
-                      
-                    },error =>{
-                      // console.log('error testNetworkConnection');
-                      Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Verifica tu conexion a internet, para poder enviar que has cerrado casilla, no te preocupes tu infromación sigue guardada en el telefono'
-                      })
-                      
+                            //tratamos e enviar incidencia
+                            this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
+                                .subscribe(resp => {
+                                  //pudimos enviar la incidencia
+                                  Swal.fire('Información enviada y actualizada, has cerrado la casilla', '', 'success')
+                                },err =>{
+                                  Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
+                                })
+                          }
+                        })
+                        .catch( err => {
+                          //no se pudo obtener el token
+                          Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
+                        })
+                    }, err =>{
+                      //no tienes internet
+                      Swal.fire('Información actualizada, has cerrado la casilla', '', 'success')
                     })
-
-                
-            })
-            .catch(err =>{
-              // console.log(err);
-              // console.log('No se pudo actualizar la informacion'); 
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'No se pudo actualizar la informacion'
-              })             
-            })
+              })
+              .catch( err =>{
+                Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Tu casilla no se pudo cerrar'
+                    })
+              })
 
       }
     })
