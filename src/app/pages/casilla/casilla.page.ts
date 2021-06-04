@@ -86,7 +86,31 @@ export class CasillaPage implements OnInit {
 
                                   this.databaseService.abrirCasilla(this.token)
                                       .subscribe(resp =>{
-                                        this.databaseService.addIncidencia(this.token,msj)
+                                        
+                                        if (resp.error != null){
+
+                                          this.databaseService.addIncidencia(this.token,'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                            .subscribe(resp => {
+                                              this.databaseService.saveIncidencia(true,'La casila se abrio localmente de nuevo en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                  .then(resp => {
+                                                    Swal.fire('Información enviada y guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Información enviada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                            }, err => {
+                                              this.databaseService.saveIncidencia(false,'La casila se abrio de nuevolocalmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                  .then(resp => {
+                                                    Swal.fire('Información guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Alerta', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                            })
+
+                                        }else{
+
+                                          this.databaseService.addIncidencia(this.token,msj)
                                             .subscribe(resp => {
                                               this.databaseService.saveIncidencia(true,'has abierto la casilla de nuevo')
                                                   .then(resp => {
@@ -98,35 +122,66 @@ export class CasillaPage implements OnInit {
                                             }, err => {
                                               this.databaseService.saveIncidencia(false,'has abierto la casilla de nuevo')
                                                   .then(resp => {
-                                                    Swal.fire('guardada', 'has abierto la casilla de nuevo', 'success')
+                                                    Swal.fire('Información guardada', 'has abierto la casilla de nuevo', 'success')
                                                   })
                                                   .catch(err=>{
                                                     Swal.fire('Información enviada', 'has abierto la casilla de nuevo', 'success')
                                                   })
                                             })
+
+                                        }
+                                        
                                       }, err =>{
-                                        this.databaseService.saveIncidencia(false,'has abierto la casilla de nuevo')
-                                            .then(resp => {
-                                              Swal.fire('guardada', 'has abierto la casilla de nuevo', 'success')
+                                       
+                                        this.databaseService.addIncidencia(this.token,'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                            .subscribe(resp => {
+                                              this.databaseService.saveIncidencia(true,'La casila se abrio localmente de nuevo en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                  .then(resp => {
+                                                    Swal.fire('Información enviada y guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Información enviada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                            }, err => {
+                                              this.databaseService.saveIncidencia(false,'La casila se abrio de nuevolocalmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                  .then(resp => {
+                                                    Swal.fire('Información guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
+                                                  .catch(err=>{
+                                                    Swal.fire('Alerta', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                  })
                                             })
+                                            
                                       })
                                 }
 
                               })
                               .catch( err => {
                                 //no se pudo obtener el token
-                                Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                                this.databaseService.saveIncidencia(true,'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                    .then(resp => {
+                                      Swal.fire('Información enviada y guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                    })
+                                    .catch(err=>{
+                                      Swal.fire('Alerta', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                    })
                               })
                           }, err =>{
                             //no tienes internet
-                            Swal.fire('Información actualizada, has abierto la casilla de nuevo', '', 'success')
+                            this.databaseService.saveIncidencia(true,'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                .then(resp => {
+                                  Swal.fire('Información guardada', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                })
+                                .catch(err=>{
+                                  Swal.fire('Alerta', 'La casila se abrio de nuevo localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                })
                           })
                     })
                     .catch( err =>{
                       Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Tu casilla ya no se pudo volver a abrir'
+                            text: 'Tu casilla ya no se pudo volver a abrir, intenta de nuevo'
                           })
                     })
               }else{
@@ -154,44 +209,95 @@ export class CasillaPage implements OnInit {
 
                                     this.databaseService.abrirCasilla(this.token)
                                         .subscribe(resp =>{
-                                          this.databaseService.addIncidencia(this.token,msj)
+
+                                          if (resp.error != null){
+
+                                            this.databaseService.addIncidencia(this.token,msj)
+                                              .subscribe(resp => {
+                                                this.databaseService.saveIncidencia(true,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                    .then(resp => {
+                                                      Swal.fire('Información enviada y guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Información guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                              }, err => {
+                                                this.databaseService.saveIncidencia(false,'Casilla abierta')
+                                                    .then(resp => {
+                                                      Swal.fire('Información guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Alerta', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                              })
+
+                                          }else{
+                                            this.databaseService.addIncidencia(this.token,msj)
                                               .subscribe(resp => {
                                                 this.databaseService.saveIncidencia(true,'Casilla abierta')
                                                     .then(resp => {
                                                       Swal.fire('Información enviada y guardada', 'Casilla abierta', 'success')
                                                     })
                                                     .catch(err=>{
-                                                      Swal.fire('Información enviada', 'Casilla abierta', 'success')
+                                                      Swal.fire('Información guardada', 'Casilla abierta', 'success')
                                                     })
                                               }, err => {
                                                 this.databaseService.saveIncidencia(false,'Casilla abierta')
                                                     .then(resp => {
-                                                      Swal.fire('guardada', 'Casilla abierta', 'success')
+                                                      Swal.fire('Información guardada', 'Casilla abierta', 'success')
                                                     })
                                                     .catch(err=>{
                                                       Swal.fire('Información enviada', 'Casilla abierta', 'success')
                                                     })
                                               })
+                                          }
+                                          
                                         }, err =>{
-                                          this.databaseService.saveIncidencia(false,'Casilla abierta')
-                                              .then(resp => {
-                                                Swal.fire('guardada', 'Casilla abierta', 'success')
+                                          this.databaseService.addIncidencia(this.token,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                              .subscribe(resp => {
+                                                this.databaseService.saveIncidencia(true,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                    .then(resp => {
+                                                      Swal.fire('Información enviada y guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Información enviada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
+                                              }, err => {
+                                                this.databaseService.saveIncidencia(false,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                                    .then(resp => {
+                                                      Swal.fire('Información guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdoa', 'warning')
+                                                    })
+                                                    .catch(err=>{
+                                                      Swal.fire('Alerta', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                                    })
                                               })
                                         })
                                   }
                                 
                                 },err =>{
-                                  Swal.fire('guardada', 'Casilla abierta', 'success')
+                                  this.databaseService.saveIncidencia(false,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                      .then(resp => {
+                                        Swal.fire('Información guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdoa', 'warning')
+                                      })
+                                      .catch(err=>{
+                                        Swal.fire('Alerta', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                      })
                                 })
                           }, err => {
-                            Swal.fire('Información guardada', 'Casilla abierta', 'success')
+                            this.databaseService.saveIncidencia(false,'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo')
+                                .then(resp => {
+                                  Swal.fire('Información guardada', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdoa', 'warning')
+                                })
+                                .catch(err=>{
+                                  Swal.fire('Alerta', 'La casila se abrio localmente en el tefono pero no remotamenten, ponte en contacto con tu encargdo', 'warning')
+                                })
                           })                    
                     })
                     .catch( err => {
                       Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Tu casilla no se pudo abrir intenta de nuevo'
+                        text: 'Tu casilla no se pudo abrir, intenta de nuevo'
                       })   
                     })
               }
@@ -249,7 +355,31 @@ export class CasillaPage implements OnInit {
                             //cerramos casilla
                             this.databaseService.cerrarCasilla(this.token)
                                 .subscribe(resp =>{
-                                  this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
+
+                                  if(resp.error != null){
+
+                                    this.databaseService.addIncidencia(this.token,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                      .subscribe(resp => {
+                                        this.databaseService.saveIncidencia(true,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                            .then(resp => {
+                                              Swal.fire('Información enviada y guardada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Información enviada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                                            })
+                                      }, err => {
+                                        this.databaseService.saveIncidencia(false,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                            .then(resp => {
+                                              Swal.fire('Información guardada', 'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten', 'warning')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Alerta', 'La casila se cerro localmente en el tefono pero no remotamenten', 'warning')
+                                            })
+                                      })
+
+                                  }else{
+
+                                    this.databaseService.addIncidencia(this.token,'Casilla cerrada: Motivo: '+msj)
                                       .subscribe(resp => {
                                         this.databaseService.saveIncidencia(true,'Casilla cerrada: Motivo: '+msj)
                                             .then(resp => {
@@ -261,28 +391,60 @@ export class CasillaPage implements OnInit {
                                       }, err => {
                                         this.databaseService.saveIncidencia(false,'Casilla cerrada')
                                             .then(resp => {
-                                              Swal.fire('guardada', 'Casilla cerrada', 'success')
+                                              Swal.fire('Información enviada', 'Casilla cerrada', 'success')
                                             })
                                             .catch(err=>{
                                               Swal.fire('Información enviada', 'Casilla cerrada', 'success')
                                             })
                                       })
+
+                                  }
+
+                                  
                                 }, err =>{
-                                  this.databaseService.saveIncidencia(false,'Casilla abierta')
-                                      .then(resp => {
-                                        Swal.fire('guardada', 'Casilla cerrada', 'success')
+
+                                  this.databaseService.addIncidencia(this.token,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                      .subscribe(resp => {
+                                        this.databaseService.saveIncidencia(true,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                            .then(resp => {
+                                              Swal.fire('Información enviada y guardada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Información enviada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                                            })
+                                      }, err => {
+                                        this.databaseService.saveIncidencia(false,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                                            .then(resp => {
+                                              Swal.fire('Información guardada', 'La casila se cerro localmente en el tefono pero no remotamenten', 'warning')
+                                            })
+                                            .catch(err=>{
+                                              Swal.fire('Alerta', 'La casila se cerro localmente en el tefono pero no remotamenten', 'warning')
+                                            })
                                       })
+                                  
                                 })
 
                           }
                         })
                         .catch( err => {
                           //no se pudo obtener el token
-                          Swal.fire('guardada', 'Casilla cerrada', 'success')
+                          this.databaseService.saveIncidencia(false,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                              .then(resp => {
+                                Swal.fire('Información guardada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                              })
+                              .catch(err=>{
+                                Swal.fire('Alerta', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                              })
                         })
                     }, err =>{
                       //no tienes internet
-                      Swal.fire('guardada', 'Casilla cerrada', 'success')
+                      this.databaseService.saveIncidencia(false,'Casilla cerrada Motivo: La casila se cerro localmente en el tefono pero no remotamenten')
+                          .then(resp => {
+                            Swal.fire('Información guardada', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                          })
+                          .catch(err=>{
+                            Swal.fire('Alerta', 'La casila se cerro localmente en el tefono pero no remotamenten, ponte en contacto con un encargado.', 'warning')
+                          })
                     })
               })
               .catch( err =>{
