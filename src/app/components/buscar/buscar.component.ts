@@ -186,42 +186,65 @@ export class BuscarComponent implements OnInit {
                                 then.subscribe(resp =>{
 
                                   if(resp.error != null){
-                                    Swal.fire({
-                                      icon: 'error',
-                                      title: 'Oops...',
-                                      text: 'Ubo un erro: '+resp.error
-                                    })
+                                    this.databaseService.addVotacion(persona_id,nombre,this.status)
+                                        .then(then => {
+                                              Swal.fire(
+                                                'Se a guardado correctamente la asistencia de ' + nombre,
+                                                '',
+                                                'success'
+                                              )
+                                            })
+                                            .catch( err => {
+                                              Swal.fire({
+                                                icon: 'error',
+                                                title: 'Oops...',
+                                                text: 'No se pudo guardar la asistencia de esta persona correctamente'
+                                              })
+                                            })
+                                        this.databaseService.deletePerson(id)
+                                           .then( resp => {
+                                          
+                                             ionSearchBar.setAttribute('value','')
+                                           })
+                                           .catch(error => {
+                                             console.log('No se pudo eliminar por el siguente error: '+error.message);
+                                           });
                                   }else{
-                                    if(resp.guardado != false){
-                                        this.status = 1;
-                                     }else{
-                                       this.status = 0;
-                                     }
-                                    
-                                     this.databaseService.addVotacion(persona_id,nombre,this.status) // la guardamo en la base de datos local 
-                                         .then(then => {
-                                           Swal.fire(
-                                             'Se a registrado y guardado correctamente la asistencia de ' + nombre,
-                                             '',
-                                             'success'
-                                           )
-                                         })
-                                         .catch( err =>{
-                                           Swal.fire(
-                                             'Se a registrado correctamente la asistencia de ' + nombre,
-                                             '',
-                                             'success'
-                                           )
-                                         })
-                                     this.databaseService.deletePerson(id)
-                                         .then( resp => {
-                                           ionSearchBar.setAttribute('value','')
-                                         })
-                                         .catch(error => {
-                                           console.log('No se pudo eliminar por el siguente error: '+error.message);
-                                         });
-                                        
-                                    }
+
+                                      if(resp.guardado != false){
+                                          this.status = 1;
+                                       }else{
+                                         this.status = 0;
+                                       }
+                                      
+                                       this.databaseService.addVotacion(persona_id,nombre,this.status) // la guardamo en la base de datos local 
+                                           .then(then => {
+                                             Swal.fire(
+                                               'Se a registrado y guardado correctamente la asistencia de ' + nombre,
+                                               '',
+                                               'success'
+                                             )
+                                           })
+                                           .catch( err =>{
+                                             Swal.fire(
+                                               'Se a registrado correctamente la asistencia de ' + nombre,
+                                               '',
+                                               'success'
+                                             )
+                                           })
+                                       this.databaseService.deletePerson(id)
+                                           .then( resp => {
+                                             ionSearchBar.setAttribute('value','')
+                                           })
+                                           .catch(error => {
+                                             console.log('No se pudo eliminar por el siguente error: '+error.message);
+                                           });
+                                          
+                                      
+
+                                  }
+
+                                  
                                },(error => { // si el servidor marca algun error aun asi lo guarmadamos en la base de datos y despues lo eliminamos de la busqueda
                                  
                                   this.databaseService.addVotacion(persona_id,nombre,this.status)
