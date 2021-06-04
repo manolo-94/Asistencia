@@ -732,7 +732,7 @@ export class ResultadosPage implements OnInit {
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'No se pudo encontra el token de este usuario intenta de nuevo o ponte en contacto con tu encargado.'
+                              text: 'No se pudo encontra el token de este usuario para el envio de inforamción intenta de nuevo o ponte en contacto con tu encargado.'
                             })
                           })
                     },err => {
@@ -741,7 +741,7 @@ export class ResultadosPage implements OnInit {
                           .then(then => {
                             Swal.fire(
                               'Guardado',
-                              'Tu información se guardo correctamente.',
+                              'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado',
                               'success'
                             )
                           })
@@ -750,7 +750,7 @@ export class ResultadosPage implements OnInit {
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'Tu información no se pudo guardar correctamente intenta de nuevo o ponte en contacto con tu encargado.'
+                              text: 'Tu información no se pudo guardar y enviar correctamente verifiaca tu conexión a internet, intenta de nuevo o ponte en contacto con tu encargado.'
                             })
                           })
 
