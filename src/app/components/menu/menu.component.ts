@@ -24,6 +24,10 @@ export class MenuComponent implements OnInit {
     this.navCtrl.navigateRoot('/tablinks/resultados', {animated: true})
   }
 
+  redundancia(){
+    this.navCtrl.navigateBack('/tablinks/respaldo',{animated: true})
+  }
+
   logout(){
     Swal.fire({
       title: 'Cerrar sesión',

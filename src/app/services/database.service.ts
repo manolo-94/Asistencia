@@ -8,6 +8,8 @@ import { Storage } from '@ionic/storage';
 
 const URL = environment.url;
 
+const URL2 = environment.url_respaldo;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -821,6 +823,34 @@ export class DatabaseService {
     });
 
     return this.http.get<any>(`${URL}/promovidos/votacion/resultado/add/`,{headers});
+
+  }
+
+  reenviarPersonaVotoRespaldo(persona_id:number, token:string){
+    
+    this.token = token|| null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    return this.http.get<Voto>(`${URL2}/personas/persona/voto/`+persona_id,{headers});
+
+  }
+
+  addPromovidoNoLNRespaldo(token:string, data:any){
+    
+    this.token = token|| null;
+    this.persona = data || null;
+
+    const headers = new HttpHeaders({
+      'Authorization' : 'Token ' + this.token
+    });
+
+    const formData = new FormData();
+    formData.append('persona', this.persona);
+
+    return this.http.post<PromovidoNoLN>(`${URL2}/promovidos/votacion/votante/add/`,formData,{headers});
 
   }
 }

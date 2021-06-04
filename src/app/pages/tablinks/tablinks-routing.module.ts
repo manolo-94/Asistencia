@@ -57,6 +57,10 @@ const routes: Routes = [
         loadChildren: () => import('../resultados/resultados.module').then( m => m.ResultadosPageModule)
       },
       {
+        path: 'respaldo',
+        loadChildren: () => import('../respaldo/respaldo.module').then( m => m.RespaldoPageModule)
+      },
+      {
         path: '',
         redirectTo: '/login',
         pathMatch: 'full'

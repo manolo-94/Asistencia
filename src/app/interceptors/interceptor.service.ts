@@ -15,8 +15,8 @@ export class InterceptorService {
 
 
   intercept(req:HttpRequest<any>, next:HttpHandler): Observable<HttpEvent<any>>{
-    console.log('pase por el interceptor');
-    // this.showHideAutoLoader();
+    // console.log('pase por el interceptor');
+    this.showHideAutoLoader();
 
     // this.loadingCtrl.getTop().then(hasLoading => {
     //   if(!hasLoading){
@@ -71,7 +71,7 @@ export class InterceptorService {
     
     this.loadingCtrl.create({
       message: 'Espere por favor...',
-      // duration: 2000
+      duration: 4000,
       backdropDismiss: true
     }).then((res) => {
       res.present();
