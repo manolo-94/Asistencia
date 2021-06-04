@@ -163,12 +163,13 @@ export class BuscarComponent implements OnInit {
             this.databaseService.getConfigCasilla()
                 .then( result => {
                   let status:string;
+                  let status_casilla:string;
                   if(result.rows.length > 0){
                     for (let i = 0; i < result.rows.length; i++){
-                      status = result.rows.item(i)['status']
+                      status_casilla = result.rows.item(i)['status']
                     }
     
-                    if(status == 'CERRADA'){
+                    if(status_casilla == 'CERRADA'){
                       // console.log('la casilla ya fue cerrada definitivamente')
                       Swal.fire({
                         icon: 'error',
@@ -176,7 +177,7 @@ export class BuscarComponent implements OnInit {
                         text: 'Tu casilla esta cerrada debe de estar abierta para comenzar a marcar la asistencia de las personas que fueron a votar'
                       })
                     }
-                    if(status == 'ABIERTA'){
+                    if(status_casilla == 'ABIERTA'){
 
                       this.networkService.getNetworkTestRequest()
                           .subscribe(success =>{ 
@@ -185,7 +186,16 @@ export class BuscarComponent implements OnInit {
                               .then(then => {
                                 then.subscribe(resp =>{
 
+                                  // console.log(resp);
+
                                   if(resp.error != null){
+
+                                    if(resp.guardado != false){
+                                      this.status = 1;
+                                    }else{
+                                      this.status = 0;
+                                    }
+
                                     this.databaseService.addVotacion(persona_id,nombre,this.status)
                                         .then(then => {
                                               Swal.fire(
@@ -247,7 +257,7 @@ export class BuscarComponent implements OnInit {
                                   
                                },(error => { // si el servidor marca algun error aun asi lo guarmadamos en la base de datos y despues lo eliminamos de la busqueda
                                  
-                                  this.databaseService.addVotacion(persona_id,nombre,this.status)
+                                  this.databaseService.addVotacion(persona_id,nombre,0)
                                       .then(then => {
                                         Swal.fire(
                                           'Se a guardado correctamente la asistencia de ' + nombre,
