@@ -535,7 +535,7 @@ export class ResultadosPage implements OnInit {
                       this.databaseServices.getTokenUser()
                           .then(then => {
                             if(then.rows.length > 0){
-                              console.log('hay registros');
+                              // console.log('hay registros');
                               
                             
                               for (let i = 0; i < then.rows.length; i++){
@@ -545,10 +545,18 @@ export class ResultadosPage implements OnInit {
                             
                               this.databaseServices.SendResultados(this.token,json)
                                   .subscribe(resp => {
-                                    console.log(resp)
+                                    //console.log(resp)
                                     // console.log('se envio correctamente la información');
-                                    
-                                    this.databaseServices.updateConfigResultados(true,json)
+
+                                    if(resp.error != null){
+                                      Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'No se pudo enviar y guardar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado.'
+                                      })
+                                    }else{
+
+                                      this.databaseServices.updateConfigResultados(true,json)
                                         .then(resp =>{
                                           Swal.fire(
                                             'Enviado!',
@@ -560,61 +568,88 @@ export class ResultadosPage implements OnInit {
                                           console.log(err);
                                           Swal.fire(
                                             'Enviado!',
-                                            'Tu información se envió correctamente..',
+                                            'Tu información se envió correctamente, pero no se pudo actualizar.',
                                             'success'
                                           )
                                         })
 
+                                    }
+                                    
+                                    
+
                                   },err => {
-                                    console.log(err);
-                                    console.log('algo salio mal');
-                                    Swal.fire({
-                                      icon: 'error',
-                                      title: 'Oops...',
-                                      text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet'
-                                    })
+                                    // console.log(err);
+                                    // console.log('algo salio mal');
+                                    
+                                    this.databaseServices.updateConfigResultados(false,json)
+                                        .then(resp =>{
+                                          Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                          })
+                                        })
+                                        .catch(err =>{
+                                          console.log(err);
+                                          Swal.fire({
+                                            icon: 'error',
+                                            title: 'Oops...',
+                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                          })
+                                        })
                                   })
 
-                                  this.databaseServices.getConfigResultados()
-                                      .then(result => {
-                                        for (let i = 0; i < result.rows.length; i++){
-                                          console.log(result.rows.item(i));
-                                        }
-                                      })
+                                  // this.databaseServices.getConfigResultados()
+                                  //     .then(result => {
+                                  //       for (let i = 0; i < result.rows.length; i++){
+                                  //         console.log(result.rows.item(i));
+                                  //       }
+                                  //     })
                                 
-                            }else{
-                              console.log('no se encontro resultados');
-
                             }
                           })
                           .catch( err => {
-                            console.log(err);
-                            console.log('no ejecutar la consulta');
+                            this.databaseServices.updateConfigResultados(false,json)
+                                .then(resp =>{
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                  })
+                                })
+                                .catch(err =>{
+                                  console.log(err);
+                                  Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                  })
+                                })
                           })
                     },err => {
-                      console.log('No tienes internet');
+                      // console.log('No tienes internet');
                       this.databaseServices.updateConfigResultados(false,json)
                           .then(resp =>{
-                            Swal.fire(
-                              'Actualizado',
-                              'Tu información se actualizo correctamente.',
-                              'success'
-                            )
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                            })
                           })
                           .catch(err =>{
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'Tu información no se pudo actualizar correctamente.'
+                              text: 'Tu información no se pudo enviar y tampoco actualizar correctamente, intenta de neuvo.'
                             })
                           })
 
-                      this.databaseServices.getConfigResultados()
-                          .then(result => {
-                            for (let i = 0; i < result.rows.length; i++){
-                              console.log(result.rows.item(i));
-                            }
-                          })
+                      // this.databaseServices.getConfigResultados()
+                      //     .then(result => {
+                      //       for (let i = 0; i < result.rows.length; i++){
+                      //         console.log(result.rows.item(i));
+                      //       }
+                      //     })
 
                     })
                 
@@ -635,13 +670,17 @@ export class ResultadosPage implements OnInit {
                               this.databaseServices.SendResultados(this.token,json)
                                   .subscribe(resp => {
                                     console.log(resp)
-                                    // console.log('se envio correctamente la información');
-                                    // Swal.fire(
-                                    //   'Enviado!',
-                                    //   'Tu información se envió correctamente.',
-                                    //   'success'
-                                    // )
-                                    this.databaseServices.insertConfigResultados(true,json)
+                                    if(resp.error != null){
+
+                                      Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'No se pudo enviar ni guardar la información por el momento, verifica que todos los campos esten correctos intenta de nuevo o ponte en contacto con tu encargado.'
+                                      })
+
+                                    }else{
+
+                                      this.databaseServices.insertConfigResultados(true,json)
                                         .then(then => {
                                           Swal.fire(
                                             'Enviado!',
@@ -658,13 +697,17 @@ export class ResultadosPage implements OnInit {
                                             'success'
                                           )
                                         })
+
+                                    }
+
                                     
-                                    this.databaseServices.getConfigResultados()
-                                        .then(result => {
-                                          for (let i = 0; i < result.rows.length; i++){
-                                            console.log(result.rows.item(i));
-                                          }
-                                        })
+                                    
+                                    // this.databaseServices.getConfigResultados()
+                                    //     .then(result => {
+                                    //       for (let i = 0; i < result.rows.length; i++){
+                                    //         console.log(result.rows.item(i));
+                                    //       }
+                                    //     })
 
                                   },err => {
                                     console.log(err);
@@ -672,21 +715,28 @@ export class ResultadosPage implements OnInit {
                                     Swal.fire({
                                       icon: 'error',
                                       title: 'Oops...',
-                                      text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos'
+                                      text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos intenta de nuevo o ponte en contacto con tu encargado.'
                                     })
                                   })
                                 
                             }else{
-                              console.log('no se encontro resultados');
+                              Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'No se pudo encontra el token de este usuario intenta de nuevo o ponte en contacto con tu encargado.'
+                              })
                               
                             }
                           })
                           .catch( err => {
-                            console.log(err);
-                            console.log('no ejecutar la consulta');
+                            Swal.fire({
+                              icon: 'error',
+                              title: 'Oops...',
+                              text: 'No se pudo encontra el token de este usuario intenta de nuevo o ponte en contacto con tu encargado.'
+                            })
                           })
                     },err => {
-                      console.log('No tienes internet');
+                      // console.log('No tienes internet');
                       this.databaseServices.insertConfigResultados(true,json)
                           .then(then => {
                             Swal.fire(
@@ -700,16 +750,16 @@ export class ResultadosPage implements OnInit {
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'Tu información no se pudo guardar correctamente.'
+                              text: 'Tu información no se pudo guardar correctamente intenta de nuevo o ponte en contacto con tu encargado.'
                             })
                           })
 
-                      this.databaseServices.getConfigResultados()
-                          .then(result => {
-                            for (let i = 0; i < result.rows.length; i++){
-                              console.log(result.rows.item(i));
-                            }
-                          })
+                      // this.databaseServices.getConfigResultados()
+                      //     .then(result => {
+                      //       for (let i = 0; i < result.rows.length; i++){
+                      //         console.log(result.rows.item(i));
+                      //       }
+                      //     })
                     })
 
               }
