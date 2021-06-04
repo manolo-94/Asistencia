@@ -545,19 +545,20 @@ export class ResultadosPage implements OnInit {
                             
                               this.databaseServices.SendResultados(this.token,json)
                                   .subscribe(resp => {
-                                    //console.log(resp)
+                                    console.log(resp)
                                     // console.log('se envio correctamente la información');
 
                                     if(resp.error != null){
                                       Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
-                                        text: 'No se pudo enviar y guardar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado.'
+                                        text: 'No se pudo enviar y guardar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en  con tu encargado.'
                                       })
                                     }else{
 
                                       this.databaseServices.updateConfigResultados(true,json)
                                         .then(resp =>{
+                                          console.log(resp)
                                           Swal.fire(
                                             'Enviado!',
                                             'Tu información se envió y actualizo correctamente.',
@@ -583,10 +584,11 @@ export class ResultadosPage implements OnInit {
                                     
                                     this.databaseServices.updateConfigResultados(false,json)
                                         .then(resp =>{
+                                          console.log(resp)
                                           Swal.fire({
                                             icon: 'error',
                                             title: 'Oops...',
-                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en contacto con tu encargado'
                                           })
                                         })
                                         .catch(err =>{
@@ -594,7 +596,7 @@ export class ResultadosPage implements OnInit {
                                           Swal.fire({
                                             icon: 'error',
                                             title: 'Oops...',
-                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                            text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en contacto con tu encargado'
                                           })
                                         })
                                   })
@@ -611,10 +613,11 @@ export class ResultadosPage implements OnInit {
                           .catch( err => {
                             this.databaseServices.updateConfigResultados(false,json)
                                 .then(resp =>{
+                                  console.log(resp)
                                   Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en  con tu encargado'
                                   })
                                 })
                                 .catch(err =>{
@@ -622,7 +625,7 @@ export class ResultadosPage implements OnInit {
                                   Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                                    text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en contacto con tu encargado'
                                   })
                                 })
                           })
@@ -630,13 +633,15 @@ export class ResultadosPage implements OnInit {
                       // console.log('No tienes internet');
                       this.databaseServices.updateConfigResultados(false,json)
                           .then(resp =>{
+                            console.log(resp)
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
-                              text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado'
+                              text: 'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en contacto con tu encargado'
                             })
                           })
                           .catch(err =>{
+                            console.log(err)
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
@@ -729,6 +734,7 @@ export class ResultadosPage implements OnInit {
                             }
                           })
                           .catch( err => {
+                            console.log(err)
                             Swal.fire({
                               icon: 'error',
                               title: 'Oops...',
@@ -739,9 +745,10 @@ export class ResultadosPage implements OnInit {
                       // console.log('No tienes internet');
                       this.databaseServices.insertConfigResultados(true,json)
                           .then(then => {
+                            console.log(then)
                             Swal.fire(
                               'Guardado',
-                              'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte encontacot con tu encargado',
+                              'No se pudo enviar la información por el momento, verifica que todos los campos esten correctos y tu conexión a internet o ponte en contacto con tu encargado',
                               'success'
                             )
                           })
