@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
   }
 
   registerUser: Usario = {
-    username: 'luis.villanueva',
+    username: 'test.test',
     // username: 'test.test',
     // username: 'noExisto.nopassword',
     email: 'test.test@gmail.com',
