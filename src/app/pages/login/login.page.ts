@@ -66,7 +66,7 @@ export class LoginPage implements OnInit {
   }
 
   registerUser: Usario = {
-    username: 'luis.villanueva',
+    username: 'test.test',
     // username: 'test.test',
     // username: 'noExisto.nopassword',
     email: 'test.test@gmail.com',
@@ -93,11 +93,17 @@ export class LoginPage implements OnInit {
   }
 
   async login( fLogin: NgForm ){
+    
+    if (this.loginUser.username != '' && this.loginUser.password != ''){
+      this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
+    } else {
+     this.uiService.alertaInformativa('Los campos no pueden ser vacios') 
+    }
 
 
-    if (fLogin.invalid){return;}
+    /* if (fLogin.invalid){return;}
 
-    await this.databaseService.validateUser(this.loginUser.username,this.loginUser.password)
+     await this.databaseService.validateUser(this.loginUser.username,this.loginUser.password)
         .then(then =>{
 
           let status: boolean = false;
@@ -191,24 +197,8 @@ export class LoginPage implements OnInit {
           console.log('No se puedo realizar la consulta');
           this.uiService.alertaInformativa('No se pudo realizar la verificación del usuario en la base de datos')
           
-        })
+        }) */
     
-    // const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
-
-    // if (valido[0] === true){
-
-    //   this.navCtrl.navigateRoot('/tablinks/personas', {animated: true})
-    // } else {
-
-    //   this.networkService.getNetworkTestRequest()
-    //     .subscribe(success =>{ 
-    //       console.log('success testNetworkConnection') 
-    //       this.uiService.alertaInformativa(valido[1])
-    //     },error =>{
-    //       console.log('error testNetworkConnection');
-    //       this.uiService.alertaInformativa('Verifique su conexion de internet')
-    //     })
-    // }
 
   }
 
