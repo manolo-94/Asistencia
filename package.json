@@ -21,6 +21,7 @@
     "@angular/router": "~11.2.0",
     "@capacitor/core": "2.4.6",
     "@ionic-native/android-permissions": "^5.33.1",
+    "@ionic-native/background-geolocation": "^5.36.0",
     "@ionic-native/background-mode": "^5.33.1",
     "@ionic-native/call-number": "^5.33.1",
     "@ionic-native/core": "^5.33.0",
@@ -37,7 +38,7 @@
     "formBuilder": "^3.6.2",
     "jquery": "^3.6.0",
     "rxjs": "~6.6.0",
-    "sweetalert2": "^11.0.11",
+    "sweetalert2": "^11.6.9",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
@@ -49,6 +50,7 @@
     "@angular/language-service": "~11.2.0",
     "@capacitor/cli": "2.4.6",
     "@ionic/angular-toolkit": "^3.1.0",
+    "@mauron85/cordova-plugin-background-geolocation": "^3.1.0",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
@@ -73,6 +75,7 @@
     "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
+    "mx.ferreyra.callnumber": "0.0.2",
     "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
@@ -93,7 +96,9 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-background-mode": {},
       "cordova-plugin-android-permissions": {},
-      "mx.ferreyra.callnumber": {}
+      "mx.ferreyra.callnumber": {},
+      "cordova-plugin-background-geolocation": {},
+      "call-number": {}
     },
     "platforms": [
       "ios",
