@@ -47,8 +47,42 @@ src/environments/environment.ts
 -configurar la herramienta de linea de comando de android asi como las variables de entorno.
 -configurar JAVA
 -tener un dispositivo android virtual o físico
--Antes de que las aplicaciones se puedan implementar en dispositivos y emuladores de Android, se debe configurar el proyecto nativo, para esto se usa *cordova* 
+-Antes de que las aplicaciones se puedan implementar en dispositivos y emuladores de Android, se debe configurar el proyecto nativo, para esto se usa *cordova*
 
 *TODA la información de lo antes mencionado se puede encontrá en la documentación https://ionicframework.com/docs/developing/android
 
 [Importante] para poder lanzar la aplicación en dispositivo debe de estar configurado muy bien las variables de entorno del Android Studio ya que si no se configura de manera correcta pude o cacinar errores para generar APK.
+
+[Errors]
+
+[1] CSS Compilation Issue
+    En caso de presentar el el siguiente error con la libreria SweetAlert2.js:
+        [ng] SassError: Undefined function.
+        [ng] 5 │ $icon-zoom: math.div(strip-units($swal2-icon-size), 5);
+
+    Modificar el siguiente archivo:
+        node_modules/sweetalert2/src/scss/_icons.scss
+
+    [Solution]
+
+    Remplazar las siguienes lienas de codigo:
+        @function strip-units($number) {
+            @return math.div($number, ($number * 0 + 1));
+        }
+        $icon-zoom: math.div(strip-units($swal2-icon-size), 5);
+
+    Por estas:
+        @function strip-units($number) {
+            @return $number / ($number * 0 + 1);
+        }
+        $icon-zoom: strip-units($swal2-icon-size) / 5;
+
+    Referencia:
+        https://github.com/sweetalert2/sweetalert2/issues/2263#issuecomment-857722854
+
+[2] the server was unsuccessful. (file ///android_asset/www/index.html)
+
+    [Solucion]
+
+    Agregar en el archivo config.xml la siguiente linea
+    <preference name="loadUrlTimeoutValue" value="60000" />

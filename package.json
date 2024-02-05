@@ -93,7 +93,8 @@
       "cordova-plugin-network-information": {},
       "cordova-plugin-background-mode": {},
       "cordova-plugin-android-permissions": {},
-      "mx.ferreyra.callnumber": {}
+      "mx.ferreyra.callnumber": {},
+      "call-number": {}
     },
     "platforms": [
       "ios",
