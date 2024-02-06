@@ -53,6 +53,38 @@ src/environments/environment.ts
 
 [Importante] para poder lanzar la aplicación en dispositivo debe de estar configurado muy bien las variables de entorno del Android Studio ya que si no se configura de manera correcta pude o cacinar errores para generar APK.
 
+[ionic info]
+
+    Ionic:
+
+       Ionic CLI                     : 6.20.4 (/home/manolo/.nvm/versions/node/v14.20.0/lib/node_modules/@ionic/cli)
+       Ionic Framework               : @ionic/angular 5.9.4
+       @angular-devkit/build-angular : 0.1102.19
+       @angular-devkit/schematics    : 11.1.4
+       @angular/cli                  : 11.1.4
+       @ionic/angular-toolkit        : 3.1.1
+
+    Cordova:
+
+       Cordova CLI       : 10.0.0 (cordova-lib@10.1.0)
+       Cordova Platforms : android 9.1.0
+       Cordova Plugins   : cordova-plugin-ionic-keyboard 2.2.0, cordova-plugin-ionic-webview 4.2.1, (and 9 other plugins)
+
+    Utility:
+
+       cordova-res                          : 0.15.4
+       native-run (update available: 2.0.1) : 1.7.1
+
+    System:
+
+       Android SDK Tools : 26.1.1 (/home/manolo/Android/Sdk)
+       NodeJS            : v14.20.0 (/home/manolo/.nvm/versions/node/v14.20.0/bin/node)
+       npm               : 6.14.17
+       OS                : Linux 5.15
+
+[Nota]
+    La version de NodeJs, Ionic/cli y Angular Cli son importantes para correr este proyecto arriba dejo las versiones recomendadas.
+
 [Errors]
 
 [1] CSS Compilation Issue
