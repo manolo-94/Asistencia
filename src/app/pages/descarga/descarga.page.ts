@@ -18,6 +18,65 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 
 export class DescargaPage implements OnInit {
 
+  public dataPersonas = [
+    {
+      id:1,
+      nombre:"luis emmanuel",
+      apellido_paterno:"villanueva",
+      apellido_materno:"peralta",
+      nombre_completo:"luis emmanuel villanueva peralta",
+      direccion:"SAN JOSER VERGEL",
+      fecha_nacimiento:"7 DE DICIEMBRE DE 1994",
+      edad:29,
+      seccion:508,
+      municipio:50,
+      localidad:1,
+      comisaria:"N/A",
+    },
+    {
+      id:2,
+      nombre:"ivan gilberto",
+      apellido_paterno:"solis",
+      apellido_materno:"pino",
+      nombre_completo:"ivan gilberto solis pino",
+      direccion:"poligono",
+      fecha_nacimiento:"25 de noviembre de 1990",
+      edad:33,
+      seccion:508,
+      municipio:50,
+      localidad:1,
+      comisaria:"N/A",
+    },
+    {
+      id:3,
+      nombre:"oscar gabriel",
+      apellido_paterno:"dominguez",
+      apellido_materno:"guemez",
+      nombre_completo:"oscar gabriel dominguez guemez",
+      direccion:"U HAB CORDEMEX",
+      fecha_nacimiento:"21 DE DICIEMBRE DE 1987",
+      edad:29,
+      seccion:508,
+      municipio:50,
+      localidad:1,
+      comisaria:"N/A",
+    },
+    {
+      id:4,
+      nombre:"manuel guillermo",
+      apellido_paterno:"baas",
+      apellido_materno:"ceballos",
+      nombre_completo:"manuel guillermo baas ceballos",
+      direccion:"COL NUEVA CHICHEN ITZA",
+      fecha_nacimiento:"3 de octubre de 1989",
+      edad:29,
+      seccion:508,
+      municipio:50,
+      localidad:1,
+      comisaria:"N/A",
+    }
+  ]
+
   public paginasTotales: number = 0;
   public paginaActual: number = 0
   public porcentValue: number = 0;
@@ -33,7 +92,7 @@ export class DescargaPage implements OnInit {
 
   personaSeccion:PersonaSeccion[] = [];
   isConnected = false;
-  
+
   // url:string = 'http://10.0.2.40:8000/api/personas/persona/seccion/' ;
 
   constructor( private databaseService: DatabaseService,
@@ -62,8 +121,8 @@ export class DescargaPage implements OnInit {
 
 
     this.networkService.getNetworkTestRequest()
-        .subscribe(success =>{ 
-          console.log('success testNetworkConnection') 
+        .subscribe(success =>{
+          console.log('success testNetworkConnection')
           this.status_connection_internet = true;
         },error =>{
           console.log('error testNetworkConnection');
@@ -92,7 +151,7 @@ export class DescargaPage implements OnInit {
               cancelButtonColor: '#d33',
               confirmButtonText: `Si, descargar`,
               cancelButtonText: 'No, ¡cancelar!',
-              
+
             }).then((result) => {
               /* Read more about isConfirmed, isDenied below */
               if (result.isConfirmed) {
@@ -105,11 +164,11 @@ export class DescargaPage implements OnInit {
                 this.porcentaje_personas_guardadas = 0;
                 this.databaseService.deleteInfoDescarga();
                 this.databaseService.createInfoDescarga();
-                
+
                 this.networkService.getNetworkTestRequest()
-                .subscribe(success =>{ 
+                .subscribe(success =>{
                   Swal.fire('Descarga iniciada', '', 'success')
-                  console.log('success testNetworkConnection') 
+                  console.log('success testNetworkConnection')
                   this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
                   this.downloadPersonas(null);
                 },error =>{
@@ -124,7 +183,7 @@ export class DescargaPage implements OnInit {
             })
           }else{ // si no existe, inicia el proceso de descarga ya que nunca se ha descargado información
             console.log('inicia proceso de descarga');
-            
+
 
             // this.databaseService.recordStatusDownload(true)
             //     .then(then =>{
@@ -143,9 +202,9 @@ export class DescargaPage implements OnInit {
             this.databaseService.createInfoDescarga();
 
             this.networkService.getNetworkTestRequest()
-            .subscribe(success =>{ 
+            .subscribe(success =>{
               Swal.fire('Descarga iniciada', '', 'success')
-              console.log('success testNetworkConnection') 
+              console.log('success testNetworkConnection')
               this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
               this.downloadPersonas(null);
               // this.databaseService.recordStatusDownload(true)
@@ -167,21 +226,70 @@ export class DescargaPage implements OnInit {
         })
   }
 
+  downloadStatic(){
+
+    this.status_completadoMsj = false;
+    this.porcentValue = 0;
+    this.paginaActual = 0;
+    this.paginasTotales = 0;
+    this.total_personas = 0;
+    this.total_personas_guardadas = 0;
+    this.porcentaje_personas_guardadas = 0;
+    this.databaseService.deleteInfoDescarga();
+    this.databaseService.createInfoDescarga();
+
+    Swal.fire('Descarga iniciada', '', 'success')
+    console.log('success testNetworkConnection')
+    this.messageAlert('Importante','Descarga de información','Tu información está por descargarse, no selecciones otra opción ni cierres la app hasta que tu descarga sea completada')
+    this.downloadPerson()
+  }
+
+  downloadPerson(){
+
+    this.status_progresbar = true;
+    this.paginasTotales = Math.ceil(100/100);
+              this.paginaActual += 1;
+              let porcentaje = this.paginaActual/this.paginasTotales*100;
+              this.porcentValue = parseFloat(porcentaje.toFixed(2));
+
+              this.total_personas = this.dataPersonas.length;
+              // console.log(resp.next);
+              // console.log(resp.results);
+              for (let i = 0; i < this.dataPersonas.length; i++){
+                this.personaSeccion = [];
+                // this.personaSeccion.push(resp.results[i])
+
+                this.databaseService.addPerson(this.dataPersonas[i].id, this.dataPersonas[i].nombre, this.dataPersonas[i].apellido_paterno, this.dataPersonas[i].apellido_materno, this.dataPersonas[i].nombre_completo, this.dataPersonas[i].direccion, this.dataPersonas[i].fecha_nacimiento, this.dataPersonas[i].edad, this.dataPersonas[i].seccion, this.dataPersonas[i].municipio, this.dataPersonas[i].localidad, this.dataPersonas[i].comisaria)
+                    .then(resp => {
+                      this.total_personas_guardadas += 1;
+                      let porcentaje_personas = this.total_personas_guardadas/this.total_personas*100;
+                      this.porcentaje_personas_guardadas = parseFloat(porcentaje_personas.toFixed(2));
+                      // console.log(resp)
+                      if(this.total_personas_guardadas == this.total_personas){
+                        this.status_completadoMsj = true;
+                      }
+                    })
+                    .then(error => {
+                      console.log(error)
+                    });
+              }
+  }
+
   async downloadPersonas(url:string){
     this.status_progresbar = true;
-    
+
     await this.databaseService.getTokenUser()
         .then( then => {
           // console.log(then)
           if(then.rows.length > 0){
             for (let i = 0; i < then.rows.length; i++){
               // console.log(then.rows.item(i)['token']);
-              
+
               this.token = then.rows.item(i)['token'];
             }
           }
         })
-        
+
     await this.databaseService.downloadPersonas(url,this.token)
           .then(then => {
             then.subscribe(resp => {
@@ -196,7 +304,7 @@ export class DescargaPage implements OnInit {
               for (let i = 0; i < resp.results.length; i++){
                 this.personaSeccion = [];
                 // this.personaSeccion.push(resp.results[i])
-                
+
                 this.databaseService.addPerson(resp.results[i].id, resp.results[i].nombre, resp.results[i].apellido_paterno, resp.results[i].apellido_materno, resp.results[i].nombre_completo, resp.results[i].direccion, resp.results[i].fecha_nacimiento, resp.results[i].edad, resp.results[i].seccion, resp.results[i].municipio, resp.results[i].localidad, resp.results[i].comisaria)
                     .then(resp => {
                       this.total_personas_guardadas += 1;
@@ -211,7 +319,7 @@ export class DescargaPage implements OnInit {
                       console.log(error)
                     });
               }
-              
+
               if(resp.next != null){
                 console.log(url)
                 // console.log(resp.results);

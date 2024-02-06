@@ -61,8 +61,8 @@ export class LoginPage implements OnInit {
   };
 
   loginUser = {
-    username: '',
-    password: ''
+    username: 'tester',
+    password: 'password'
   }
 
   registerUser: Usario = {
@@ -79,7 +79,7 @@ export class LoginPage implements OnInit {
                 public network: Network,
                 public networkService: NetworkService,
                 public databaseService: DatabaseService,
-                private toastController: ToastController) { 
+                private toastController: ToastController) {
 
                   // this.ionViewDidLoad();
 
@@ -89,15 +89,19 @@ export class LoginPage implements OnInit {
     /* this.slides.lockSwipes(true); */
     //bloquear la pantalla para que no se deslice
     this.slider.lockSwipes(true);
-    
+
   }
 
   async login( fLogin: NgForm ){
 
+    console.log(this.loginUser.username)
 
     if (fLogin.invalid){return;}
 
-    await this.databaseService.validateUser(this.loginUser.username,this.loginUser.password)
+
+    this.navCtrl.navigateRoot('/tablinks/personas', {animated: true});
+
+    /* await this.databaseService.validateUser(this.loginUser.username,this.loginUser.password)
         .then(then =>{
 
           let status: boolean = false;
@@ -185,14 +189,14 @@ export class LoginPage implements OnInit {
                   // si no tenemos acceso a internet o al servidor no mostrara un mensaje que validemos nuestra conexion a internet
                   this.uiService.alertaInformativa('Verifique su conexión de internet')
                 })
-          
+
           }
         },(error) =>{
           console.log('No se puedo realizar la consulta');
           this.uiService.alertaInformativa('No se pudo realizar la verificación del usuario en la base de datos')
-          
+
         })
-    
+ */
     // const valido = await this.usuarioService.login(this.registerUser.username, this.registerUser.password);
 
     // if (valido[0] === true){
@@ -201,8 +205,8 @@ export class LoginPage implements OnInit {
     // } else {
 
     //   this.networkService.getNetworkTestRequest()
-    //     .subscribe(success =>{ 
-    //       console.log('success testNetworkConnection') 
+    //     .subscribe(success =>{
+    //       console.log('success testNetworkConnection')
     //       this.uiService.alertaInformativa(valido[1])
     //     },error =>{
     //       console.log('error testNetworkConnection');

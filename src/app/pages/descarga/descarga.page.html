@@ -25,10 +25,10 @@
       </ion-card-content>
     </ion-card>
     <!-- <ion-button (click)="downloadPersonas(null)" expand="block">Descargar información</ion-button> -->
-    
+
   </section>
 
-  <ion-button (click)="verificacionDescarga()" expand="block">Descargar información</ion-button>
+  <ion-button (click)="downloadStatic()" expand="block">Descargar información</ion-button>
 
 
   <section *ngIf="status_progresbar">
@@ -43,7 +43,7 @@
       </ion-col>
       <ion-col size="12" style="text-align: center;">
         <div text-center>
-          <label for="">{{paginaActual}}/{{paginasTotales}}</label>
+          <label for="">{{paginaActual}}/{{paginasTotales}} Paginas</label>
         </div>
       </ion-col>
     </ion-row>
@@ -58,7 +58,7 @@
       </ion-col>
       <ion-col size="12" style="text-align: center;">
         <div text-center>
-          <label for="">{{total_personas_guardadas}}/{{total_personas}}</label>
+          <label for="">{{total_personas_guardadas}}/{{total_personas}} Personas</label>
         </div>
       </ion-col>
     </ion-row>
